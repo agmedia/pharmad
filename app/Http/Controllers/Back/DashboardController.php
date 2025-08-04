@@ -230,7 +230,7 @@ class DashboardController extends Controller
                 ]);
 
                 if ($product_id) {
-                    $get_url = 'https://www.ljekarne-pharmad.hr/';
+                    $get_url = 'https://www.ljekarne-pharmad.hr/image/';
                     // Create, sort all images.
                     $main_path = $get_url . $product->image;
                     $main_image = $import->resolveProductImage($main_path, $product_description->name, $product_id);
