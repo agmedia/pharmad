@@ -25,7 +25,7 @@
         @if (auth()->user()->can('*'))
             <div class="row">
                 <div class="col-md-12">
-                    <div class="block block-rounded block-mode-hidden">
+                    <div class="block block-rounded ">
                         <div class="block-header block-header-default">
                             <h3 class="block-title">Superadmin dashboard</h3>
                             <div class="block-options">
@@ -33,18 +33,20 @@
                             </div>
                         </div>
                         <div class="block-content">
-                            <a href="{{ route('roles.set') }}" class="btn btn-hero-sm btn-rounded btn-hero-secondary mb-3 mr-3">Set Roles</a>
+                            {{--<a href="{{ route('roles.set') }}" class="btn btn-hero-sm btn-rounded btn-hero-secondary mb-3 mr-3">Set Roles</a>
                             <a href="{{ route('ping.hp') }}" class="btn btn-hero-sm btn-rounded btn-hero-primary mb-3 mr-3">Ping HP</a>
                             <a href="{{ route('slugs.revision') }}" class="btn btn-hero-sm btn-rounded btn-hero-secondary mb-3 mr-3">Rewrite Empty Slugs</a>
+                            <br>--}}
+                            <a href="{{ route('import.oc.categories') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Import OpenCart Categories</a>
+                            <a href="{{ route('import.oc.products') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Import OpenCart Products</a>
                             <br>
-                           <a href="{{ route('import.initial') }}" class="btn btn-hero-sm btn-rounded btn-hero-info mb-3 mr-3">Import LAguna</a>
-                            <a href="{{ route('mailing.test') }}" class="btn btn-hero-sm btn-rounded btn-hero-info mb-3 mr-3">Mail Test</a>
+                            <a href="{{ route('mailing.test') }}" class="btn btn-hero-sm btn-rounded btn-hero-success mb-3 mr-3">Mail Test</a>
                             <br>
-                            <a href="{{ route('letters.import') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">First Letters Import</a>
+                            {{--<a href="{{ route('letters.import') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">First Letters Import</a>
                             <a href="{{ route('set.pdv.products') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Set PDV 25 Products</a>
                             <br>
                             <a href="{{ route('set.group') }}" class="btn btn-hero-sm btn-rounded btn-hero-danger mb-3 mr-3">Set New Category Group</a>
-                            <a href="{{ route('set.unlimited') }}" class="btn btn-hero-sm btn-rounded btn-hero-danger mb-3 mr-3">Set Unlimited Quantity</a>
+                            <a href="{{ route('set.unlimited') }}" class="btn btn-hero-sm btn-rounded btn-hero-danger mb-3 mr-3">Set Unlimited Quantity</a>--}}
                             {{--<a href="{{ route('statuses.cron') }}" class="btn btn-hero-sm btn-rounded btn-hero-success mb-3 mr-3">Statuses</a>--}}
                             {{--<a href="{{ route('slugs.revision') }}" class="btn btn-hero-sm btn-rounded btn-hero-primary mb-3 mr-3">Slugs revision</a>--}}
                             {{--<a href="{{ route('duplicate.revision', ['target' => 'images']) }}" class="btn btn-hero-sm btn-rounded btn-hero-primary mb-3 mr-3">Duplicate Images revision</a>--}}
