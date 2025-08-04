@@ -33,6 +33,8 @@ return [
     'default_tax_id'       => 1,
     'eur_divide_amount' => 0.13272280,
 
+    'default_product_image' => 'media/avatars/avatar0.jpg',
+
     'sorting_list' => [
         0 => [
             'title' => 'Najnovije',

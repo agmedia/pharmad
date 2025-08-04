@@ -201,7 +201,7 @@ class DashboardController extends Controller
                     'sku'              => isset($attributes['Šifra']) ? $attributes['Šifra'] : $product->model . '-' . $product->product_id,
                     'ean'              => $product->product_id,
                     'polica'           => 0,
-                    'group'            => '',
+                    /*'group'            => '',*/
                     'description'      => '<p>' . str_replace('\n', '<br>', $product_description->description) . '</p>',
                     'slug'             => Str::slug($product_description->name) . '-' . time(),
                     'url'              => '',
@@ -230,8 +230,9 @@ class DashboardController extends Controller
                 ]);
 
                 if ($product_id) {
+                    $get_url = 'https://www.ljekarne-pharmad.hr/';
                     // Create, sort all images.
-                    $main_path = 'https://www.antikvarijat-vremeplov.hr/image/' . $product->image;
+                    $main_path = $get_url . $product->image;
                     $main_image = $import->resolveProductImage($main_path, $product_description->name, $product_id);
 
                     Product::where('id', $product_id)->update(['image' => $main_image]);
@@ -239,7 +240,7 @@ class DashboardController extends Controller
                     if ($product_images->count()) {
                         $icount = 0;
                         foreach ($product_images as $product_image) {
-                            $path = 'https://www.antikvarijat-vremeplov.hr/image/' . $product_image->image;
+                            $path = $get_url . $product_image->image;
                             $image = $import->resolveProductImage($path, $product_description->name, $product_id);
 
                             ProductImage::insert([
@@ -266,16 +267,16 @@ class DashboardController extends Controller
                             ]);
                         }
 
-                        $cat = Category::query()->where('id', $category)->first();
+                        /*$cat = Category::query()->where('id', $category)->first();
 
-                        $product->update([
+                        Product::where('id', $product_id)->update([
                             'group' => $cat->group,
-                        ]);
+                        ]);*/
                     }
 
                     $product = Product::find($product_id);
 
-                    $product->update([
+                    Product::where('id', $product_id)->update([
                         'url'             => ProductHelper::url($product),
                         'category_string' => ProductHelper::categoryString($product)
                     ]);
