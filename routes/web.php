@@ -56,7 +56,8 @@ Route::middleware(['auth:sanctum', 'verified', 'no.customers'])->prefix('admin')
 
     Route::get('setRoles', [DashboardController::class, 'setRoles'])->name('roles.set');
     Route::get('pingHP', [DashboardController::class, 'pingHP'])->name('ping.hp');
-    Route::get('import', [DashboardController::class, 'import'])->name('import.initial');
+    Route::get('import-oc-categories', [DashboardController::class, 'importOpenCartCategories'])->name('import.oc.categories');
+    Route::get('import-oc-products', [DashboardController::class, 'importOpenCartProducts'])->name('import.oc.products');
     Route::get('mailing-test', [DashboardController::class, 'mailing'])->name('mailing.test');
     Route::get('letters', [DashboardController::class, 'letters'])->name('letters.import');
     Route::get('slugs', [DashboardController::class, 'slugs'])->name('slugs.revision');
