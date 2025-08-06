@@ -241,6 +241,14 @@ class Helper
 
         if ( ! $wg) {
             $wg = $wgs->where('slug', $id)->first();
+
+            if ( ! $wg) {
+                return str_replace(
+                    '++' . $id . '++',
+                    view('front.layouts.widget.widget_empty', ['data' => 'Widget not found.']),
+                    $description
+                );
+            }
         }
 
         $widgets = [];
