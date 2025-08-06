@@ -78,14 +78,10 @@
                                 <span class="nav-main-link-name">Artikli</span>
                             </a>
                         </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link{{ request()->routeIs(['publishers', 'publishers.*']) ? ' active' : '' }}" href="{{ route('publishers') }}">
-                                <span class="nav-main-link-name">Izdavači</span>
-                            </a>
-                        </li>
+
                         <li class="nav-main-item">
                             <a class="nav-main-link{{ request()->routeIs(['authors', 'authors.*']) ? ' active' : '' }}" href="{{ route('authors') }}">
-                                <span class="nav-main-link-name">Autori</span>
+                                <span class="nav-main-link-name">Brandovi</span>
                             </a>
                         </li>
                     </ul>

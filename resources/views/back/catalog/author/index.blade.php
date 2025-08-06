@@ -5,9 +5,9 @@
     <div class="bg-body-light">
         <div class="content content-full">
             <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Autori</h1>
+                <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Brendovi</h1>
                 <a class="btn btn-hero-success my-2" href="{{ route('authors.create') }}">
-                    <i class="far fa-fw fa-plus-square"></i><span class="d-none d-sm-inline ml-1"> Novi autor</span>
+                    <i class="far fa-fw fa-plus-square"></i><span class="d-none d-sm-inline ml-1"> Novi brend</span>
                 </a>
             </div>
         </div>
@@ -20,7 +20,7 @@
     <!-- All Products -->
         <div class="block block-rounded">
             <div class="block-header block-header-default">
-                <h3 class="block-title">Svi Autori <small class="font-weight-light">{{ $authors->total() }}</small></h3>
+                <h3 class="block-title">Svi Brendovi <small class="font-weight-light">{{ $authors->total() }}</small></h3>
                 <div class="block-options">
                     <!-- Search Form -->
                     <form action="{{ route('authors') }}" method="GET">
@@ -65,7 +65,7 @@
                         @empty
                             <tr>
                                 <td colspan="3">
-                                    Nema autora.
+                                    Nema brendova.
                                 </td>
                             </tr>
                         @endforelse

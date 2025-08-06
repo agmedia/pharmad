@@ -5,11 +5,11 @@
     <div class="bg-body-light">
         <div class="content content-full">
             <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Autor edit</h1>
+                <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Brend edit</h1>
                 <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('authors') }}">Autori</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Novi autor</li>
+                        <li class="breadcrumb-item"><a href="{{ route('authors') }}">Brendovi</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Novi brend</li>
                     </ol>
                 </nav>
             </div>
@@ -35,7 +35,7 @@
                     <div class="block-options d-inline-block">
                         <div class="custom-control custom-switch custom-control-success d-inline-block mr-5">
                             <input type="checkbox" class="custom-control-input" id="featured-switch" name="featured"{{ (isset($author->featured) and $author->featured) ? 'checked' : '' }}>
-                            <label class="custom-control-label" for="featured-switch">Izdvojeni autor</label>
+                            <label class="custom-control-label" for="featured-switch">Izdvojeni brend</label>
                         </div>
                         <div class="custom-control custom-switch custom-control-success d-inline-block">
                             <input type="checkbox" class="custom-control-input" id="author-switch" name="status"{{ (isset($author->status) and $author->status) ? 'checked' : '' }}>
@@ -48,7 +48,7 @@
                         <div class="col-md-10">
 
                             <div class="form-group">
-                                <label for="title-input">Naziv izdavača</label>
+                                <label for="title-input">Naziv Brenda</label>
                                 <input type="text" class="form-control" id="title-input" name="title" placeholder="Upišite naziv autora" value="{{ isset($author) ? $author->title : old('title') }}" onkeyup="SetSEOPreview()">
                             </div>
 
@@ -58,7 +58,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="description-editor">Opis izdavača</label>
+                                <label for="description-editor">Opis Brenda</label>
                                 <textarea id="description-editor" name="description">{!! isset($author) ? $author->description : old('description') !!}</textarea>
                             </div>
 
