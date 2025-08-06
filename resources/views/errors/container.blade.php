@@ -2,7 +2,7 @@
 <html dir="ltr" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="author" content="Skladišna Logistika" />
+    <meta name="author" content="Ljekarne pharmad" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>  @yield ('title' ) - {{ config('app.name') }}</title>
     <!-- Favicon and Touch Icons-->
@@ -51,13 +51,13 @@
 <!-- Document Wrapper -->
 <div id="wrapper" class="clearfix">
     <!-- Topbar -->
-@include('front.layouts.partials.header')
+
 <!-- Slider -->
 {{-- @include('front.layouts.partials.slider') --}}
 <!-- Content -->
 @yield('content')
 <!-- Footer -->
-    @include('front.layouts.partials.footer')
+
 </div><!-- #wrapper end -->
 
 <link rel="stylesheet" media="screen" href="{{ config('settings.images_domain') . 'css/tiny-slider.css?v=1.2' }}"/>

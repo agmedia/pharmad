@@ -5,7 +5,7 @@
     <title> @yield('title') </title>
     <!-- SEO Meta Tags-->
     <meta name="description" content="@yield('description')">
-    <meta name="author" content="Zuzi Shop">
+    <meta name="author" content="Ljekarne Pharmad">
     @stack('meta_tags')
     <!-- Viewport-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -94,7 +94,7 @@
                     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-TKZGQZV');</script>
+            })(window,document,'script','dataLayer','GTM-xxxxxxxx');</script>
         <!-- End Google Tag Manager -->
 
         <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -104,7 +104,7 @@
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
-            gtag('config', ' G-Q2GNBMK18T');
+            gtag('config', ' G-xxxxxxxx');
         </script>
 
 
@@ -117,7 +117,7 @@
 <body class="bg-bck">
 @if (config('app.env') == 'production')
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TKZGQZV"
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-xxxxxxx"
                       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 @endif
