@@ -67,15 +67,8 @@
     </ul>
     <div class="offcanvas-body px-0 pt-3 pb-0" data-simplebar>
         <div class="tab-content">
-            @livewire('front.filter'/*, ['group' => 'ljepota-i-njega']*/)
+            @livewire('front.filter', ['ids' => isset($ids) ? $ids : '', 'group' => isset($group) ? $group : '', 'cat' => isset($cat) ? $cat : null])
 
-            {{--<filter-view ids="{{ isset($ids) ? $ids : null }}"
-                         group="dodaci-prehrani"
-                         cat="{{ isset($cat) ? $cat : null }}"
-                         subcat="{{ isset($subcat) ? $subcat : null }}"
-                         author="{{ isset($author) ? $author['slug'] : null }}"
-                         publisher="{{ isset($publisher) ? $publisher['slug'] : null }}">
-            </filter-view>--}}
             <!-- Menu-->
             <div class="sidebar-nav tab-pane fade" id="menu" role="tabpanel">
                 <div class="widget widget-categories">

@@ -22,9 +22,11 @@
                             <div class="px-grid-gutter pt-1 pb-4">
                                 <div class="widget widget-links">
                                     @foreach ($_categories as $category)
-                                        <ul class="widget-list">
-                                            <li class="widget-list-item pb-1"><a class="widget-list-link" href="{{ route('catalog.route', ['group' => \Illuminate\Support\Str::slug($group), 'cat' => $category['id']]) }}">{{ $category['title'] }} </a></li>
-                                        </ul>
+                                        @if (isset($category['url']))
+                                            <ul class="widget-list">
+                                                <li class="widget-list-item pb-1"><a class="widget-list-link" href="{{ $category['url'] }}">{{ $category['title'] }} </a></li>
+                                            </ul>
+                                        @endif
                                     @endforeach
                                     <ul class="widget-list mt-2">
                                         <li class="widget-list-item"><a class="widget-list-link" href="{{ route('catalog.route', ['group' => \Illuminate\Support\Str::slug($group)]) }}">Pogledajte sve</a></li>
