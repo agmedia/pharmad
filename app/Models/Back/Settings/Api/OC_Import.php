@@ -509,7 +509,7 @@ class OC_Import
             $exist = $this->getManufacturers($manufacturer_id);
 
             if ($exist) {
-                $author = Author::query()->where('title', $exist->title)->first();
+                $author = Author::query()->where('title', $exist->name)->first();
 
                 if ($author) {
                     return $author->id;
