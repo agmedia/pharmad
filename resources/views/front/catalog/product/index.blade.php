@@ -9,7 +9,7 @@
     <meta property="og:title" content="{{ $seo['title'] }}" />
     <meta property="og:description" content="{{ $seo['description']  }}" />
     <meta property="og:url" content="{{ url($prod->url) }}"  />
-    <meta property="og:site_name" content="ZUZI SHOP" />
+    <meta property="og:site_name" content="Ljekarne PharmAD" />
     <meta property="og:updated_time" content="{{ $prod->updated_at  }}" />
     <meta property="og:image" content="{{ asset($prod->image) }}" />
     <meta property="og:image:secure_url" content="{{ asset($prod->image) }}" />

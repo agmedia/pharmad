@@ -115,7 +115,9 @@
                 <section class="d-md-flex justify-content-between align-items-center text-center text-lg-start mb-1 pb-1">
 
                     @if ($group && ! $cat && ! $subcat)
-                        <h1 class="h2 mb-2 mb-md-0 me-3">Zuzi Web Shop</h1>
+
+
+                        <h1 class="h2 mb-2 mb-md-0 me-3"> Web Shop</h1>
 
                     @endif
                     @if ($cat && ! $subcat)

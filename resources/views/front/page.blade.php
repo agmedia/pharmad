@@ -1,33 +1,28 @@
 @extends('front.layouts.app')
 @if (request()->routeIs(['index']))
-    @section ( 'title', 'ZUZI Shop | Prodaja knjiga | Otkup knjiga | Webshop' )
-    @section ( 'description', 'Zuzi shop - Nudimo Vam praktičnu mogućnost pretraživanja i naručivanja željenih naslova putem web stranice zuzi.hr iz udobnosti naslonjača.' )
-
-
+    @section ( 'title', 'Ljekarne PharmAD -  Vaša internet ljekarna' )
+    @section ( 'description', 'U našim ljekarnama nudimo Vam velik izbor dodataka prehrani, bezreceptnih lijekova, dermokozmetike, ortopedske obuće, ortopedskih pomagala, medicinskih pomagala, biljnih lijekova, eteričnih ulja, čajeva. Naš stručni tim pružit će vam svu potrebnu ljekarničku skrb. Stojimo vam na raspolaganju ...' )
     @push('meta_tags')
-
         <link rel="canonical" href="{{ env('APP_URL')}}" />
         <meta property="og:locale" content="hr_HR" />
         <meta property="og:type" content="product" />
-        <meta property="og:title" content="ZUZI Shop | Prodaja knjiga | Otkup knjiga | Webshop" />
-        <meta property="og:description" content="Zuzi shop - Nudimo Vam praktičnu mogućnost pretraživanja i naručivanja željenih naslova putem web stranice zuzi.hr iz udobnosti naslonjača." />
+        <meta property="og:title" content="Ljekarne PharmAD -  Vaša internet ljekarna" />
+        <meta property="og:description" content="U našim ljekarnama nudimo Vam velik izbor dodataka prehrani, bezreceptnih lijekova, dermokozmetike, ortopedske obuće, ortopedskih pomagala, medicinskih pomagala, biljnih lijekova, eteričnih ulja, čajeva. Naš stručni tim pružit će vam svu potrebnu ljekarničku skrb. Stojimo vam na raspolaganju..." />
         <meta property="og:url" content="{{ env('APP_URL')}}"  />
-        <meta property="og:site_name" content="ZUZI Shop | Prodaja knjiga | Otkup knjiga | Webshop" />
-        <meta property="og:image" content="{{ asset('media/img/cover-zuzi.jpg') }}" />
-        <meta property="og:image:secure_url" content="{{ asset('media/img/cover-zuzi.jpg') }}" />
+        <meta property="og:site_name" content="Ljekarne PharmAD -  Vaša internet ljekarna" />
+        <meta property="og:image" content="{{ asset('media/img/cover-ljekarne-pharmad.jpg') }}" />
+        <meta property="og:image:secure_url" content="{{ asset('media/img/cover-ljekarne-pharmad.jpg') }}" />
         <meta property="og:image:width" content="1920" />
         <meta property="og:image:height" content="720" />
         <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:alt" content="ZUZI Shop | Prodaja knjiga | Otkup knjiga | Webshop" />
+        <meta property="og:image:alt" content="Ljekarne PharmAD -  Vaša internet ljekarna" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="ZUZI Shop | Prodaja knjiga | Otkup knjiga | Webshop" />
-        <meta name="twitter:description" content="Zuzi shop - Nudimo Vam praktičnu mogućnost pretraživanja i naručivanja željenih naslova putem web stranice zuzi.hr iz udobnosti naslonjača." />
-        <meta name="twitter:image" content="{{ asset('media/img/cover-zuzi.jpg') }}" />
-
+        <meta name="twitter:title" content="Ljekarne PharmAD -  Vaša internet ljekarna" />
+        <meta name="twitter:description" content="U našim ljekarnama nudimo Vam velik izbor dodataka prehrani, bezreceptnih lijekova, dermokozmetike, ortopedske obuće, ortopedskih pomagala, medicinskih pomagala, biljnih lijekova, eteričnih ulja, čajeva. Naš stručni tim pružit će vam svu potrebnu ljekarničku skrb. Stojimo vam na raspolaganju." />
+        <meta name="twitter:image" content="{{ asset('media/img/cover-ljekarne-pharmad.jpg') }}" />
     @endpush
-
 @else
-    @section ( 'title', $page->title. ' - ZUZI Shop' )
+    @section ( 'title', $page->title. ' - Ljekarne PharmAD' )
     @section ( 'description', $page->meta_description )
 @endif
 

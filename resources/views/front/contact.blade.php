@@ -31,21 +31,17 @@
                 <h3 class=" mb-2">Impressum</h3>
                 <p>
 
-                    <strong> ZUZI, obrt za uslužne djelatnosti, VL. MIRJANA VULIĆ ŠALDIĆ</strong></p>
+                    <strong> Ljekarne PharmAD</strong></p>
 
-                <p> Sjedište: Antuna Šoljana 33, 10000 Zagreb<br><br>
+                <p> Sjedište: Zagrebačka 99 HR10291 Prigorje Brdovečko, Hrvatska<br><br>
 
-                    OIB: 69101336685<br>
-                    MBO: 97981036<br>
-                    Broj obrtnice: 21011606742<br>
+                    OIB: 67642543751<br>
+
                     <br>
-                    IBAN: HR1624020061140345999<br>
-                    Banka: ERSTE & STEIERMÄRKISCHE BANK d.d. Rijeka<br>
-                    Swift: ESBCHR22<br><br>
+                    IBAN: HR33 2360000 1102693642<br>
+                    BANKA: ZAGREBAČKA BANKA<br><br>
 
-                    IBAN: HR0623900011101297120<br>
-                    Banka: HRVATSKA POSTANSKA BANKA d.d. Zagreb<br>
-                    Swift: HPBZHR2X
+
                 </p>
 
             </div>

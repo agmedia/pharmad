@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-    <title>Zuzi shop</title>
+    <title>Ljekarne PharmAD</title>
 
-    <meta name="description" content="Zuzi shop">
-    <meta name="author" content="pixelcave">
+    <meta name="description" content="Ljekarne PharmAD">
+    <meta name="author" content="agmedia.hr">
     <meta name="robots" content="noindex, nofollow">
 
     <!-- CSRF Token -->

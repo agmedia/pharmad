@@ -1,9 +1,9 @@
 @extends('front.layouts.app')
 @if(isset($blogs))
-    @section ( 'title', 'Blog - Zuzi Shop' )
-    @section ( 'description', 'Medijske objave, članci i obavijesti -  Zuzi Shop' )
+    @section ( 'title', 'Blog - Ljekarne PharmAD' )
+    @section ( 'description', 'Medijske objave, članci i obavijesti -  Ljekarne PharmAD' )
 @else
-    @section ( 'title', $blog->title. ' - Zuzi Shop' )
+    @section ( 'title', $blog->title. ' - Ljekarne PharmAD' )
 @section ( 'description', $blog->meta_description )
 
     @push('meta_tags')
@@ -17,7 +17,7 @@
         <meta property="og:title" content="{{ $blog->title }}" />
         <meta property="og:description" content="{{ $blog->meta_description  }}" />
         <meta property="og:url" content="{{ route('catalog.route.blog', ['blog' => $blog]) }}"  />
-        <meta property="og:site_name" content="ZUZI SHOP" />
+        <meta property="og:site_name" content="Ljekarne PharmAD" />
         <meta property="og:updated_time" content="{{ $blog->updated_at  }}" />
         <meta property="og:image" content="{{ asset($blog->image) }}" />
         <meta property="og:image:secure_url" content="{{ asset($blog->image) }}" />
