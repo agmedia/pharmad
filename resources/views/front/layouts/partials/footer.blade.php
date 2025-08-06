@@ -25,7 +25,7 @@
 
                 <div class="row pt-3 ">
                     <div class="col-lg-3 col-sm-6 col-6 mb-grid-gutter">
-                        <div class="d-inline-flex align-items-center text-start"><i class="ci-truck text-primary" style="font-size: 3rem;"></i>
+                        <div class="d-inline-flex align-items-center text-start"><i class="ci-truck text-ph" style="font-size: 3rem;"></i>
                             <div class="ps-3">
                                 <p class="text-dark fw-bold fs-base mb-1">Brza dostava</p>
                                 <p class="text-dark fs-ms opacity-70 mb-0">Unutar 5 radnih dana</p>
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-6 mb-grid-gutter">
-                        <div class="d-inline-flex align-items-center text-start"><i class="ci-security-check text-primary" style="font-size: 3rem;"></i>
+                        <div class="d-inline-flex align-items-center text-start"><i class="ci-security-check text-ph" style="font-size: 3rem;"></i>
                             <div class="ps-3">
                                 <p class="text-dark fw-bold fs-base mb-1">Sigurna kupovina</p>
                                 <p class="text-dark fs-ms opacity-70 mb-0">SSL certifitikat i CorvusPay</p>
@@ -41,15 +41,15 @@
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-6 mb-grid-gutter">
-                        <div class="d-inline-flex align-items-center text-start"><i class="ci-bag text-primary" style="font-size: 3rem;"></i>
+                        <div class="d-inline-flex align-items-center text-start"><i class="ci-bag text-ph" style="font-size: 3rem;"></i>
                             <div class="ps-3">
                                 <p class="text-dark fw-bold fs-base mb-1">Besplatna dostava</p>
-                                <p class="text-dark fs-ms opacity-70 mb-0">Za narudžbe iznad 70€</p>
+                                <p class="text-dark fs-ms opacity-70 mb-0">Za narudžbe iznad 80€</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-6 mb-grid-gutter">
-                        <div class="d-inline-flex align-items-center text-start"><i class="ci-locked text-primary" style="font-size: 3rem;"></i>
+                        <div class="d-inline-flex align-items-center text-start"><i class="ci-locked text-ph" style="font-size: 3rem;"></i>
                             <div class="ps-3">
                                 <p class="text-dark fw-bold fs-base mb-1">Zaštita kupca</p>
                                 <p class="text-dark fs-ms opacity-70 mb-0">Zaštita svih podataka</p>

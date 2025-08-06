@@ -172,9 +172,7 @@
                        @if ($prod->author)
                            <li><strong>Autor:</strong> <a href="{{ route('catalog.route.author', ['author' => $prod->author]) }}">{{ $prod->author->title }} </a></li>
                        @endif
-                       @if ($prod->publisher)
-                           <li><strong>Nakladnik:</strong> <a href="{{ route('catalog.route.publisher', ['publisher' => $prod->publisher]) }}">{{ $prod->publisher->title }}</a> </li>
-                       @endif
+
                        @if ($prod->isbn)
                        <li><strong>EAN:</strong> {{ $prod->isbn }} </li>
                        @endif
@@ -266,7 +264,7 @@
            <!-- Specs table-->
            <div class="row pt-2">
                <div class="col-lg-7 col-sm-7">
-                   <h3 class="h6">Sažetak</h3>
+
                    <div class=" fs-md pb-2 mb-4">
                        {!! $prod->description !!}
                    </div>

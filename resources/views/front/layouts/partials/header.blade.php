@@ -1,23 +1,23 @@
 <!-- Navbar-->
-<header class="bg-dark shadow-sm fixed-top" data-fixed-element>
-    <div class="navbar navbar-expand-lg navbar-dark py-0">
+<header class="bg-light shadow-sm fixed-top" data-fixed-element style="background:url('../media/img/baka.png') repeat;">
+    <div class="navbar navbar-expand-lg navbar-light py-0">
         <div class="container-fluid">
             <a class="navbar-brand d-none d-md-block me-1 flex-shrink-0 py-0" href="{{ route('index') }}">
-                <div class="logo-bg" style="background-color:#fff;margin-left:-30px; padding: 0 0 0 30px; ">
-                    <img src="{{ asset('media/img/zuzi-logo.webp') }}" width="90"  alt="Web shop | ZUZI Shop | Prodaja knjiga | Otkup knjiga | Webshop">
+                <div class="logo-bg" style="margin-left:-30px; padding: 0 0 0 30px; ">
+                    <img src="{{ asset('media/img/logo-ljekarne-pharmad.svg') }}" width="180"  alt="Ljekarne PharmAD -  Vaša internet ljekarna">
                     <span class="arrow"></span>
                 </div>
             </a>
             <a class="navbar-brand pt-0 pb-0 d-md-none me-0" href="{{ route('index') }}">
-                <div class="logo-bg" style="background-color:#fff;margin-left:-30px; padding: 0 0 0 30px; ">
-                <img src="{{ asset('media/img/zuzi-logo.webp') }}" width="55" alt="Žuži Shop">
+                <div class="logo-bg" style="margin-left:-30px; padding: 0 0 0 30px; ">
+                <img src="{{ asset('media/img/logo-ljekarne-pharmad.svg') }}" width="140" alt="Ljekarne PharmAD -  Vaša internet ljekarna">
                 <span class="arrow-mb"></span>
                 </div>
             </a>
             <!-- Search-->
             <form action="{{ route('pretrazi') }}" id="search-form-first" class="w-100 d-none d-lg-flex flex-nowrap mx-4" method="get">
                 <div class="input-group "><i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                    <input class="form-control rounded-start w-100" type="text" name="{{ config('settings.search_keyword') }}" value="{{ request()->query('pojam') ?: '' }}" placeholder="Pretražite po nazivu ili autoru">
+                    <input class="form-control rounded-start w-100" type="text" name="{{ config('settings.search_keyword') }}" value="{{ request()->query('pojam') ?: '' }}" placeholder="Pretražite po nazivu ili brandu">
                 </div>
             </form>
             <!-- Toolbar-->
@@ -68,7 +68,7 @@
     <div class="offcanvas-body px-0 pt-3 pb-0" data-simplebar>
         <div class="tab-content">
             <filter-view ids="{{ isset($ids) ? $ids : null }}"
-                         group="kategorija-proizvoda"
+                         group="dodaci-prehrani"
                          cat="{{ isset($cat) ? $cat : null }}"
                          subcat="{{ isset($subcat) ? $subcat : null }}"
                          author="{{ isset($author) ? $author['slug'] : null }}"
@@ -97,7 +97,7 @@
     <div class="offcanvas-footer d-block px-grid-gutter pt-4 pb-3 mb-2">
 
 
-     <a class="btn-social bs-light bg-primary bs-facebook me-2 mb-2" href="https://www.facebook.com/zuziobrt/"><i class="ci-facebook"></i></a><a class="btn-social bs-light bg-primary bs-instagram me-2 mb-2" href="https://www.instagram.com/zuziobrt/"><i class="ci-instagram"></i></a>
+     <a class="btn-social bs-light bg-primary bs-facebook me-2 mb-2" href="https://www.facebook.com/ljekarna.pharmad/"><i class="ci-facebook"></i></a><a class="btn-social bs-light bg-primary bs-instagram me-2 mb-2" href="https://www.instagram.com/ljekarnepharmad/"><i class="ci-instagram"></i></a>
 
 
 

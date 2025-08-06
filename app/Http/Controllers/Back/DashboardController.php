@@ -228,7 +228,7 @@ class DashboardController extends Controller
                     'ean'              => $product->product_id,
                     'polica'           => 0,
                     /*'group'            => '',*/
-                    'description'      => '<p>' . str_replace('\n', '<br>', $product_description->description) . '</p>',
+                    'description'      =>  str_replace('\n', '<br>', $product_description->description) ,
                     'slug'             => Str::slug($product_description->name) . '-' . time(),
                     'url'              => '',
                     'price'            => $product->price,

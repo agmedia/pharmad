@@ -250,9 +250,9 @@ class OC_Import
 
                     $str = $id . '/' . Str::limit(Str::slug($name)) . '-' . $time . '.';
 
-                    $img = $img->resize(800, null, function ($constraint) {
+                 /*   $img = $img->resize(800, null, function ($constraint) {
                         $constraint->aspectRatio();
-                    });
+                    });*/
 
                     $path = $str . 'jpg';
                     Storage::disk('products')->put($path, $img->encode('jpg'));
