@@ -36,7 +36,7 @@ class StatusReady extends Mailable
      */
     public function build()
     {
-        return $this->subject('Hvala vam za narudžbu - Zuzi Shop' )
+        return $this->subject('Hvala vam za narudžbu - Ljekarne PharmAD' )
             ->view('emails.status-ready');
     }
 }

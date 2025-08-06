@@ -23,8 +23,8 @@ class Seo
     public static function getProductData(Product $product): array
     {
         return [
-            'title'       => $product->name . ' knjige ' . (isset($product->author->title) ? $product->author->title : ''),
-            'description' => 'Knjiga ' . $product->name . ' izdavača ' . (isset($product->author->title) ? $product->author->title : '') . ' godine izdanja ' . ($product->year ?: '') . ' i mjesta izdavanja ' . ($product->origin ?: '') . ' u Zuzi Shop-u.'
+            'title'       => $product->name . ' - ' . (isset($product->author->title) ? $product->author->title : ''),
+            'description' => $product->meta_description
         ];
     }
 
@@ -34,8 +34,8 @@ class Seo
      */
     public static function getAuthorData(Author $author, Category $cat = null, Category $subcat = null): array
     {
-        $title = $author->title . ' knjige - Zuzi Shop';
-        $description = 'Knjige autora ' . $author->title . ' danas su jako popularne u svijetu. Bogati izbor knjiga autora ' . $author->title . ' uz brzu dostavu i sigurnu kupovinu.';
+        $title = $author->title . '- Ljekarne PharmAD';
+        $description = $author->meta_description;
 
         // Check if there is meta title or description and set vars.
         if ($cat) {
@@ -60,7 +60,7 @@ class Seo
      */
     public static function getPublisherData(Publisher $publisher, Category $cat = null, Category $subcat = null): array
     {
-        $title = $publisher->title . ' knjige - Zuzi Shop';
+        $title = $publisher->title . ' - Ljekarne PharmAD';
         $description = 'Ponuda knjiga nakladnika ' . $publisher->title . '. Knjige iz antikvarijata, naklade ' . $publisher->title . ' mogu biti u vašem domu uz brzu dostavu.';
 
         // Check if there is meta title or description and set vars.

@@ -80,15 +80,15 @@ class Bank
                         ),
                     'receiver'    =>
                         array(
-                            'name'      => 'ZUZI, obrt',
-                            'street'    => 'Antuna Šoljana 33',
-                            'place'     => '10000 Zagreb',
-                            'iban'      => 'HR1624020061140345999',
+                            'name'      => 'Ljekarne PharmAD',
+                            'street'    => 'Zagrebačka 99',
+                            'place'     => '10291 Prigorje Brdovečko',
+                            'iban'      => 'HR332360000110269364',
                             'model'     => '00',
                             'reference' => $pozivnabroj,
                         ),
                     'purpose'     => 'CMDT',
-                    'description' => 'Web narudžba Zuzi Shop',
+                    'description' => 'Web narudžba Ljekarne PharmAD',
                 ),
         );
 
