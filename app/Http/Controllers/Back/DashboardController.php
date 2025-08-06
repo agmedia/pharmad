@@ -161,6 +161,34 @@ class DashboardController extends Controller
 
 
     /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function importOpenCartManufacturers()
+    {
+        $count = 0;
+        $import = new OC_Import();
+        $manufacturers = $import->getManufacturers();
+
+        if ($manufacturers->count()) {
+            foreach ($manufacturers as $manufacturer) {
+                $count++;
+                //$main_description = $import->getManufacturerDescription($manufacturer->manufacturer_id);
+                $main_path        = $import->getManufacturerPath($manufacturer->manufacturer_id);
+
+                $import->saveManufacturer(
+                    $manufacturer->name,
+                    '',
+                    $main_path ? $main_path->keyword : '',
+                    $manufacturer->name
+                );
+            }
+        }
+
+        return redirect()->route('dashboard')->with(['success' => 'Import je uspješno obavljen..! ' . $count . ' proizvođača importano.']);
+    }
+
+
+    /**
      * @param Request|null $request
      *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
@@ -190,12 +218,10 @@ class DashboardController extends Controller
                 $product_categories = $import->getProductCategories($product->product_id);
 
                 $attributes = $import->resolveAttributes($product_description->description);
-                $author = $import->resolveAuthor($product_description->name);
-                $publisher = $import->resolvePublisher(isset($attributes['Izdavač']) ? $attributes['Izdavač'] : '');
 
                 $product_id = Product::insertGetId([
-                    'author_id'        => $author,
-                    'publisher_id'     => $publisher,
+                    'author_id'        => $import->resolveManufacturerId($product->manufacturer_id),
+                    'publisher_id'     => 0,
                     'action_id'        => 0,
                     'name'             => $product_description->name,
                     'sku'              => isset($attributes['Šifra']) ? $attributes['Šifra'] : $product->model . '-' . $product->product_id,
@@ -280,6 +306,9 @@ class DashboardController extends Controller
                         'url'             => ProductHelper::url($product),
                         'category_string' => ProductHelper::categoryString($product)
                     ]);
+
+                    // Autor
+                    $manufacturer = $import->getManufacturers();
 
                     $count++;
                 }

@@ -93,6 +93,65 @@ class OC_Import
     }
 
     /*******************************************************************************
+     *                                Copyright : AGmedia                           *
+     *                              email: filip@agmedia.hr                         *
+     *******************************************************************************/
+
+    public function getManufacturers(int $manufacturer_id = 0)
+    {
+        if ($manufacturer_id) {
+            return DB::connection('oc')->table('oc_manufacturer')->where('manufacturer_id', $manufacturer_id)->first();
+        }
+
+        return DB::connection('oc')->table('oc_manufacturer')->get();
+    }
+
+
+    public function getManufacturerDescription(int $manufacturer_id)
+    {
+        return DB::connection('oc')->table('oc_manufacturer_description')->where('manufacturer_id', $manufacturer_id)->first();
+    }
+
+
+    public function getManufacturerPath(int $manufacturer_id)
+    {
+        return DB::connection('oc')->table('oc_seo_url')->where('query', 'manufacturer_id=' . $manufacturer_id)->first();
+    }
+
+
+    /**
+     * @param string $name
+     * @param int    $parent
+     *
+     * @return mixed
+     */
+    public function saveManufacturer(
+        string $title,
+        string $description,
+        string $slug,
+        ?string $meta_title = '',
+        ?string $meta_description = '',
+        ?int $sort_order = 0,
+    )
+    {
+        return Author::insertGetId([
+            'letter'           => Helper::resolveFirstLetter($title),
+            'title'            => $title,
+            'description'      => $description,
+            'meta_title'       => $meta_title,
+            'meta_description' => $meta_description,
+            'lang'             => 'hr',
+            'sort_order'       => $sort_order,
+            'status'           => 1,
+            'featured'         => 0,
+            'slug'             => $slug,
+            'url'              => config('settings.author_path') . '/' . $slug,
+            'created_at'       => Carbon::now(),
+            'updated_at'       => Carbon::now()
+        ]);
+    }
+
+    /*******************************************************************************
     *                                Copyright : AGmedia                           *
     *                              email: filip@agmedia.hr                         *
     *******************************************************************************/
@@ -436,6 +495,29 @@ class OC_Import
         }
 
         return config('settings.unknown_publisher');
+    }
+
+
+    /**
+     * @param string $publisher
+     *
+     * @return int
+     */
+    public function resolveManufacturerId(int $manufacturer_id = 0): int
+    {
+        if ($manufacturer_id) {
+            $exist = $this->getManufacturers($manufacturer_id);
+
+            if ($exist) {
+                $author = Author::query()->where('title', $exist->title)->first();
+
+                if ($author) {
+                    return $author->id;
+                }
+            }
+        }
+
+        return config('settings.unknown_author');
     }
 
 

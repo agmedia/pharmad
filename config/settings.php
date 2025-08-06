@@ -22,11 +22,11 @@ return [
     ],
 
     'search_keyword'    => 'pojam',
-    'author_path'       => 'autor',
+    'author_path'       => 'brand',
     'publisher_path'    => 'nakladnik',
     'group_path'        => 'Kategorija proizvoda',
 
-    'unknown_author'    => 3282,
+    'unknown_author'    => 0,
     'unknown_publisher' => 376,
     'images_domain'     =>  env('APP_IMAGE_DOMAIN'),
     'script_domain'     =>  env('APP_URL'),

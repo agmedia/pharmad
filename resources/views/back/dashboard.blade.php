@@ -38,6 +38,7 @@
                             <a href="{{ route('slugs.revision') }}" class="btn btn-hero-sm btn-rounded btn-hero-secondary mb-3 mr-3">Rewrite Empty Slugs</a>
                             <br>--}}
                             <a href="{{ route('import.oc.categories') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Import OpenCart Categories</a>
+                            <a href="{{ route('import.oc.manufacturers') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Import OpenCart Manufacturers</a>
                             <a href="{{ route('import.oc.products') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Import OpenCart Products</a>
                             <br>
                             <a href="{{ route('mailing.test') }}" class="btn btn-hero-sm btn-rounded btn-hero-success mb-3 mr-3">Mail Test</a>

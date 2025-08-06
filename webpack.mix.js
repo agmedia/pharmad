@@ -34,7 +34,7 @@ mix
 .sass('resources/sass/dashmix/themes/xplay.scss', 'public/css/themes/')*/
 
 /* JS */
-//.js('resources/js/app.js', 'public/js/laravel.app.js')
+.js('resources/js/app.js', 'public/js/laravel2.app.js')
 //.js('resources/js/dashmix/app.js', 'public/js/dashmix.app.js')
 
 /* Page JS */
@@ -43,8 +43,8 @@ mix
 // BACK
 //.js('resources/js/back/ag-input-field.js', 'public/js/ag-input-field.js').vue()
 
-.js('resources/js/front/cart/app.js', 'public/js/cart.js').vue()
-.js('resources/js/front/filter/app.js', 'public/js/filter.js').vue()
+//.js('resources/js/front/cart/app.js', 'public/js/cart.js').vue()
+//.js('resources/js/front/filter/app.js', 'public/js/filter.js').vue()
 //.js('resources/js/back/ag-order-products.js', 'public/js/components/ag-order-products.js').vue()
 
 /* Tools */
