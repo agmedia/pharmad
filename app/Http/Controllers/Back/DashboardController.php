@@ -224,7 +224,7 @@ class DashboardController extends Controller
                     'publisher_id'     => 0,
                     'action_id'        => 0,
                     'name'             => $product_description->name,
-                    'sku'              => isset($attributes['Šifra']) ? $attributes['Šifra'] : $product->model . '-' . $product->product_id,
+                    'sku'              => $product->sku,
                     'ean'              => $product->product_id,
                     'polica'           => 0,
                     /*'group'            => '',*/
@@ -247,10 +247,10 @@ class DashboardController extends Controller
                     'condition'        => isset($attributes['Stanje']) ? $attributes['Stanje'] : null,
                     'binding'          => isset($attributes['Uvez']) ? $attributes['Uvez'] : null,
                     'year'             => isset($attributes['Godina']) ? str_replace('.', '', $attributes['Godina']) : null,
-                    'viewed'           => 0,
+                    'viewed'           => $product->viewed,
                     'sort_order'       => 0,
                     'push'             => 0,
-                    'status'           => 1,
+                    'status'           => $product->status,
                     'created_at'       => Carbon::now(),
                     'updated_at'       => Carbon::now()
                 ]);

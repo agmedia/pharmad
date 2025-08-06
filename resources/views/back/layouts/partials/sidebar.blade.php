@@ -20,7 +20,7 @@
                                 B<span class="opacity-75">x</span>
                             </span>
                 <span class="smini-hidden">
-                                ZUZI<span class="opacity-75">SHOP</span>
+                                LJEKARNE<span class="opacity-75">PHARMAD</span>
                             </span>
             </a>
             <!-- END Logo -->

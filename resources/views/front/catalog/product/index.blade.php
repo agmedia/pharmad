@@ -82,7 +82,7 @@
     <section class="row g-0 mx-n2 ">
         @include('back.layouts.partials.session')
         <!-- Product Gallery + description-->
-        <div class="col-xl-6 px-2 mb-3">
+        <div class="col-xl-5 px-2 mb-3">
             <div class="h-100 bg-light shadow rounded-3 p-4">
                 <div class="product-gallery">
                     <div class="product-gallery-preview  gallery order-sm-2">
@@ -109,7 +109,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-6 px-2 mb-3">
+        <div class="col-xl-7 px-2 mb-3">
             <div class="h-100 bg-light shadow  rounded-3 py-5 px-4 px-sm-5">
 
         @if ( $prod->quantity < 1)
@@ -151,11 +151,6 @@
            <span class=" fs-sm text-muted me-1"> *Najniža cijena u zadnjih 30 dana.</span>
        </div>
 
-                @if($prod->kat)
-
-
-                    <div class="d-flex row justify-content-between"><div class="col-md-12"><div role="alert" class="alert alert-info d-flex  mb-1 "><div class="alert-icon"><i class="ci-truck"></i></div> <small>Dostava za Regionalne naslove je 20 dana.</small></div></div></div>
-                    @endif
 
    @endif
             @if ( $prod->quantity > 0)
@@ -170,11 +165,11 @@
 
                    <ul class="fs-sm ps-4 mb-0">
                        @if ($prod->author)
-                           <li><strong>Autor:</strong> <a href="{{ route('catalog.route.author', ['author' => $prod->author]) }}">{{ $prod->author->title }} </a></li>
+                           <li><strong>Brand:</strong> <a href="{{ route('catalog.route.author', ['author' => $prod->author]) }}">{{ $prod->author->title }} </a></li>
                        @endif
 
-                       @if ($prod->isbn)
-                       <li><strong>EAN:</strong> {{ $prod->isbn }} </li>
+                       @if ($prod->sku)
+                       <li><strong>Šifra:</strong> {{ $prod->sku }} </li>
                        @endif
                            @if ($prod->quantity)
                                @if ($prod->decrease)
@@ -186,7 +181,7 @@
                                <li><strong>Dostupnost:</strong> Rasprodano</li>
                            @endif
 
-                           <li><strong>Stanje:</strong> Nova knjiga</li>
+
                    </ul>
 
                </div>
@@ -266,46 +261,9 @@
                <div class="col-lg-7 col-sm-7">
 
                    <div class=" fs-md pb-2 mb-4">
-                       {!! $prod->description !!}
+                       {!! html_entity_decode($prod->description) !!}
                    </div>
 
-
-                   @if ($prod->author_web_url or $prod->serial_web_url or $prod->wiki_url or $prod->youtube_channel or $prod->youtube_product_url or $prod->goodreads_author_url or $prod->goodreads_book_url)
-
-                       <h3 class="h6 mt-4">Multimedia i linkovi</h3>
-                       <ul class="list-unstyled fs-sm pb-2">
-                           @if ($prod->youtube_product_url)
-                               <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">YouTube Video:</span><span><i class="ci-youtube text-muted fs-lg align-middle mt-n1 me-1"></i> <a href="{{ $prod->youtube_product_url }}">Pogledajte video</a></span></li>
-                           @endif
-
-                           @if ($prod->youtube_channel)
-                                <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">YouTube Kanal:</span><span><i class="ci-youtube text-muted fs-lg align-middle mt-n1 me-1"></i> <a href="{{ $prod->youtube_channel }}">Pogledajte video</a></span></li>
-                           @endif
-
-                           @if ($prod->wiki_url)
-                                   <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Wikipedia:</span><span><i class="ci-link text-muted fs-lg align-middle mt-n1 me-1"></i> <a href="{{ $prod->wiki_url }}">Pogledajte stranicu</a></span></li>
-                           @endif
-
-                           @if ($prod->author_web_url)
-                                   <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Web stranica autora:</span><span><i class="ci-link text-muted fs-lg align-middle mt-n1 me-1"></i> <a href="{{ $prod->author_web_url }}">Pogledajte stranicu</a></span></li>
-                           @endif
-
-                            @if ($prod->serial_web_url)
-                                   <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Web stranica serijala:</span><span><i class="ci-link text-muted fs-lg align-middle mt-n1 me-1"></i> <a href="{{ $prod->serial_web_url }}">Pogledajte stranicu</a></span></li>
-                            @endif
-
-                            @if ($prod->goodreads_author_url)
-                                   <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Goodreads stranica autora:</span><span><i class="ci-link text-muted fs-lg align-middle mt-n1 me-1"></i> <a href="{{ $prod->goodreads_author_url }}">Pogledajte stranicu</a></span></li>
-
-                            @endif
-
-                            @if ($prod->goodreads_book_url)
-                                   <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Goodreads stranica knjige:</span><span><i class="ci-link text-muted fs-lg align-middle mt-n1 me-1"></i> <a href="{{ $prod->goodreads_book_url }}">Pogledajte stranicu</a></span></li>
-
-                            @endif
-                       </ul>
-
-                   @endif
                </div>
                <div class="col-lg-5 col-sm-5 ">
                    <h3 class="h6">Dodatne informacije</h3>
@@ -313,30 +271,17 @@
 
 
                        @if ($prod->author)
-                               <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Autor:</span><span><a href="{{ route('catalog.route.author', ['author' => $prod->author]) }}">{{ Illuminate\Support\Str::limit($prod->author->title, 30) }}</a></span></li>
+                               <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Brand:</span><span><a href="{{ route('catalog.route.author', ['author' => $prod->author]) }}">{{ Illuminate\Support\Str::limit($prod->author->title, 30) }}</a></span></li>
                        @endif
-                       @if ($prod->publisher)
-                               <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Nakladnik:</span><span><a href="{{ route('catalog.route.publisher', ['publisher' => $prod->publisher]) }}">{{ Illuminate\Support\Str::limit($prod->publisher->title, 30) }}</a> </span></li>
-                       @endif
+
 
 
                        @if ($prod->binding)
                            <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Uvez:</span><span>{{ $prod->binding  }}</span></li>
                         @endif
-                       @if ($prod->origin)
-                           <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Jezik:</span><span>{{ $prod->origin  }}</span></li>
-                       @endif
-                        @if ($prod->year)
-                           <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Godina izdanja:</span><span>{{ $prod->year }}</span></li>
-                       @endif
-                       @if ($prod->pages)
-                           <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Broj stranica:</span><span>{{ $prod->pages }}</span></li>
-                      @endif
-                       @if ($prod->dimensions)
-                           <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Dimenzije:</span><span>{{ $prod->dimensions.' cm'  }}</span></li>
-                       @endif
-                       @if ($prod->isbn)
-                            <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">EAN:</span><span>{{ $prod->isbn }}</span></li>
+
+                       @if ($prod->sku)
+                            <li class="d-flex justify-content-between pb-2 border-bottom"><span class="text-muted">Šifra:</span><span>{{ $prod->sku }}</span></li>
                        @endif
                    </ul>
 
@@ -352,7 +297,7 @@
 <!-- Product description-->
 <section class="pb-5 mb-2 mb-xl-4">
 <div class=" flex-wrap justify-content-between align-items-center  text-center">
-<h2 class="h3 mb-4 pt-1 font-title me-3 text-center"> Možda vas zanima</h2>
+<h2 class="h3 mb-4 pt-1 font-title me-3 text-center"> Povezani artikli</h2>
 
 </div>
 <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">

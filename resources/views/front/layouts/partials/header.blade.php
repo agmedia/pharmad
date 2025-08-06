@@ -1,5 +1,5 @@
 <!-- Navbar-->
-<header class="bg-light shadow-sm fixed-top" data-fixed-element style="background:url('../media/img/baka.png') repeat;">
+<header class="bg-light shadow-sm fbck fixed-top" data-fixed-element>
     <div class="navbar navbar-expand-lg navbar-light py-0">
         <div class="container-fluid">
             <a class="navbar-brand d-none d-md-block me-1 flex-shrink-0 py-0" href="{{ route('index') }}">
@@ -9,9 +9,9 @@
                 </div>
             </a>
             <a class="navbar-brand pt-0 pb-0 d-md-none me-0" href="{{ route('index') }}">
-                <div class="logo-bg" style="margin-left:-30px; padding: 0 0 0 30px; ">
+                <div class="logo-bg" style="margin-left:-30px; padding: 5px 0 5px 30px; ">
                 <img src="{{ asset('media/img/logo-ljekarne-pharmad.svg') }}" width="140" alt="Ljekarne PharmAD -  Vaša internet ljekarna">
-                <span class="arrow-mb"></span>
+
                 </div>
             </a>
             <!-- Search-->

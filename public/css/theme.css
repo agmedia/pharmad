@@ -91,7 +91,11 @@ body {
 }
 
 .text-ph{
-   color: #26b67f;
+    color: #26b67f;
+}
+
+.fbck{
+    background:url('../media/img/baka.png') repeat;
 }
 
 #agapp[aria-hidden=true] {
@@ -519,7 +523,7 @@ h3, .h3 {
 }
 @media (min-width: 1200px) {
     h3, .h3 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
     }
 }
 
@@ -5014,7 +5018,7 @@ textarea.form-control-lg {
     align-items: center;
     width: 100%;
     padding: var(--cz-accordion-btn-padding-y) var(--cz-accordion-btn-padding-x);
-    font-size: 1rem;
+    font-size: .9375rem;
     color: var(--cz-accordion-btn-color);
     text-align: left;
     background-color: var(--cz-accordion-btn-bg);
