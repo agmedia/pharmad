@@ -164,6 +164,8 @@ class OC_Import
     {
         $response = config('settings.default_product_image');
 
+        //dd($image, $name, $id);
+
         if ($image) {
             $time = time() . Str::random(9);
 
