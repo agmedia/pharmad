@@ -12,7 +12,7 @@
 
     </div>
     <div class="tns-carousel pt-2 pb-2">
-        <div class="tns-carousel-inner" data-carousel-options='{"items": 2, "controls": true, "nav": true, "autoHeight": true, "responsive": {"0":{"items":2, "gutter": 10},"500":{"items":2, "gutter": 10},"768":{"items":3, "gutter": 10}, "1100":{"items":4, "gutter": 10}, "1500":{"items":5, "gutter": 10}, "1600":{"items":6, "gutter": 10}}}'>
+        <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 15, &quot;controls&quot;: true, &quot;nav&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;500&quot;:{&quot;items&quot;:2},&quot;768&quot;:{&quot;items&quot;:2}, &quot;992&quot;:{&quot;items&quot;:5, &quot;gutter&quot;: 30}}}">
             @foreach ($data['items'] as $product)
                 <!-- Product-->
                 <div>
