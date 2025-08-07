@@ -4,31 +4,33 @@
             <div class="widget widget-categories">
                 <div class="accordion" id="shop-categories">
 
-                    @foreach ($categories as $group => $_categories)
+                    @foreach ($categories as $_group => $_categories)
                         <div class="accordion-item border-bottom">
-                            <h3 class="accordion-header px-grid-gutter">
-                                <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#id{{ \Illuminate\Support\Str::slug($group) }}" aria-expanded="false" :aria-controls="id{{ \Illuminate\Support\Str::slug($group) }}">
-                                    <span class="d-flex align-items-center"> {{ $group }}</span>
+                            <h3 class="accordion-header px-grid-gutter @if(isset($group) && $group == \Illuminate\Support\Str::slug($_group)) bg-default @endif">
+                                <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#id{{ \Illuminate\Support\Str::slug($_group) }}" aria-expanded="false" :aria-controls="id{{ \Illuminate\Support\Str::slug($_group) }}">
+                                    <span class="d-flex align-items-center"> {{ $_group }}</span>
                                 </button>
                                 @if (empty($_categories))
-                                    <a href="{{ route('catalog.route', ['group' => \Illuminate\Support\Str::slug($group)]) }}" class="nav-link-style d-block fs-md py-3" role="link">
-                                        <span class="d-flex align-items-center"><span></span> {{ $group }}</span>
+                                    <a href="{{ route('catalog.route', ['group' => \Illuminate\Support\Str::slug($_group)]) }}" class="nav-link-style d-block fs-md py-3" role="link">
+                                        <span class="d-flex align-items-center"><span></span> {{ $_group }}</span>
                                     </a>
                                 @endif
                             </h3>
 
-                            <div class="collapse" id="id{{ \Illuminate\Support\Str::slug($group) }}" data-bs-parent="#shop-categories">
+                            <div class="collapse @if(isset($group) && $group == \Illuminate\Support\Str::slug($_group)) show @endif" id="id{{ \Illuminate\Support\Str::slug($_group) }}" data-bs-parent="#shop-categories">
                                 <div class="px-grid-gutter pt-1 pb-4">
                                     <div class="widget widget-links">
                                         @foreach ($_categories as $category)
                                             @if (isset($category['url']))
                                                 <ul class="widget-list">
-                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="{{ $category['url'] }}">{{ $category['title'] }} </a></li>
+                                                    <li class="widget-list-item pb-1 @if(isset($cat) && $cat->id == $category['id']) active @endif">
+                                                        <a class="widget-list-link" href="{{ $category['url'] }}">{{ $category['title'] }} </a>
+                                                    </li>
                                                 </ul>
                                             @endif
                                         @endforeach
                                         <ul class="widget-list mt-2">
-                                            <li class="widget-list-item"><a class="widget-list-link" href="{{ route('catalog.route', ['group' => \Illuminate\Support\Str::slug($group)]) }}">Pogledajte sve</a></li>
+                                            <li class="widget-list-item"><a class="widget-list-link" href="{{ route('catalog.route', ['group' => \Illuminate\Support\Str::slug($_group)]) }}">Pogledajte sve</a></li>
                                         </ul>
                                     </div>
                                 </div>
