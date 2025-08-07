@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use function App\Models\Back\Catalog\Options\current_locale;
 
 class Options extends Model
 {
@@ -35,7 +34,7 @@ class Options extends Model
      */
     public function getGroupAttribute($value)
     {
-        return $this->translation->group_title;
+        return $this->grupa;
     }
 
 
@@ -50,8 +49,8 @@ class Options extends Model
     {
         $request->validate([
             'title' => 'required',
-            'type'    => 'required',
-            'item'    => 'required'
+            'type'  => 'required',
+            'item'  => 'required'
         ]);
 
         $this->request = $request;
@@ -71,20 +70,21 @@ class Options extends Model
 
         foreach ($this->request->input('item') as $item) {
             $id = $this->insertGetId([
-                'group'      => Str::slug($group),
+                'grupa'      => Str::slug($group),
+                'ime_grupe'  => $group,
+                'title'      => $this->request->input('title'),
                 'type'       => $this->request->input('type'),
                 'value'      => $item['color'] ?? '#000000',
-                'value_opt'  => $item['color_opt'] ?? '#FFFFF1',
-                'option_sku'  => $item['option_sku'] ?? null,
+                'value_opt'  => $item['color_opt'] ?? null,
+                'option_sku' => $item['option_sku'] ?? null,
                 'data'       => '',
                 'sort_order' => $item['sort_order'] ?? 0,
                 'status'     => (isset($this->request->status) and $this->request->status == 'on') ? 1 : 0,
+                'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]);
 
-            if ($id) {
-                OptionsTranslation::create($id, $this->request, $item);
-            } else {
+            if ( ! $id) {
                 return false;
             }
         }
@@ -100,36 +100,30 @@ class Options extends Model
      */
     public function edit()
     {
-        $values = Options::query()->where('group', Str::slug($this->group))->get();
-        $group  = $this->request->input('title')[config('app.locale')] ?? 'hr';
+        dd($this->request->toArray());
+        $values = Options::query()->where('grupa', Str::slug($this->grupa))->get();
+        $group  = $this->request->input('title');
         $items  = collect($this->request->input('item'));
-
-
 
         foreach ($values as $value) {
             $item = $items->where('id', $value->id);
 
-            /*if ($item->first()['id'] == 2) {
-                dd($item->first(), $value);
-            }*/
-
             if ( ! empty($item->first())) {
                 $saved = $value->update([
-                    'group'      => Str::slug($group),
+                    'grupa'      => Str::slug($group),
+                    'ime_grupe'  => $group,
+                    'title'      => $this->request->input('title'),
                     'type'       => $this->request->input('type'),
-                    'value'      => $item->first()['color'] ?? '#000000',
-                    'value_opt'  => $item->first()['color_opt'] ?? null,
-                    'option_sku'  => $item->first()['option_sku'] ?? null,
+                    'value'      => $item['color'] ?? '#000000',
+                    'value_opt'  => $item['color_opt'] ?? null,
+                    'option_sku' => $item['option_sku'] ?? null,
+                    'data'       => '',
                     'sort_order' => $item->first()['sort_order'] ?? 0,
                     'status'     => (isset($this->request->status) and $this->request->status == 'on') ? 1 : 0,
                     'updated_at' => Carbon::now()
                 ]);
 
-
-
-                if ($saved) {
-                    OptionsTranslation::edit($value->id, $this->request, $item->first());
-                } else {
+                if ( ! $saved) {
                     return false;
                 }
             }
@@ -137,20 +131,20 @@ class Options extends Model
 
         foreach ($items->where('id', '==', '0') as $item) {
             $id = $this->insertGetId([
-                'group'      => Str::slug($group),
+                'grupa'      => Str::slug($group),
+                'ime_grupe'  => $group,
+                'title'      => $this->request->input('title'),
                 'type'       => $this->request->input('type'),
                 'value'      => $item['color'] ?? '#000000',
                 'value_opt'  => $item['color_opt'] ?? null,
-                'option_sku'  => $item['option_sku'] ?? null,
+                'option_sku' => $item['option_sku'] ?? null,
                 'data'       => '',
                 'sort_order' => $item['sort_order'] ?? 0,
                 'status'     => (isset($this->request->status) and $this->request->status == 'on') ? 1 : 0,
                 'updated_at' => Carbon::now()
             ]);
 
-            if ($id) {
-                OptionsTranslation::create($id, $this->request, $item);
-            } else {
+            if ( ! $id) {
                 return false;
             }
         }
@@ -163,7 +157,6 @@ class Options extends Model
             if ($diff->count()) {
                 foreach ($diff as $item) {
                     Options::query()->where('id', $item['id'])->delete();
-                    OptionsTranslation::query()->where('option_id', $item['id'])->delete();
                 }
             }
         }
@@ -178,15 +171,15 @@ class Options extends Model
     public function getList()
     {
         $response = [];
-        $values   = Options::query()->orderBy('sort_order','asc')->get();
+        $values   = Options::query()->orderBy('sort_order', 'asc')->get();
 
         foreach ($values as $value) {
-            $response[$value->group]['group']   = $value->translation->group_title;
-            $response[$value->group]['items'][] = [
+            $response[$value->grupa]['group']   = $value->grupa;
+            $response[$value->grupa]['items'][] = [
                 'id'         => $value->id,
-                'title'      => $value->translation->title,
+                'title'      => $value->title,
                 'value'      => $value->color,
-                'option_sku'  => $value->option_sku,
+                'option_sku' => $value->option_sku,
                 'value_opt'  => $value->color_opt,
                 'sort_order' => $value->sort_order
             ];
@@ -202,17 +195,15 @@ class Options extends Model
     public static function getColorList()
     {
         $response = [];
-        $values   = Options::query()->where('type', 'color')->with('translation', function ($query) {
-            $query->orderBy('title','asc');
-        })->get();
+        $values   = Options::query()->where('type', 'color')->orderBy('title', 'asc')->get();
 
         foreach ($values as $value) {
             $response[] = [
                 'id'         => $value->id,
-                'title'      => $value->translation->title,
+                'title'      => $value->title,
                 'value'      => $value->color,
                 'value_opt'  => $value->color_opt,
-                'option_sku'  => $value->option_sku,
+                'option_sku' => $value->option_sku,
                 'sort_order' => $value->sort_order
             ];
         }

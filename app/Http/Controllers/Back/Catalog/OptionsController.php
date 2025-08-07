@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Back\Catalog;
 
 use App\Http\Controllers\Controller;
-use App\Models\Back\Catalog\Options\Options;
+use App\Models\Back\Catalog\Options;
 use Illuminate\Http\Request;
 
 class OptionsController extends Controller
@@ -16,9 +16,9 @@ class OptionsController extends Controller
     public function index(Request $request)
     {
         if ($request->has('search') && ! empty($request->search)) {
-            $options = Options::query()->groupBy('group')->paginate(12);
+            $options = Options::query()->groupBy('grupa')->paginate(12);
         } else {
-            $options = Options::query()->groupBy('group')->paginate(12);
+            $options = Options::query()->groupBy('grupa')->paginate(12);
         }
 
         return view('back.catalog.options.index', compact('options'));
@@ -50,10 +50,10 @@ class OptionsController extends Controller
         $stored = $option->validateRequest($request)->create();
 
         if ($stored) {
-            return redirect()->route('options.edit', ['options' => $stored ])->with(['success' => 'Attribute was succesfully saved!']);
+            return redirect()->route('options.edit', ['options' => $stored ])->with(['success' => 'Option was succesfully saved!']);
         }
 
-        return redirect()->back()->with(['error' => 'Whoops..! There was an error saving the attribute.']);
+        return redirect()->back()->with(['error' => 'Whoops..! There was an error saving the option.']);
     }
 
 
@@ -87,7 +87,7 @@ class OptionsController extends Controller
             return redirect()->route('options.edit', ['options' => $options->id])->with(['success' => 'Options was succesfully saved!']);
         }
 
-        return redirect()->back()->with(['error' => 'Whoops..! There was an error saving the attribute.']);
+        return redirect()->back()->with(['error' => 'Whoops..! There was an error saving the option.']);
     }
 
 
@@ -103,9 +103,9 @@ class OptionsController extends Controller
         $destroyed = Options::destroy($options->id);
 
         if ($destroyed) {
-            return redirect()->route('options')->with(['success' => 'Attribute was succesfully deleted!']);
+            return redirect()->route('options')->with(['success' => 'Option was succesfully deleted!']);
         }
 
-        return redirect()->back()->with(['error' => 'Whoops..! There was an error deleting the attribute .']);
+        return redirect()->back()->with(['error' => 'Whoops..! There was an error deleting the option.']);
     }
 }
