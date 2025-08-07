@@ -31,7 +31,7 @@
     @if (request()->routeIs(['index']))
 
       {{--@include('front.layouts.partials.hometemp') --}}
-      <section >
+    <!--  <section >
           <div class="d-flex row justify-content-between">
 
               <div class="col-md-12">
@@ -43,7 +43,7 @@
                   </div>
               </div>
           </div>
-      </section>
+      </section> -->
       <h1 style="visibility: hidden;height:1px "> Ljekarne PharmAD -  Vaša internet ljekarna </h1>
 
         {!! $page->description !!}
