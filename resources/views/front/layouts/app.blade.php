@@ -12,7 +12,7 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" media="screen" href="{{ asset('vendor/simplebar/dist/simplebar.min.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('css/tema.min.css?v=2.7') }}">
+    <link rel="stylesheet" media="screen" href="{{ asset('css/theme.css?v=2.8') }}">
 
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
