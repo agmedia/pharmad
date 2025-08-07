@@ -13,7 +13,7 @@
     <nav class="mb-4" aria-label="breadcrumb">
         <ol class="breadcrumb flex-lg-nowrap">
             <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovnica</a></li>
-            <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route.author') }}">Lista autora</a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route.author') }}">Lista brendova</a></li>
 
 
 
@@ -21,10 +21,10 @@
     </nav>
 
     <section class="d-md-flex justify-content-between align-items-center mb-2 pb-2">
-        <h1 class="h2 mb-1 mb-md-0 me-3">Lista autora</h1>
+        <h1 class="h2 mb-1 mb-md-0 me-3">Lista brendova</h1>
         <form action="{{ route('pretrazi', ['tip' => 'author']) }}" method="get" >
             <div class="input-group input-group-lg flex-nowrap">
-                <input type="text" class="form-control rounded-start" name="{{ config('settings.search_keyword') }}" placeholder="Pretražite po autoru">
+                <input type="text" class="form-control rounded-start" name="{{ config('settings.search_keyword') }}" placeholder="Pretražite po brendu">
                 <button class="btn btn-primary btn-lg fs-base" type="submit"><i class="ci-search"></i></button>
             </div>
         </form>
