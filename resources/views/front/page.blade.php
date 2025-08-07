@@ -39,12 +39,12 @@
                       <div class="alert-icon">
                           <i class="ci-gift"></i>
                       </div>
-                      <small>Besplatna dostava za narudžbe > 70€</small>
+                      <small>Besplatna dostava za narudžbe > 80€</small>
                   </div>
               </div>
           </div>
       </section>
-      <h1 style="visibility: hidden;height:1px "> ZUZI Shop | Prodaja knjiga | Otkup knjiga | Webshop </h1>
+      <h1 style="visibility: hidden;height:1px "> Ljekarne PharmAD -  Vaša internet ljekarna </h1>
 
         {!! $page->description !!}
 
