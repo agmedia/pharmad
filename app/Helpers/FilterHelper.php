@@ -11,10 +11,16 @@ use Illuminate\Support\Str;
 class FilterHelper
 {
 
-    public static function getCategories(string $group = '')
+    public static function getCategories()
     {
-        if ($group) {
-            //$response = Helper::resolveCache('categories')->remember($group, config('cache.life'), function () use ($group) {
+        //$response = Helper::resolveCache('categories')->remember($group, config('cache.life'), function () {
+        $groups = Category::query()->pluck('group');
+
+        foreach ($groups as $group) {
+            if ( ! empty($group)) {
+                $name = str_replace('-', ' ', $group);
+                $name = Str::headline($name);
+
                 $response = Category::active()->topList($group)->sortByName()->with('subcategories')->withCount([
                     'products',
                     'products as products_count' => function (Builder $query) {
@@ -23,36 +29,13 @@ class FilterHelper
                                      ->where('price', '>', 0);
                     }])->get()->toArray();
 
-                return self::resolveCategoryArray($response, 'categories');
-            //});
-
-        } else {
-            //$response = Helper::resolveCache('categories')->remember($group, config('cache.life'), function () {
-            $groups = Category::query()->pluck('group');
-
-            foreach ($groups as $group) {
-                if ( ! empty($group)) {
-                    $name = str_replace('-', ' ', $group);
-                    $name = Str::headline($name);
-
-                    $response = Category::active()->topList($group)->sortByName()->with('subcategories')->withCount([
-                        'products',
-                        'products as products_count' => function (Builder $query) {
-                            return $query->where('status', 1)
-                                         ->where('quantity', '>', 0)
-                                         ->where('price', '>', 0);
-                        }])->get()->toArray();
-
-                    $sorted[$name] = self::resolveCategoryArray($response, 'categories');
-                }
+                $sorted[$name] = self::resolveCategoryArray($response, 'categories');
             }
-
-            return $sorted;
-
-            //});
         }
 
-        return $response;
+        return $sorted;
+
+        //});
     }
 
 

@@ -25,7 +25,9 @@ class Filter extends Component
     {
         $this->categories = $this->getCategories();
 
-        Log::debug($this->categories);
+        Log::debug($this->group);
+        Log::debug($this->cat);
+        Log::debug($this->subcat);
     }
 
     public function render()
@@ -36,6 +38,6 @@ class Filter extends Component
 
     private function getCategories()
     {
-        return FilterHelper::getCategories($this->group);
+        return FilterHelper::getCategories();
     }
 }
