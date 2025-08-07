@@ -16,6 +16,8 @@ class FilterHelper
         //$response = Helper::resolveCache('categories')->remember($group, config('cache.life'), function () {
         $groups = Category::query()->pluck('group');
 
+
+
         foreach ($groups as $group) {
             if ( ! empty($group)) {
                 $name = str_replace('-', ' ', $group);

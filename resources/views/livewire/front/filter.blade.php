@@ -4,11 +4,15 @@
             <div class="widget widget-categories">
                 <div class="accordion" id="shop-categories">
 
+
+
                     @foreach ($categories as $_group => $_categories)
                         <div class="accordion-item border-bottom">
                             <h3 class="accordion-header px-grid-gutter @if(isset($group) && $group == \Illuminate\Support\Str::slug($_group)) bg-default @endif">
                                 <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#id{{ \Illuminate\Support\Str::slug($_group) }}" aria-expanded="false" :aria-controls="id{{ \Illuminate\Support\Str::slug($_group) }}">
                                     <span class="d-flex align-items-center"> {{ $_group }}</span>
+
+
                                 </button>
                                 @if (empty($_categories))
                                     <a href="{{ route('catalog.route', ['group' => \Illuminate\Support\Str::slug($_group)]) }}" class="nav-link-style d-block fs-md py-3" role="link">

@@ -33,7 +33,6 @@
 @endif
 
 
-
 @section('content')
 
     @if (Route::currentRouteName() == 'pretrazi')
@@ -92,7 +91,7 @@
         </section>
     @endif
 
-    @if (isset($group) && $group)
+            @if (isset($group) && $group)
 
         <nav class="mb-2 text-center text-lg-start" aria-label="breadcrumb">
             <ol class="breadcrumb flex-lg-nowrap">
