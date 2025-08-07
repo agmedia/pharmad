@@ -40,7 +40,7 @@
                     @forelse ($options as $option)
                         <tr>
                             <td>
-                        <span class="font-size-sm">  {{ $option->group }} </span>
+                        <span class="font-size-sm"> {{ $option->group }} </span>
                             </td>
                             <td class="text-right font-size-sm">
                                 <a class="btn btn-sm btn-alt-secondary" href="{{ route('options.edit', ['options' => $option]) }}">

@@ -10,7 +10,6 @@
         </div>
     </div>
 
-
     <div class="content content-full content-boxed">
         @include('back.layouts.partials.session')
 
@@ -37,27 +36,7 @@
 
                             <div class="form-group">
                                 <label for="title-input">{{ __('back/option.pitanje') }}</label>
-                                <ul class="nav nav-pills float-right">
-                                    @foreach(ag_lang() as $lang)
-                                        <li @if ($lang->code == current_locale()) class="active" @endif>
-                                            <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#title-{{ $lang->code }}">
-                                                <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-
-
-                                <div class="tab-content">
-                                    @foreach(ag_lang() as $lang)
-                                        <div id="title-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-                                            <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="title[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($options) ? $options->group : old('title.*') }}" >
-                                        </div>
-                                    @endforeach
-                                </div>
-
-
-
+                                <input type="text" class="form-control" id="title-input" name="title" value="{{ isset($options) ? $options->grupa : old('title') }}">
                             </div>
 
                             <div class="form-group ">
@@ -88,11 +67,9 @@
                         </div>
                         <div class="col-md-6 text-right">
                             @if (isset($options))
-
                                 <a href="{{ route('options.destroy', ['options' => $options]) }}" type="submit" class="btn btn-hero-danger my-2 js-tooltip-enabled" data-toggle="tooltip" title="" data-original-title="{{ __('back/option.obrisi') }}" onclick="event.preventDefault(); document.getElementById('delete-option-form{{ $options->id }}').submit();">
                                     <i class="fa fa-trash-alt"></i> {{ __('back/option.obrisi') }}
                                 </a>
-
                             @endif
                         </div>
                     </div>
