@@ -1,6 +1,6 @@
 <!-- {"title": "Slider Index", "description": "Index main slider."} -->
 
-<section class="tns-carousel mb-3 rounded-3 bg-light shadow ">
+<section class="tns-carousel mb-3 rounded-3  bg-white shadow ">
     <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 1, &quot;mode&quot;: &quot;gallery&quot;, &quot;nav&quot;: true, &quot;responsive&quot;: {&quot;0&quot;: {&quot;nav&quot;: true, &quot;controls&quot;: true}, &quot;576&quot;: {&quot;nav&quot;: false, &quot;controls&quot;: true}}}">
         @foreach($data as  $widget)
             <div>
@@ -13,7 +13,7 @@
                             <p class="text-dark d-none d-sm-block fs-md">{{ $widget['subtitle'] }}</p>
                             <div class="d-flex flex-wrap justify-content-center justify-content-xl-start"><a class="btn btn-primary btn-shadow me-2 mb-2" href="{{ url($widget['url']) }}" role="button">Pogledajte ponudu <i class="ci-arrow-right ms-2 me-n1"></i></a></div>
                         </div>
-                        <div class="p-3"><img src="{{ $widget['image'] }}" alt="{{ $widget['title'] }}" width="350" height="350"></div>
+                        <div class="p-3"><img src="{{ $widget['image'] }}"  alt="{{ $widget['title'] }}" width="400" height="400"></div>
                     </div>
                 </div>
             </div>

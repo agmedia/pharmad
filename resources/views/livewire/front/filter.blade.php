@@ -42,7 +42,7 @@
                 <div class="accordion-item border-bottom">
                     <h3 class="accordion-header px-grid-gutter">
                         <a class="nav-link-style d-block fs-md py-3" href="{{ route('catalog.route.author') }}">
-                            <span class="d-flex align-items-center"><i class="ci-edit  fs-lg mt-n1 me-2"></i>Proizvođači</span>
+                            <span class="d-flex align-items-center"><i class="ci-heart-circle  fs-lg mt-n1 me-2"></i>Brandovi</span>
                         </a>
                     </h3>
                 </div>

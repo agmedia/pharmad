@@ -11,6 +11,7 @@ use App\Models\Front\Loyalty;
 use App\Models\Front\Catalog\Author;
 use App\Models\Front\Catalog\Product;
 use App\Models\Front\Catalog\Publisher;
+
 use Darryldecode\Cart\CartCondition;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -265,10 +266,14 @@ class Helper
             if (static::isDescriptionTarget($data, 'blog')) {
                 $items     = static::blogs($data)->get();
                 $tablename = 'blog';
+
+
             }
 
             if (static::isDescriptionTarget($data, 'category')) {
                 $items     = static::category($data)->get();
+
+
                 $tablename = 'category';
             }
 
@@ -278,7 +283,7 @@ class Helper
             }
 
             if (static::isDescriptionTarget($data, 'reviews')) {
-                $items     = static::reviews($data)->get();
+                $items     = static::dummyReviews();
                 $tablename = 'reviews';
             }
 
@@ -701,5 +706,109 @@ class Helper
 
         return false;
     }
+
+
+    private static function dummyReviews()
+    {
+        return collect([
+            (object)[
+                'id' => 1,
+                'product_id' => 101,
+                'order_id' => 1001,
+                'user_id' => 501,
+                'lang' => 'hr',
+                'fname' => 'Ivana Čorić',
+                'lname' => 'Horvat',
+                'email' => 'ana.horvat@example.com',
+                'avatar' => 'avatars/ana.jpg',
+                'message' => 'Oduševila me brzina dostave, cijena i usluga....osim jednog naručenog proizvoda dobila sam i par testera...sve pohvale za PharmaAD Farmaciju...od sada sam vaš najvjerniji kupac ☺️',
+                'stars' => 5.00,
+                'sort_order' => 0,
+                'featured' => 1,
+                'status' => 1,
+                'created_at' => '2025-08-01 10:15:00',
+                'updated_at' => '2025-08-01 10:15:00',
+            ],
+            (object)[
+                'id' => 2,
+                'product_id' => 102,
+                'order_id' => 1002,
+                'user_id' => 502,
+                'lang' => 'hr',
+                'fname' => 'Valentina',
+                'lname' => '',
+                'email' => 'ivan.maric@example.com',
+                'avatar' => 'avatars/ivan.png',
+                'message' => 'Oduševljena sam pristupom i kvalitetom usluge. Brza dostava, sve što sam naručio bilo je adekvatno zapakirano i zaštićeno. Kupnju sam obavila jednostavno i lako. U paketu je bio i poklon koji me također iznenadio. Ispunio je moja očekivanja, kupovat ću opet kod vas. 🍀💛',
+                'stars' => 5.00,
+                'sort_order' => 0,
+                'featured' => 0,
+                'status' => 1,
+                'created_at' => '2025-08-02 11:00:00',
+                'updated_at' => '2025-08-02 11:00:00',
+            ],
+            (object)[
+                'id' => 3,
+                'product_id' => 103,
+                'order_id' => 1003,
+                'user_id' => 503,
+                'lang' => 'hr',
+                'fname' => 'Cat',
+                'lname' => 'Woman',
+                'email' => 'maja.kovac@example.com',
+                'avatar' => 'avatars/maja.jpg',
+                'message' => 'E sad, naručujem preko weba dugi niz godina i eto odlučih kupit nešto i preko PharmAD ljekarne.
+Cijene povoljne, stiglo veoma brzo i najviše su me ugodno iznenadili poklončići kojih ima podosta.
+I da nije, sve bi bilo ok.
+Preporučam u svakom pogledu.
+Pozdrav iz Splita. 🙂👍',
+                'stars' => 5.00,
+                'sort_order' => 0,
+                'featured' => 1,
+                'status' => 1,
+                'created_at' => '2025-08-03 09:45:00',
+                'updated_at' => '2025-08-03 09:45:00',
+            ],
+            (object)[
+                'id' => 4,
+                'product_id' => 104,
+                'order_id' => 1004,
+                'user_id' => 504,
+                'lang' => 'hr',
+                'fname' => 'Sanja',
+                'lname' => 'Jotanovic Adanic',
+                'email' => 'petar.novak@example.com',
+                'avatar' => 'avatars/petar.png',
+                'message' => 'Narudžba poslana ekspresno, dostava GLS, što mi je iznimno važno. Nakon što sam otvorila paket doživila šok poklonom uz kupnju.
+Sve preporuke od mene 👍.',
+                'stars' => 5.00,
+                'sort_order' => 0,
+                'featured' => 0,
+                'status' => 1,
+                'created_at' => '2025-08-04 13:20:00',
+                'updated_at' => '2025-08-04 13:20:00',
+            ],
+            (object)[
+                'id' => 5,
+                'product_id' => 105,
+                'order_id' => 1005,
+                'user_id' => 505,
+                'lang' => 'hr',
+                'fname' => 'Azra',
+                'lname' => 'Begulić',
+                'email' => 'lucija.peric@example.com',
+                'avatar' => 'avatars/lucija.jpeg',
+                'message' => 'Odlična ponuda a i usluga!☺️ Jako brza dostava, i uvijek se dobije mali (ili veći 🙈) znak pažnje!',
+                'stars' => 5.00,
+                'sort_order' => 0,
+                'featured' => 1,
+                'status' => 1,
+                'created_at' => '2025-08-05 08:10:00',
+                'updated_at' => '2025-08-05 08:10:00',
+            ],
+        ]);
+    }
+
+
 
 }

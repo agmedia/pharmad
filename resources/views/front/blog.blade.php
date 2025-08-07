@@ -67,7 +67,7 @@
                 @foreach ($blogs as $blog)
 
                 <article class="masonry-grid-item">
-                    <div class="card">
+                    <div class="card product-card  shadow mb-3 pb-2">
                         <a class="blog-entry-thumb" href="{{ route('catalog.route.blog', ['blog' => $blog]) }}"><img class="card-img-top" src="{{ $blog->image }}" alt="Post"></a>
                         <div class="card-body">
                             <h2 class="h6 blog-entry-title"><a href="{{ route('catalog.route.blog', ['blog' => $blog]) }}">{{ $blog->title }}</a></h2>

@@ -1,9 +1,13 @@
 <!-- {"title": "Page Carousel", "description": "Category, Publisher, Reviews."} -->
 <section class=" py-0 " >
     <div class="d-flex flex-wrap justify-content-between align-items-center pt-1  pb-3 mb-2">
-        <h2 class="h3 mb-0 pt-0 font-title me-3"> {{ $data['title'] }}</h2>
+        <h2 class="h3 mb-0 pt-0 font-title me-3 "><span class="border-color"> {{ $data['title'] }}</span></h2>
         @if ($data['tablename'] == 'blog')
         <a class="btn btn-primary btn-sm btn-shadow mt-0" href="/blog"><span class="d-none d-sm-inline-block">Pogledajte sve</span> <i class="ci-arrow-right "></i></a>
+        @endif
+
+        @if ($data['tablename'] == 'reviews')
+            <a class="btn btn-primary btn-sm btn-shadow mt-0" target="_blanks" href="https://search.google.com/local/reviews?placeid=ChIJq6MCBZjIZUcRxti_kumFAkA"><span class="d-none d-sm-inline-block">Google recenzije</span> <i class="ci-arrow-right "></i></a>
         @endif
     </div>
 
@@ -34,7 +38,7 @@
 
     @elseif ($data['tablename'] == 'reviews')
 
-        <div class="tns-carousel">
+        <div class="tns-carousel pb-5">
             <div class="tns-carousel-inner" data-carousel-options='{"items": 1, "controls": false, "autoplay": true, "autoHeight": true, "responsive": {"0":{"items":1, "gutter": 20},"480":{"items":2, "gutter": 20},"800":{"items":3, "gutter": 20}, "1300":{"items":4, "gutter": 30}}}'>
             @foreach ($data['items'] as $review)
 
@@ -76,7 +80,7 @@
 
                     <!-- Product-->
                     <div>
-                        <div class="card"><a class="blog-entry-thumb" href="{{ route('catalog.route.blog', ['blog' => $item]) }}"><img class="card-img-top" loading="lazy" src="{{ $item['image'] }}" width="400" height="230" alt="{{ $item['title'] }}" style="width:  400px;height: 260px;object-fit: cover;"></a>
+                        <div class="card product-card  shadow mb-3 pb-2"><a class="blog-entry-thumb" href="{{ route('catalog.route.blog', ['blog' => $item]) }}"><img class="card-img-top" loading="lazy" src="{{ $item['image'] }}" width="400" height="230" alt="{{ $item['title'] }}" style="width: 100%;height: 260px;object-fit: cover;margin:0 auto"></a>
                             <div class="card-body">
                                 <h2 class="h6 blog-entry-title"><a href="{{ route('catalog.route.blog', ['blog' => $item]) }}">{{ $item['title'] }}</a></h2>
                                 <p class="fs-sm"> {!! Str::limit($item['short_description'], 180, ' ...') !!}</p>

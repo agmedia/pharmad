@@ -93,6 +93,14 @@ body {
 .text-ph{
     color: #26b67f;
 }
+.border-color{
+
+    border-bottom: 1px solid #a4dbc6;
+}
+.slider-image{
+    border-radius: 20px;
+    border: 1px solid #a4dbc6;
+}
 
 .fbck{
     background:url('../media/img/baka.png') repeat;
@@ -514,12 +522,12 @@ h2, .h2 {
 }
 @media (min-width: 1200px) {
     h2, .h2 {
-        font-size: 2rem;
+        font-size: 1.6rem;
     }
 }
 
 h3, .h3 {
-    font-size: calc(1.3rem + 0.6vw);
+    font-size: calc(1.2rem + 0.6vw);
 }
 @media (min-width: 1200px) {
     h3, .h3 {
@@ -532,7 +540,7 @@ h4, .h4 {
 }
 @media (min-width: 1200px) {
     h4, .h4 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
 }
 
@@ -5351,7 +5359,7 @@ textarea.form-control-lg {
 .alert-info {
     --cz-alert-color: #26b67f;
     --cz-alert-bg: #fff;
-    --cz-alert-border-color: #d8fff0;
+    --cz-alert-border-color: #a4dbc6;
 }
 .alert-info .alert-link {
     color: #4c81b7;
