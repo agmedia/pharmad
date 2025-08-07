@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\v2\CartController;
 use App\Http\Controllers\Api\v2\FilterController;
 use App\Http\Controllers\Back\Catalog\AuthorController;
 use App\Http\Controllers\Back\Catalog\CategoryController;
+use App\Http\Controllers\Back\Catalog\OptionsController;
 use App\Http\Controllers\Back\Catalog\ProductController;
 use App\Http\Controllers\Back\Catalog\PublisherController;
 use App\Http\Controllers\Back\DashboardController;
@@ -85,6 +86,14 @@ Route::middleware(['auth:sanctum', 'verified', 'no.customers'])->prefix('admin')
         Route::get('publisher/{publisher}/edit', [PublisherController::class, 'edit'])->name('publishers.edit');
         Route::patch('publisher/{publisher}', [PublisherController::class, 'update'])->name('publishers.update');
         Route::delete('publisher/{publisher}', [PublisherController::class, 'destroy'])->name('publishers.destroy');
+
+        // Options
+        Route::get('options', [OptionsController::class, 'index'])->name('options');
+        Route::get('option/create', [OptionsController::class, 'create'])->name('options.create');
+        Route::post('option', [OptionsController::class, 'store'])->name('options.store');
+        Route::get('option/{options}/edit', [OptionsController::class, 'edit'])->name('options.edit');
+        Route::patch('option/{options}', [OptionsController::class, 'update'])->name('options.update');
+        Route::delete('option/{options}', [OptionsController::class, 'destroy'])->name('options.destroy');
 
         // AUTORI
         Route::get('authors', [AuthorController::class, 'index'])->name('authors');

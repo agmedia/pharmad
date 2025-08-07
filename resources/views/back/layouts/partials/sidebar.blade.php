@@ -78,7 +78,11 @@
                                 <span class="nav-main-link-name">Artikli</span>
                             </a>
                         </li>
-
+                        <li class="nav-main-item">
+                            <a class="nav-main-link{{ request()->routeIs(['options', 'options.*']) ? ' active' : '' }}" href="{{ route('options') }}">
+                                <span class="nav-main-link-name">Opcije</span>
+                            </a>
+                        </li>
                         <li class="nav-main-item">
                             <a class="nav-main-link{{ request()->routeIs(['authors', 'authors.*']) ? ' active' : '' }}" href="{{ route('authors') }}">
                                 <span class="nav-main-link-name">Brandovi</span>
