@@ -1,4 +1,4 @@
-<div>
+
     <div class="sidebar-nav tab-pane fade show active" id="categories" role="tabpanel">
         @if ($categories)
             <div class="widget widget-categories">
@@ -29,7 +29,7 @@
                                                             <ul class="widget-list pt-1">
                                                                 @foreach ($category['subs'] as $subcategory)
                                                                     <li class="widget-list-item @if(isset($subcat) && $subcat->id == $subcategory['id'])  @endif">
-                                                                        <a class="widget-list-link" href="{{ $subcategory['url'] }}">{{ $subcategory['title'] }}</a>
+                                                                        <a class="widget-list-link fs-sm" href="{{ $subcategory['url'] }}">{{ $subcategory['title'] }}</a>
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
@@ -39,7 +39,7 @@
                                             @endif
                                         @endforeach
                                         <ul class="widget-list mt-2">
-                                            <li class="widget-list-item"><a class="widget-list-link" href="{{ route('catalog.route', ['group' => \Illuminate\Support\Str::slug($_group)]) }}">Pogledajte sve</a></li>
+                                            <li class="widget-list-item"><a class="widget-list-link" href="{{ route('catalog.route', ['group' => \Illuminate\Support\Str::slug($_group)]) }}">Pogledajte sve <i class="fs-xs  ci-arrow-right"></i></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -68,4 +68,4 @@
             </div>
         @endif
     </div>
-</div>
+

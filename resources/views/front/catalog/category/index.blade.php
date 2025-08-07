@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 @if (isset($group) && $group)
     @if ($group && ! $cat && ! $subcat)
-        @section ( 'title',  \Illuminate\Support\Str::ucfirst($group). ' - ZuZi Shop' )
+        @section ( 'title',  \Illuminate\Support\Str::ucfirst($group). ' - Ljekarne PharmAD' )
     @endif
     @if ($cat && ! $subcat)
         @section ( 'title',  $cat->title . ' - ZuZi Shop' )
@@ -98,9 +98,9 @@
                         <ol class="breadcrumb flex-lg-nowrap">
                             <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovnica</a></li>
                             @if ($group && ! $cat && ! $subcat)
-                               <!-- <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ \Illuminate\Support\Str::ucfirst($group) }}</li> -->
+                               <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ \Illuminate\Support\Str::ucfirst($group) }}</li>
                             @elseif ($group && $cat)
-                            <!--    <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route', ['group' => $group]) }}">{{ \Illuminate\Support\Str::ucfirst($group) }}</a></li>-->
+                              <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route', ['group' => $group]) }}">{{ \Illuminate\Support\Str::ucfirst($group) }}</a></li>
                             @endif
                             @if ($cat && ! $subcat)
                                 <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ $cat->title }}</li>
@@ -117,7 +117,7 @@
                     @if ($group && ! $cat && ! $subcat)
 
 
-                        <h1 class="h2 mb-2 mb-md-0 me-3"> Web Shop</h1>
+                        <h1 class="h2 mb-2 mb-md-0 me-3"> {{ \Illuminate\Support\Str::ucfirst($group) }}</h1>
 
                     @endif
                     @if ($cat && ! $subcat)
