@@ -1,4 +1,4 @@
-<div class="article px-0 mb-2 px-1" >
+<div class="col px-2 mb-4 d-flex align-items-stretch " >
 
     <div class="card product-card shadow pb-2 ">
         @if ($product->main_price > $product->main_special)

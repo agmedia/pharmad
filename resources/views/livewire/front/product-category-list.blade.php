@@ -22,9 +22,9 @@
     <!-- Products grid-->
     <div class=" row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 row-cols-xxxl-6 mb-3 px-2">
         @forelse ($products as $product)
-            <div class="col-md-4 col-6  px-2 mb-4">
+
                 @include('front.catalog.category.product')
-            </div>
+
         @empty
             <div class="col-md-12 px-2 mb-4">
                 @php
