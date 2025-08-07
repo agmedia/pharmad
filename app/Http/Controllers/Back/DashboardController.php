@@ -308,7 +308,7 @@ class DashboardController extends Controller
                     ]);
 
                     // Autor
-                    $manufacturer = $import->getManufacturers();
+
 
                     $count++;
                 }
