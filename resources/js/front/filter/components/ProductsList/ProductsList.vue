@@ -6,9 +6,6 @@
                 <div class="dropdown me-2 d-sm-none"><a class="btn btn-dark dropdown-toggle " href="#shop-sidebar" data-bs-toggle="offcanvas" aria-label="Open the menu" data-bs-target="#sideNav">Kategorije</a></div>
 
 
-
-
-
                 <div class="d-flex align-items-center flex-nowrap me-3 me-sm-4 pb-3">
 
 

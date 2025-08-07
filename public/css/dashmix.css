@@ -1,9 +1,9 @@
 @charset "UTF-8";
 .bckimagelogin {
   background-color: #ccc !important;
-  background-image: url("../media/img/zuzi-bck-transparent.svg");
-    background-size: cover !important;
-    background-repeat: no-repeat;
+  background-image: url("../media/img/baka.png");
+
+    background-repeat: repeat;
 }
 
 .ck-editor__editable {

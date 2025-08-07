@@ -29,7 +29,7 @@
                         <div class="form-check mb-2 ps-0">
                             <x-jet-checkbox id="remember_me" name="remember" />
                             <label class="form-check-label" for="si-remember">Zapamti me</label>
-                        </div><!--<a class="fs-sm" href="#">Zaboravljena lozinka</a>-->
+                        </div><a class="fs-sm" href="forgot-password">Zaboravljena lozinka</a>
                     </div>
                     <button class="btn btn-primary btn-shadow d-block w-100" type="submit">Prijavi se</button>
                 </form>

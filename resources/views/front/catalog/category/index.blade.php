@@ -162,8 +162,7 @@
                            group="{{ isset($group) ? $group : null }}"
                            cat="{{ isset($cat) ? $cat['id'] : null }}"
                            subcat="{{ isset($subcat) ? $subcat['id'] : null }}"
-                           author="{{ isset($author) ? $author['slug'] : null }}"
-                           publisher="{{ isset($publisher) ? $publisher['slug'] : null }}">
+                           author="{{ isset($author) ? $author['slug'] : null }}">
             </products-view>
 
 

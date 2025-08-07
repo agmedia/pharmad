@@ -85,10 +85,6 @@
                     <div class="col-md-4  text-center text-md-start mb-4">
 
                         <h3 class="widget-title fw-700 d-block text-dark"><span>Korisnička podrška</span></h3>
-                        <p class=" text-dark  fs-md pb-1 d-none d-sm-block">
-
-
-
 
                         <p class=" text-dark  fs-md pb-1 d-block">  <strong>Broj telefona</strong><br>
                             +385 (0) 99 489 1210</p>
@@ -103,8 +99,8 @@
 
 
                         <div class="widget mt-4 text-md-nowrap text-center text-sm-start">
-                            <a class="btn-social btn-primary bs-light bg-primary bs-instagram me-2 mb-2" href="https://www.instagram.com/zuziobrt/"><i class="ci-instagram"></i></a>
-                            <a class="btn-social bs-light bg-primary bs-facebook me-2 mb-2" href="https://www.facebook.com/zuziobrt/"><i class="ci-facebook"></i></a>
+                            <a class=" btn btn-outline-primary btn-sm btn-icon" href="https://www.instagram.com/zuziobrt/"><i class="ci-instagram"></i></a>
+                            <a class="btn btn-outline-primary btn-sm btn-icon" href="https://www.facebook.com/zuziobrt/"><i class="ci-facebook"></i></a>
                         </div>
                     </div>
                     <!-- Mobile dropdown menu (visible on screens below md)-->
