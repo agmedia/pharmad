@@ -19,7 +19,7 @@ class FilterHelper
         foreach ($groups as $group) {
             if ( ! empty($group)) {
                 $name = str_replace('-', ' ', $group);
-                $name = Str::headline($name);
+                $name = Str::ucfirst(Str::lower($name));
 
                 $response = Category::active()->topList($group)->sortByName()->with('subcategories')->withCount([
                     'products',
