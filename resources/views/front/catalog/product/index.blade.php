@@ -261,7 +261,8 @@
                <div class="col-lg-7 col-sm-7">
 
                    <div class=" fs-md pb-2 mb-4">
-                       {!! html_entity_decode($prod->description) !!}
+                       {!! preg_replace('/<\/?(span|big)[^>]*>/', '', html_entity_decode($prod->description)) !!}
+
                    </div>
 
                </div>

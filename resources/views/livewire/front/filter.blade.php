@@ -25,6 +25,11 @@
                                                 <ul class="widget-list">
                                                     <li class="widget-list-item pb-1 @if(isset($cat) && $cat->id == $category['id']) active @endif">
                                                         <a class="widget-list-link" href="{{ $category['url'] }}">{{ $category['title'] }} </a>
+                                                        <ul class="widget-list pt-1">
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="#">Baguette</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="#">Loaves</a></li>
+
+                                                        </ul>
                                                     </li>
                                                 </ul>
                                             @endif
