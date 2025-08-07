@@ -148,13 +148,13 @@
 @include('front.layouts.modals.login')
 
 <!-- Vendor Styles including: Font Icons, Plugins, etc.-->
-<link rel="stylesheet" media="screen" href="{{ asset(config('settings.images_domain') . 'css/tiny-slider.css?v=1.2') }}"/>
+<link rel="stylesheet" media="screen" href="{{ asset(config('settings.images_domain') . 'css/tiny-slider.css?v=1.23ß') }}"/>
 <!-- Vendor scrits: js libraries and plugins-->
 <script src="{{ asset('js/jquery/jquery-2.1.1.min.js') }}"></script>
 <script src="{{ asset('js/jquery.ihavecookies.js?v=2.0.320') }}"></script>
 <script src="{{ asset('vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('vendor/simplebar/dist/simplebar.min.js') }}"></script>
-<script src="{{ asset('vendor/tiny-slider/dist/min/tiny-slider.js?v=2.0') }}"></script>
+<script src="{{ asset('vendor/tiny-slider/dist/min/tiny-slider.js?v=2.1') }}"></script>
 <script src="{{ asset('vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js') }}"></script>
 <script src="{{ asset('js/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
 <script src="{{ asset('js/shufflejs/dist/shuffle.min.js') }}"></script>
