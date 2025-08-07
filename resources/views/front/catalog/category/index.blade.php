@@ -104,7 +104,7 @@
                 @if ($group && ! $cat && ! $subcat)
                     <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ \Illuminate\Support\Str::ucfirst(Str::lower(str_replace('-', ' ', $group))) }}</li>
                 @elseif ($group && $cat)
-                    <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route', ['group' => $group]) }}">{{ \Illuminate\Support\Str::ucfirst($group) }}</a></li>
+                    <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route', ['group' => $group]) }}">{{ \Illuminate\Support\Str::ucfirst(Str::lower(str_replace('-', ' ', $group))) }}</a></li>
                 @endif
                 @if ($cat && ! $subcat)
                     <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ $cat->title }}</li>
