@@ -25,9 +25,7 @@ class Filter extends Component
     {
         $this->categories = $this->getCategories();
 
-        Log::debug($this->group);
-        Log::debug($this->cat);
-        Log::debug($this->subcat);
+        Log::debug($this->categories);
     }
 
     public function render()

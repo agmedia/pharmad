@@ -24,12 +24,16 @@
                                             @if (isset($category['url']))
                                                 <ul class="widget-list">
                                                     <li class="widget-list-item pb-1 @if(isset($cat) && $cat->id == $category['id']) active @endif">
-                                                        <a class="widget-list-link" href="{{ $category['url'] }}">{{ $category['title'] }} </a>
-                                                        <ul class="widget-list pt-1">
-                                                            <li class="widget-list-item"><a class="widget-list-link" href="#">Baguette</a></li>
-                                                            <li class="widget-list-item"><a class="widget-list-link" href="#">Loaves</a></li>
-
-                                                        </ul>
+                                                        <a class="widget-list-link" href="{{ $category['url'] }}">{{ $category['title'] }}</a>
+                                                        @if ($category['subs'])
+                                                            <ul class="widget-list pt-1">
+                                                                @foreach ($category['subs'] as $subcategory)
+                                                                    <li class="widget-list-item @if(isset($subcat) && $subcat->id == $subcategory['id'])  @endif">
+                                                                        <a class="widget-list-link" href="{{ $subcategory['url'] }}">{{ $subcategory['title'] }}</a>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @endif
                                                     </li>
                                                 </ul>
                                             @endif
