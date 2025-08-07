@@ -67,7 +67,7 @@
     </ul>
     <div class="offcanvas-body px-0 pt-3 pb-0" data-simplebar>
         <div class="tab-content">
-
+            @livewire('front.filter', ['ids' => isset($ids) ? $ids : '', 'group' => isset($group) ? $group : '', 'cat' => isset($cat) ? $cat : null])
 
             <!-- Menu-->
             <div class="sidebar-nav tab-pane fade" id="menu" role="tabpanel">
