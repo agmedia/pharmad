@@ -5,7 +5,7 @@
             <div class="dropdown me-2 d-md-none"><a class="btn btn-primary dropdown-toggle collapsed" href="#shop-sidebar" data-bs-toggle="collapse" aria-expanded="false"><i class="ci-filter-alt"></i></a></div>
             <div class="d-flex align-items-center flex-nowrap me-3 me-sm-4 pb-3">
                 <label class="text-light opacity-75 text-nowrap fs-sm  d-none d-sm-block" for="sorting"></label>
-                <select class="form-select" id="sorting-select" wire:ignore>
+                <select class="form-select" id="sorting-select" wire:sort>
                     <option value="" selected>Sortiraj</option>
                     @foreach (config('settings.sorting_list') as $item)
                         <option value="{{ $item['value'] }}" @if(request()->get('sort') == $item['value']) selected @endif>{{ $item['title'] }}</option>
@@ -70,7 +70,7 @@
         @endforelse
     </div>
 
-    {{ $products->onEachSide(1)->links() }}
+    {{ $products->onEachSide(1)->links('pagination::bootstrap-4') }}
 
 
 

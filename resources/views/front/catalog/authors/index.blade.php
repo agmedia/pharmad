@@ -63,9 +63,7 @@
         </div>
 
         <div class="row  py-md-3">
-
-            {{ $authors->onEachSide(1)->links() }}
-
+            {{ $authors->onEachSide(1)->links('pagination::bootstrap-4') }}
         </div>
     </section>
 
