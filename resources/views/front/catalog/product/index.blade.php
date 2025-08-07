@@ -48,7 +48,7 @@
 
 
     <!-- Page title + breadcrumb-->
-    <nav class="mb-4" aria-label="breadcrumb">
+    <nav class="mb-4 mt-3" aria-label="breadcrumb">
         <ol class="breadcrumb flex-lg-nowrap">
             <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovnica</a></li>
             @if ($group)
