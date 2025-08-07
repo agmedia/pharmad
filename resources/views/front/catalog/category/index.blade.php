@@ -3,13 +3,18 @@
 
 @if (isset($group) && $group)
     @if ($group && ! $cat && ! $subcat)
-        @section ( 'title',  \Illuminate\Support\Str::ucfirst($group). ' - Ljekarne PharmAD' )
+        @section ( 'title',  \Illuminate\Support\Str::ucfirst(Str::lower(str_replace('-', ' ', $group))). ' - Ljekarne PharmAD' )
+
+
+
+
+
     @endif
     @if ($cat && ! $subcat)
-        @section ( 'title',  $cat->title . ' - ZuZi Shop' )
+        @section ( 'title',  $cat->title . ' - Ljekarne PharmAD' )
         @section ( 'description', $cat->meta_description )
     @elseif ($cat && $subcat)
-        @section ( 'title', $subcat->title . ' - ZuZi Shop' )
+        @section ( 'title', $subcat->title . ' - Ljekarne PharmAD' )
         @section ( 'description', $cat->meta_description )
     @endif
 @endif
@@ -97,7 +102,7 @@
             <ol class="breadcrumb flex-lg-nowrap">
                 <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovnica</a></li>
                 @if ($group && ! $cat && ! $subcat)
-                    <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ \Illuminate\Support\Str::ucfirst($group) }}</li>
+                    <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ \Illuminate\Support\Str::ucfirst(Str::lower(str_replace('-', ' ', $group))) }}</li>
                 @elseif ($group && $cat)
                     <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route', ['group' => $group]) }}">{{ \Illuminate\Support\Str::ucfirst($group) }}</a></li>
                 @endif
@@ -112,7 +117,7 @@
 
         <section class="d-md-flex justify-content-between align-items-center text-center text-lg-start mb-1 pb-1">
             @if ($group && ! $cat && ! $subcat)
-                <h1 class="h2 mb-2 mb-md-0 me-3"> {{ \Illuminate\Support\Str::ucfirst($group) }}</h1>
+                <h1 class="h2 mb-2 mb-md-0 me-3"> {{ \Illuminate\Support\Str::ucfirst(Str::lower(str_replace('-', ' ', $group))) }}</h1>
             @endif
             @if ($cat && ! $subcat)
                 <h1 class="h2 mb-2 mt-2 mb-md-0 me-3">{{ $cat->title }}</h1>

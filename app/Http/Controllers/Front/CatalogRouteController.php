@@ -70,6 +70,8 @@ class CatalogRouteController extends Controller
 
             $prod->kat = CategoryProducts::where('product_id', $prod->id)->where('category_id', 109)->first();
 
+
+
             return view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'seo', 'crumbs', 'bookscheme','shipping_methods','payment_methods', 'gdl'));
         }
 
