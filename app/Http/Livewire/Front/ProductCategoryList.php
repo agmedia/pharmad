@@ -196,11 +196,16 @@ class ProductCategoryList extends Component
 
         $request = new Request($request_data);
 
+        $this->ids = collect();
+
         if (is_array($this->ids)) {
             $this->ids = collect($this->ids);
         }
 
+
         $products = (new Product())->filter($request, $this->ids)->with('author')->paginate(config('settings.pagination.front'));
+
+        //dd($request->input('cat')->id, $products);
 
         return view('livewire.front.product-category-list', [
             'products' => $products

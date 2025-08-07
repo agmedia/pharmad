@@ -473,6 +473,7 @@ class Product extends Model
             $query->whereIn('id', collect($_ids)->unique());
         }
 
+
         if ($request->has('group')) {
             // Akcije
             if ($request->input('group') == 'snizenja') {
@@ -495,9 +496,10 @@ class Product extends Model
 
         if ($request->has('cat')) {
             $query->whereHas('categories', function ($query) use ($request) {
-                $query->where('category_id', $request->input('cat'));
+                $query->where('category_id', $request->input('cat')->id);
             });
         }
+        //dd($query->count());
 
         if ($request->has('subcat')) {
             $query->whereHas('categories', function ($query) use ($request) {

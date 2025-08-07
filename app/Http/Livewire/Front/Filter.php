@@ -24,8 +24,6 @@ class Filter extends Component
     public function mount()
     {
         $this->categories = $this->getCategories();
-
-        Log::debug($this->categories);
     }
 
     public function render()
