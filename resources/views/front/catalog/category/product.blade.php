@@ -1,4 +1,4 @@
-<div class="article px-0 mb-2 px-1" >
+<div class="col px-2 mb-4 d-flex align-items-stretch " >
 
     <div class="card product-card shadow pb-2 ">
         @if ($product->main_price > $product->main_special)
@@ -11,6 +11,9 @@
 
             <div class="d-flex flex-wrap justify-content-between align-items-start pb-1">
                 <div class="text-muted fs-xs me-1">
+                    @if ($product->author)
+                    <a class="product-meta fw-medium" href="{{ $product->author->url }}">{{ $product->author->title }}</a>
+                    @endif
                 </div>
 
             </div>
@@ -19,7 +22,7 @@
 
             @if ($product->main_price > $product->main_special)
                 <div class="product-price"><small><span class="text-muted">NC30: <s>{{ $product->main_price_text }}</s>  @if($product->secondary_price_text){{ $product->secondary_price_text }} @endif</span></small>
-                    <span class="text-dark fs-md">{{ $product->main_special_text }} @if($product->secondary_special_text) <small class="text-muted">{{ $product->secondary_special_text }}</small> @endif</span></div>
+               <span class="text-dark fs-md">{{ $product->main_special_text }} @if($product->secondary_special_text) <small class="text-muted">{{ $product->secondary_special_text }}</small> @endif</span></div>
             @else
                 <div class="product-price"><span class="text-dark fs-md">{{ $product->main_price_text }}  @if($product->secondary_price_text) <small class="fs-sm text-muted">{{ $product->secondary_price_text }} </small>@endif</span></div>
             @endif
