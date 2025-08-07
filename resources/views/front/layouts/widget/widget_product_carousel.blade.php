@@ -16,7 +16,7 @@
             @foreach ($data['items'] as $product)
                 <!-- Product-->
                     <div>
-                        @include('front.catalog.category.product')
+                        @include('front.catalog.category.widget')
                     </div>
                 @endforeach
             </div>
