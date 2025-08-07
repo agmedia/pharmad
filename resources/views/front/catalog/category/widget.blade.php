@@ -11,7 +11,9 @@
 
             <div class="d-flex flex-wrap justify-content-between align-items-start pb-1">
                 <div class="text-muted fs-xs me-1">
+                    @if ($product->author)
                     <a class="product-meta fw-medium" href="{{ $product->author->url }}">{{ $product->author->title }}</a>
+                    @endif
                 </div>
 
             </div>
