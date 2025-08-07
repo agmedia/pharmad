@@ -144,11 +144,11 @@
                     <div class="pb-4 fs-sm text-dark  text-center text-md-start">© 2025. Ljekarne Pharmad. Web by <a class="text-dark" title="Izrada web shopa - B2C ili B2B web trgovina - AG media" href="https://www.agmedia.hr/usluge/izrada-web-shopa/" target="_blank" rel="noopener">AG media</a>
                     </div>
                     <div class="widget widget-links widget-light pb-4 text-center text-md-end">
-                        <img class="d-inline-block" style="width: 55px;margin-right:3px" src="{{ config('settings.images_domain') }}media/cards/visa.svg" width="55" height="35" alt="Visa"/>
-                        <img class="d-inline-block" style="width: 55px;margin-right:3px" src="{{ config('settings.images_domain') }}media/cards/maestro.svg" width="55" height="35" alt="Maestro"/>
-                        <img class="d-inline-block" style="width: 55px;margin-right:3px" src="{{ config('settings.images_domain') }}media/cards/mastercard.svg" width="55" height="35" alt="MasterCard"/>
-                        <img class="d-inline-block" style="width: 55px;margin-right:3px" src="{{ config('settings.images_domain') }}media/cards/diners.svg" width="55" height="35" alt="Diners"/>
-                        <img src="{{ config('settings.images_domain') }}media/cards/google_pay.svg" width="55" height="35" alt="Gogole pay" class="d-inline-block" style="width: 55px; margin-right: 3px;"><img src="{{ config('settings.images_domain') }}media/cards/apple_pay.svg" width="55" height="35" alt="Apple Pay" class="d-inline-block" style="width: 55px; margin-right: 3px;">
+                        <img class="d-inline-block" style="width: 50px;margin-right:3px" src="{{ config('settings.images_domain') }}media/cards/visa.svg" width="55" height="35" alt="Visa"/>
+                        <img class="d-inline-block" style="width: 50px;margin-right:3px" src="{{ config('settings.images_domain') }}media/cards/maestro.svg" width="55" height="35" alt="Maestro"/>
+                        <img class="d-inline-block" style="width: 50px;margin-right:3px" src="{{ config('settings.images_domain') }}media/cards/mastercard.svg" width="55" height="35" alt="MasterCard"/>
+                        <img class="d-inline-block" style="width: 50px;margin-right:3px" src="{{ config('settings.images_domain') }}media/cards/diners.svg" width="50" height="35" alt="Diners"/>
+                        <img src="{{ config('settings.images_domain') }}media/cards/google_pay.svg" width="55" height="35" alt="Gogole pay" class="d-inline-block" style="width: 55px; margin-right: 3px;"><img src="{{ config('settings.images_domain') }}media/cards/apple_pay.svg" width="55" height="35" alt="Apple Pay" class="d-inline-block" style="width: 50px; margin-right: 3px;">
                     </div>
                 </div>
 
