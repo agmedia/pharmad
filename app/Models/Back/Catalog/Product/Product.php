@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Helpers\ProductHelper;
 use App\Models\Back\Catalog\Author;
 use App\Models\Back\Catalog\Category;
+use App\Models\Back\Catalog\Options;
 use App\Models\Back\Catalog\Publisher;
 use App\Models\Back\Marketing\Action;
 use App\Models\Back\Settings\Settings;
@@ -83,6 +84,15 @@ class Product extends Model
     public function subkat()
     {
         return $this->hasManyThrough(Category::class, ProductCategory::class, 'product_id', 'id', 'id', 'category_id')->where('parent_id', '!=', 0)->groupBy('title');
+    }
+
+
+    /**
+     * @return Relation
+     */
+    public function options()
+    {
+        return $this->hasMany(ProductOption::class, 'product_id');
     }
 
 
@@ -205,6 +215,10 @@ class Product extends Model
             throw ValidationException::withMessages(['sku_dupl' => $this->request->sku . ' - Šifra već postoji...']);
         }
 
+        if ($this->isDuplicateOptionSku()) {
+            throw ValidationException::withMessages(['sku_opt' => 'Šifra opcije već postoji...']);
+        }
+
         return $this;
     }
 
@@ -246,6 +260,7 @@ class Product extends Model
         $updated = $this->update($this->getModelArray(false));
 
         if ($updated) {
+            $this->resolveOptions();
             $this->resolveCategories($this->id);
 
             $this->update([
@@ -513,6 +528,50 @@ class Product extends Model
 
 
     /**
+     * @param int|null $product_id
+     *
+     * @return Product
+     */
+    private function resolveOptions(int $product_id = null): Product
+    {
+        $product_id = $product_id ?: $this->id;
+
+        if ( ! empty($this->request->input('options')) && is_array($this->request->input('options'))) {
+            $quantity = 0;
+            $inputs = $this->request->input('options');
+            $groups = Options::query()->get()->unique('group')->pluck('group');
+
+            foreach ($groups as $group) {
+                $group = Str::slug($group);
+
+                if ( ! empty($inputs[$group])) {
+                    foreach ($inputs[$group] as $option) {
+                        if (isset($option['main_id'])) {
+                            $options_qty = ProductOption::storeDouble($inputs[$group], $product_id);
+                        } elseif (isset($option['value'])) {
+                            $options_qty = ProductOption::storeSingle($inputs[$group], $product_id);
+                        }
+                    }
+
+                    $quantity += $options_qty;
+
+                    if (isset($this->id)) {
+                        $this->update(['quantity' => $quantity]);
+                    }
+                }
+            }
+        }
+
+        //
+        if (empty($this->request->input('options'))) {
+            ProductOption::deleteAll($product_id);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * @param int  $product_id
      * @param bool $insert
      *
@@ -606,6 +665,57 @@ class Product extends Model
 
         if (isset($this->id) && $exist && $exist->id != $this->id) {
             return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @return bool
+     * @throws ValidationException
+     */
+    private function isDuplicateOptionSku()
+    {
+        if ( ! empty($this->request->input('options')) && is_array($this->request->input('options'))) {
+            $inputs = $this->request->input('options');
+            $groups = Options::query()->get()->unique('type')->pluck('type');
+
+            foreach ($groups as $group) {
+                $group = Str::slug($group);
+
+                // single options
+                if (isset($inputs[$group][0]['value'])) {
+                    foreach ($inputs[$group] as $option) {
+                        $opt = Options::query()->find(intval($option['value']) ?? 0);
+
+                        if ($opt) {
+                            if (ProductHelper::isDuplicateOptionSku($option['sku'], $opt->id)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+                // double (referenced) options
+                if (isset($inputs[$group][0]['main_id'])) {
+                    foreach ($inputs[$group] as $option) {
+                        $opt = Options::query()->find(intval($option['main_id']) ?? 0);
+
+                        if ($opt && ! empty($option['sub_options'])) {
+                            foreach ($option['sub_options'] as $sub_option) {
+                                $sub_opt = Options::query()->find(intval($sub_option['id']) ?? 0);
+
+                                if ($sub_opt) {
+                                    if (ProductHelper::isDuplicateOptionSku($sub_option['sku'], $sub_opt->id)) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         return false;

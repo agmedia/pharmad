@@ -335,6 +335,24 @@
                     </div>
                 </div>
             </div>
+
+            <div class="block">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Opcije</h3>
+                </div>
+                <div class="block-content block-content-full">
+                    <div class="row justify-content-center push">
+                        <div class="col-md-12">
+                            @error('sku_opt')
+                            <span class="text-danger small font-italic">{{ $message }}</span>
+                            @enderror
+                            <div id="addition">
+                                @livewire('back.catalog.product-options-selection', ['product' => isset($product) ? $product : null])
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
 
         @if (isset($product))

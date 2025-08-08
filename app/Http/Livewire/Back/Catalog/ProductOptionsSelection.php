@@ -432,7 +432,7 @@ class ProductOptionsSelection extends Component
             if ($default) {
                 $group = Str::slug($default->grupa);
 
-                foreach ($options->where('group', $group)->get() as $option) {
+                foreach ($options->where('grupa', $group)->get() as $option) {
                     $this->items[$group]['options']                 = [];
                     $this->items[$group]['selections'][$option->id] = [
                         'id'    => $option->id,
