@@ -3,11 +3,11 @@
     <div class="d-flex flex-wrap justify-content-between align-items-center pt-1  pb-3 mb-2">
         <h2 class="h3 mb-0 pt-0 font-title me-3 "><span class="border-color"> {{ $data['title'] }}</span></h2>
         @if ($data['tablename'] == 'blog')
-        <a class="btn btn-primary btn-sm btn-shadow mt-0" href="/blog"><span class="d-none d-sm-inline-block">Pogledajte sve</span> <i class="ci-arrow-right fs-xs "></i></a>
+        <a class="btn btn-outline-primary btn-sm btn-shadow mt-0" href="/blog"><span class="d-none d-sm-inline-block">Pogledajte sve</span> <i class="ci-arrow-right fs-xs "></i></a>
         @endif
 
         @if ($data['tablename'] == 'reviews')
-            <a class="btn btn-primary btn-sm btn-shadow mt-0" target="_blanks" href="https://search.google.com/local/reviews?placeid=ChIJq6MCBZjIZUcRxti_kumFAkA"><span class="d-none d-sm-inline-block">Google recenzije</span> <i class="ci-arrow-right fs-xs"></i></a>
+            <a class="btn btn-outline-primary btn-sm btn-shadow mt-0" target="_blanks" href="https://search.google.com/local/reviews?placeid=ChIJq6MCBZjIZUcRxti_kumFAkA"><span class="d-none d-sm-inline-block">Google recenzije</span> <i class="ci-arrow-right fs-xs"></i></a>
         @endif
     </div>
 
