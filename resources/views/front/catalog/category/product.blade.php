@@ -1,11 +1,11 @@
-<div class="col px-2 mb-4 d-flex align-items-stretch " >
+<div class="col px-2 mb-3 d-flex align-items-stretch " >
 
     <div class="card product-card shadow pb-2 ">
         @if ($product->main_price > $product->main_special)
             <span class="badge bg-primary badge-shadow">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($product->price, $product->special())), 0) }}%</span>
         @endif
         <a class="card-img-top d-block overflow-hidden text-center" href="{{ url($product->url) }}">
-            <img loading="lazy" src="{{ str_replace('.webp','-thumb.webp', $product->image) }}" width="250" height="300" alt="{{ $product->name }}">
+            <img  src="{{ str_replace('.webp','-thumb.webp', $product->image) }}" width="250" height="300" alt="{{ $product->name }}">
         </a>
         <div class="card-body pt-2" style="min-height: 120px;">
 

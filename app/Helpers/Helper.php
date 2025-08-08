@@ -476,8 +476,7 @@ class Helper
         if (!empty($data['popular']) && $data['popular'] === 'on') {
             $product->orderBy('viewed', 'desc'); // prilagodi prema tvojoj logici popularnosti
         }
-
-        return $product;
+        return $product->limit(15);
     }
 
 
