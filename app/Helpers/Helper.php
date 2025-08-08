@@ -474,7 +474,7 @@ class Helper
 
         // Popularni proizvodi – ovo pretpostavlja da postoji kolona `views` ili slično
         if (!empty($data['popular']) && $data['popular'] === 'on') {
-            $product->orderBy('views', 'desc'); // prilagodi prema tvojoj logici popularnosti
+            $product->orderBy('viewed', 'desc'); // prilagodi prema tvojoj logici popularnosti
         }
 
         return $product;
