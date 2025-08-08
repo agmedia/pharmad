@@ -302,7 +302,7 @@
 
 </div>
     <div class="tns-carousel pt-2 pb-2">
-        <div class="tns-carousel-inner" data-carousel-options='{"items": 2, "controls": true, "nav": true, "responsive": {"0":{"items":2, "gutter": 5},"500":{"items":2, "gutter": 10},"768":{"items":3, "gutter": 10}, "1100":{"items":4, "gutter": 10}, "1500":{"items":5, "gutter": 10}, "1600":{"items":6, "gutter": 10}}}'>
+        <div class="tns-carousel-inner" data-carousel-options='{"items": 2, "controls": false, "nav": true, "responsive": {"0":{"items":2, "gutter": 5},"500":{"items":2, "gutter": 10},"768":{"items":3, "gutter": 10}, "1100":{"items":4, "controls": true, "gutter": 10}, "1500":{"items":5, "controls": true, "gutter": 10}, "1600":{"items":6, "controls": true, "gutter": 10}}}'>
     @foreach ($cat->products()->get()->unique()->take(10) as $cat_product)
         @if ($cat_product->id  != $prod->id)
             <div>
