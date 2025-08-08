@@ -6,6 +6,7 @@ use App\Models\Back\Settings\Category;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Options extends Model
@@ -89,7 +90,7 @@ class Options extends Model
             }
         }
 
-        return $this->find($id);
+        return true;
     }
 
 
@@ -100,25 +101,35 @@ class Options extends Model
      */
     public function edit()
     {
-        dd($this->request->toArray());
         $values = Options::query()->where('grupa', Str::slug($this->grupa))->get();
         $group  = $this->request->input('title');
         $items  = collect($this->request->input('item'));
 
-        foreach ($values as $value) {
-            $item = $items->where('id', $value->id);
+        /*if ($this->grupa != Str::slug($group)) {
+            Options::query()->where('grupa', Str::slug($this->grupa))->update([
+                'grupa'      => Str::slug($group),
+                'ime_grupe'  => $group,
+            ]);
+        }*/
 
-            if ( ! empty($item->first())) {
+        //dd($this->request->toArray(), $values, $this->grupa);
+
+        foreach ($values as $value) {
+            $item = $items->where('id', $value->id)->first();
+
+            Log::info($item);
+
+            if ( ! empty($item)) {
                 $saved = $value->update([
                     'grupa'      => Str::slug($group),
                     'ime_grupe'  => $group,
-                    'title'      => $this->request->input('title'),
+                    'title'      => $item['title'] ?? '',
                     'type'       => $this->request->input('type'),
                     'value'      => $item['color'] ?? '#000000',
                     'value_opt'  => $item['color_opt'] ?? null,
                     'option_sku' => $item['option_sku'] ?? null,
                     'data'       => '',
-                    'sort_order' => $item->first()['sort_order'] ?? 0,
+                    'sort_order' => $item['sort_order'] ?? 0,
                     'status'     => (isset($this->request->status) and $this->request->status == 'on') ? 1 : 0,
                     'updated_at' => Carbon::now()
                 ]);
@@ -133,7 +144,7 @@ class Options extends Model
             $id = $this->insertGetId([
                 'grupa'      => Str::slug($group),
                 'ime_grupe'  => $group,
-                'title'      => $this->request->input('title'),
+                'title'      => $item['title'] ?? '',
                 'type'       => $this->request->input('type'),
                 'value'      => $item['color'] ?? '#000000',
                 'value_opt'  => $item['color_opt'] ?? null,

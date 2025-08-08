@@ -36,7 +36,7 @@
 
                             <div class="form-group">
                                 <label for="title-input">{{ __('back/option.pitanje') }}</label>
-                                <input type="text" class="form-control" id="title-input" name="title" value="{{ isset($options) ? $options->grupa : old('title') }}">
+                                <input type="text" class="form-control" id="title-input" name="title" value="{{ isset($options) ? $options->ime_grupe : old('title') }}">
                             </div>
 
                             <div class="form-group ">
