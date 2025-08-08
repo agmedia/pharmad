@@ -258,7 +258,12 @@ class DashboardController extends Controller
                 if ($product_id) {
                     $get_url = 'https://www.ljekarne-pharmad.hr/image/';
                     // Create, sort all images.
-                    $main_path = $get_url . $product->image;
+                   // $main_path = $get_url . $product->image;
+
+                    $encoded_path = implode('/', array_map('rawurlencode', explode('/', $product->image)));
+                    $main_path = $get_url . $encoded_path;
+
+
                     $main_image = $import->resolveProductImage($main_path, $product_description->name, $product_id);
 
                     Product::where('id', $product_id)->update(['image' => $main_image]);
