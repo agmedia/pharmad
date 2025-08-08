@@ -5147,7 +5147,7 @@ textarea.form-control-lg {
     --cz-breadcrumb-divider-color: #a6acb7;
     --cz-breadcrumb-item-padding-x: 0.5rem;
     --cz-breadcrumb-item-active-color: #363e4f;
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
     padding: var(--cz-breadcrumb-padding-y) var(--cz-breadcrumb-padding-x);
     margin-bottom: var(--cz-breadcrumb-margin-bottom);
