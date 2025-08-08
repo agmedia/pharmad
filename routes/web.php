@@ -222,6 +222,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('moj-racun')->group(func
     Route::get('/', [CustomerController::class, 'index'])->name('moj-racun');
     Route::patch('/snimi/{user}', [CustomerController::class, 'save'])->name('moj-racun.snimi');
     Route::get('/narudzbe', [CustomerController::class, 'orders'])->name('moje-narudzbe');
+    Route::get('/loyalty', [CustomerController::class, 'loyalty'])->name('loyalty');
 });
 
 /**
@@ -237,7 +238,8 @@ Route::prefix('api/v2')->group(function () {
         Route::post('/add', [CartController::class, 'add']);
         Route::post('/update/{id}', [CartController::class, 'update']);
         Route::get('/remove/{id}', [CartController::class, 'remove']);
-        Route::get('/coupon/{coupon}', [CartController::class, 'coupon']);;
+        Route::get('/coupon/{coupon}', [CartController::class, 'coupon']);
+        Route::get('/loyalty/{loyalty}', [CartController::class, 'loyalty']);
     });
 
     Route::get('/products/autocomplete', [\App\Http\Controllers\Api\v2\ProductController::class, 'autocomplete'])->name('products.autocomplete');
