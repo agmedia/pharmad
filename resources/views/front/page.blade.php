@@ -68,9 +68,9 @@
 
 
 
-        <nav class="mb-4 mt-3" aria-label="breadcrumb">
+        <nav class="mb-4 mt-3 text-center text-lg-start" aria-label="breadcrumb">
             <ol class="breadcrumb flex-lg-nowrap">
-                <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovnica</a></li>
+                <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovna</a></li>
                 <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ $page->title }}</li>
             </ol>
         </nav>

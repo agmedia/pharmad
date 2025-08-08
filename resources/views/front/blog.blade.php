@@ -36,9 +36,9 @@
 
 @section('content')
 
-    <nav class="mb-4" aria-label="breadcrumb">
+    <nav class="mb-4 text-center text-lg-start" aria-label="breadcrumb">
         <ol class="breadcrumb flex-lg-nowrap">
-            <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovnica</a></li>
+            <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovna</a></li>
             <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('catalog.route.blog') }}"><i class="ci-home"></i>Blog</a></li>
         </ol>
     </nav>
