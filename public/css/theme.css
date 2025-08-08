@@ -15851,7 +15851,7 @@ h1 .dropdown-toggle::after, h2 .dropdown-toggle::after, h3 .dropdown-toggle::aft
     }
 }
 .input-group .position-absolute {
-    z-index: 5;
+    z-index: 15;
 }
 .input-group .position-absolute + .form-control, .input-group .position-absolute + .password-toggle .form-control {
     padding-left: 2.5rem;

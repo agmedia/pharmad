@@ -38,11 +38,11 @@ class Glsstari
             ini_set('max_execution_time', 600);
 
             //Test ClientNumber:
-            $clientNumber = 380006507; //!!!NOT FOR CUSTOMER TESTING, USE YOUR OWN, USE YOUR OWN!!!
+            $clientNumber = 380007696; //!!!NOT FOR CUSTOMER TESTING, USE YOUR OWN, USE YOUR OWN!!!
             //Test username:
-            $username = "info@zuzi.hr"; //!!!NOT FOR CUSTOMER TESTING, USE YOUR OWN, USE YOUR OWN!!!
+            $username = "ljekarne.pharmad@gmail.com"; //!!!NOT FOR CUSTOMER TESTING, USE YOUR OWN, USE YOUR OWN!!!
             //Test password:
-            $pwd      = "Mimizizi0510"; //!!!NOT FOR CUSTOMER TESTING, USE YOUR OWN, USE YOUR OWN!!!
+            $pwd      = "PharmAD0106"; //!!!NOT FOR CUSTOMER TESTING, USE YOUR OWN, USE YOUR OWN!!!
             $password = hash('sha512', $pwd, true);
 
             $brojracuna = $this->order['id'];
@@ -72,14 +72,18 @@ class Glsstari
             $deliveryAddress->HouseNumberInfo = "";
             $parcel->DeliveryAddress          = $deliveryAddress;
             $pickupAddress                    = new StdClass();
-            $pickupAddress->ContactName       = "Mirjana Vulić Šaldić";
-            $pickupAddress->ContactPhone      = "+385916047126";
-            $pickupAddress->ContactEmail      = "info@zuzi.hr";
-            $pickupAddress->Name              = "Zuzi Obrt";
-            $pickupAddress->Street            = "Antuna Šoljana";
-            $pickupAddress->HouseNumber       = "33";
-            $pickupAddress->City              = "Zagreb";
-            $pickupAddress->ZipCode           = "10000";
+
+
+            $pickupAddress->ContactName = "Ljekarne PharmAD";
+            $pickupAddress->ContactPhone = "+385994891210 ";
+            $pickupAddress->ContactEmail = "webshop@ljekarne-pharmad.hr";
+            $pickupAddress->Name = "Ljekarne PharmAD";
+            $pickupAddress->Street = "Zagrebačka";
+            $pickupAddress->HouseNumber = "99";
+            $pickupAddress->City = "Prigorje Brdovečko";
+            $pickupAddress->ZipCode = "10291";
+
+
             $pickupAddress->CountryIsoCode    = "HR";
             $pickupAddress->HouseNumberInfo   = "";
             $parcel->PickupAddress            = $pickupAddress;
