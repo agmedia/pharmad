@@ -47,7 +47,7 @@ class ActionGroupList extends Component
     public $title = '';
 
     /**
-     * @var int 
+     * @var int
      */
     public $dropdown_limit = 5;
 
@@ -119,6 +119,9 @@ class ActionGroupList extends Component
             case 'category':
                 $this->title = 'Kategorije koje želite uključiti' . $this->requiredSymbol();
                 break;
+            case 'product_category':
+                $this->title = 'Kategorije koje želite uključiti' . $this->requiredSymbol();
+                break;
             case 'publisher':
                 $this->title = 'Nakladnici koje želite uključiti' . $this->requiredSymbol();
                 break;
@@ -157,6 +160,9 @@ class ActionGroupList extends Component
                 case 'category':
                     $this->search_results = Category::where('title', 'like', '%' . $this->search . '%')->limit($this->dropdown_limit)->get();
                     break;
+                case 'product_category':
+                    $this->search_results = Category::where('title', 'like', '%' . $this->search . '%')->limit($this->dropdown_limit)->get();
+                    break;
                 case 'publisher':
                     $this->search_results = Publisher::where('title', 'like', '%' . $this->search . '%')->limit($this->dropdown_limit)->get();
                     break;
@@ -192,6 +198,9 @@ class ActionGroupList extends Component
                     $this->disabled = true;
                     break;
                 case 'category':
+                    $this->list[$id] = Category::where('id', $id)->first();
+                    break;
+                case 'product_category':
                     $this->list[$id] = Category::where('id', $id)->first();
                     break;
                 case 'publisher':

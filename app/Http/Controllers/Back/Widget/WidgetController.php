@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Models\Back\Catalog\Category;
 
 class WidgetController extends Controller
 {
@@ -182,12 +183,14 @@ class WidgetController extends Controller
     public function getLinks(Request $request)
     {
         if ($request->has('type')) {
-            /*if ($request->input('type') == 'category') {
+            if ($request->input('type') == 'category') {
                 return response()->json(Category::getList());
             }
-            if ($request->input('type') == 'page') {
-                return response()->json(Blog::published()->pluck('title', 'id'));
-            }*/
+
+            if ($request->input('type') == 'product_category') {
+                return response()->json(Category::getList());
+            }
+
         }
 
         return response()->json([

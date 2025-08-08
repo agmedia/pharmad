@@ -278,6 +278,14 @@ class Helper
                 $tablename = 'category';
             }
 
+            if (static::isDescriptionTarget($data, 'product_category')) {
+                $items     = static::product_category($data)->get();
+
+
+                $tablename = 'product_category';
+            }
+
+
             if (static::isDescriptionTarget($data, 'publisher')) {
                 $items     = static::publisher($data)->get();
                 $tablename = 'publisher';
@@ -443,6 +451,33 @@ class Helper
         }
 
         return $category;
+    }
+
+
+    private static function product_category(array $data): Builder
+    {
+        $product = (new Product())->newQuery();
+
+        $product->where('status', 1);
+
+        // Filtriraj po kategorijama
+        if (!empty($data['list'])) {
+            $product->whereHas('categories', function (Builder $query) use ($data) {
+                $query->whereIn('categories.id', $data['list']);
+            });
+        }
+
+        // Novi proizvodi
+        if (!empty($data['new']) && $data['new'] === 'on') {
+            $product->orderBy('created_at', 'desc');
+        }
+
+        // Popularni proizvodi – ovo pretpostavlja da postoji kolona `views` ili slično
+        if (!empty($data['popular']) && $data['popular'] === 'on') {
+            $product->orderBy('views', 'desc'); // prilagodi prema tvojoj logici popularnosti
+        }
+
+        return $product;
     }
 
 

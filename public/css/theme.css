@@ -17902,7 +17902,7 @@ a.nav-link:hover .media-tab-media {
     width: 100%;
     height: 100%;
     transition: opacity 0.3s ease-in-out;
-    background-color: rgba(43, 52, 69, 0.5);
+    background-color: rgba(43, 52, 69, 0.2);
     content: "";
     opacity: 0;
     z-index: 1;
