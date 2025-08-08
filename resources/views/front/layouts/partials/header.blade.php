@@ -66,7 +66,7 @@
         <li class="nav-item d-lg-none"><a class="nav-link " href="#" data-bs-dismiss="offcanvas" aria-label="Close Navigation" role="tab"><i class="ci-close fs-xs me-2"></i></a></li>
     </ul>
     <div class="offcanvas-body px-0 pt-3 pb-0" data-simplebar>
-        <div class="tab-content">
+        <div class="tab-content" v-pre>
             @livewire('front.filter', ['ids' => isset($ids) ? $ids : '', 'group' => isset($group) ? $group : '', 'cat' => isset($cat) ? $cat : null])
 
             <!-- Menu-->

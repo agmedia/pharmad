@@ -88,7 +88,14 @@ class ProductCategoryList extends Component
 
     public function updatingSort()
     {
+        dd($this->sort);
         $this->resetPage();
+    }
+
+
+    public function selectSortBtn()
+    {
+        dd($this->sort);
     }
 
 
