@@ -60,6 +60,16 @@ class HomeController extends Controller
         return view('front.contact');
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function poslovnice(Request $request)
+    {
+        return view('front.poslovnice');
+    }
+
 
     /**
      * @param Request $request

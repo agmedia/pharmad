@@ -27,10 +27,10 @@
                                         @foreach ($_categories as $category)
                                             @if (isset($category['url']))
                                                 <ul class="widget-list">
-                                                    <li class="widget-list-item pb-1 @if(isset($cat) && $cat->id == $category['id']) active @endif">
+                                                    <li class="widget-list-item pb-2 @if(isset($cat) && $cat->id == $category['id']) active @endif">
                                                         <a class="widget-list-link" href="{{ $category['url'] }}">{{ $category['title'] }}</a>
                                                         @if ($category['subs'])
-                                                            <ul class="widget-list pt-1">
+                                                            <ul class="widget-list pt-2">
                                                                 @foreach ($category['subs'] as $subcategory)
                                                                     <li class="widget-list-item @if(isset($subcat) && $subcat->id == $subcategory['id'])  @endif">
                                                                         <a class="widget-list-link fs-sm" href="{{ $subcategory['url'] }}">{{ $subcategory['title'] }}</a>
@@ -61,10 +61,18 @@
                         </a>
                     </h3>
                 </div>
+
+                <div class="accordion-item border-bottom">
+                    <h3 class="accordion-header px-grid-gutter">
+                        <a class="nav-link-style d-block fs-md py-3" href="{{ route('poslovnice') }}">
+                            <span class="d-flex align-items-center"><i class="ci-location  fs-lg mt-n1 me-2"></i>Naše ljekarne</span>
+                        </a>
+                    </h3>
+                </div>
                 <div class="accordion-item border-bottom">
                     <h3 class="accordion-header px-grid-gutter">
                         <a class="nav-link-style d-block fs-md py-3" href="{{ route('catalog.route.blog') }}">
-                            <span class="d-flex align-items-center"><i class="ci-list  fs-lg mt-n1 me-2"></i>Blog</span>
+                            <span class="d-flex align-items-center"><i class="ci-menu-circle  fs-lg mt-n1 me-2"></i>Blog</span>
                         </a>
                     </h3>
                 </div>

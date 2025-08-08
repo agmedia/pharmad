@@ -81,16 +81,6 @@
         </div>
     </section>
 
-    <div class="container-fluid px-0" id="map">
-        <div class="row g-0">
-            <div class="col-lg-12 iframe-full-height-wrap">
-
-
-                <iframe class="iframe-full-height" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2781.460285624646!2d15.88745341256823!3d45.802039410712396!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4765d12d0d165b0f%3A0xa370e29cb63b7a2e!2sZuzi%20Shop!5e0!3m2!1shr!2shr!4v1684309041472!5m2!1shr!2shr" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-
-        </div>
-    </div>
 
 
 
