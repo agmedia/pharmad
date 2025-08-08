@@ -260,8 +260,10 @@ class DashboardController extends Controller
                     // Create, sort all images.
                    // $main_path = $get_url . $product->image;
 
-                    $encoded_path = implode('/', array_map('rawurlencode', explode('/', $product->image)));
+                    $segments = explode('/', $product->image);
+                    $encoded_path = implode('/', array_map('rawurlencode', $segments));
                     $main_path = $get_url . $encoded_path;
+
 
 
                     $main_image = $import->resolveProductImage($main_path, $product_description->name, $product_id);
