@@ -421,7 +421,9 @@ class ProductOptionsSelection extends Component
                 ];
             }
 
-            $this->option_title = $options->first()->grupa;
+            if ($options->first()) {
+                $this->option_title = $options->first()->grupa;
+            }
 
         } else {
 
