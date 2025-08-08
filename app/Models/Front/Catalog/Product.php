@@ -3,6 +3,7 @@
 namespace App\Models\Front\Catalog;
 
 use App\Helpers\Currency;
+use App\Helpers\ProductHelper;
 use App\Models\Back\Catalog\Product\ProductAction;
 use App\Models\Back\Settings\Settings;
 use Carbon\Carbon;
@@ -43,6 +44,7 @@ class Product extends Model
         'secondary_price_text',
         'secondary_special',
         'secondary_special_text',
+        'has_option'
     ];
 
     /**
@@ -186,6 +188,15 @@ class Product extends Model
 
 
     /**
+     * @return bool
+     */
+    public function getHasOptionAttribute()
+    {
+        return $this->options()->count() > 0;
+    }
+
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function images()
@@ -201,6 +212,102 @@ class Product extends Model
     {
         return $this->belongsTo(ProductAction::class, 'action_id', 'id')
                     ->where('status', 1);
+    }
+
+
+    /**
+     * @return Relation
+     */
+    public function options()
+    {
+        return $this->hasMany(ProductOption::class, 'product_id');
+    }
+
+
+    /**
+     * @return array
+     */
+    public function optionsList()
+    {
+        $response = [];
+
+        if ($this->options()->count() > 0) {
+            $options = $this->options()->get();
+
+            if ( ! $options->first()->top) {
+                $key = $options->first()->option->type;
+
+                $response[$key]['group'] = $options->first()->option->ime_grupe;
+
+                foreach ($options as $option) {
+                    $response[$key]['options'][] = [
+                        'id'         => $option->id,
+                        'option_id'  => $option->option_id,
+                        'name'       => $option->title->title . ProductOption::hasPriceAddition($option->price),
+                        'sku'        => $option->sku,
+                        'value'      => $option->title->value,
+                        'value_opt'  => $option->title->value_opt,
+                        'style'      => ProductHelper::getColorOptionStyle($option),
+                        'quantity'   => $option->quantity,
+                        'price'      => $option->price,
+                        'sort_order' => $option->title->sort_order,
+                        'active'     => $option->quantity ? 1 : 0
+                    ];
+                }
+
+            } else {
+                $key     = $options->first()->option->type;
+                $parent  = $options->first()->top->type;
+                $parents = [];
+
+                $response[$key]['group']    = $options->first()->option->ime_grupe;
+                $response[$parent]['group'] = $options->first()->top->ime_grupe;
+
+                foreach ($options as $option) {
+                    $response[$key]['options'][$option->option_id] = [
+                        'id'         => $option->id,
+                        'option_id'  => $option->option_id,
+                        'name'       => $option->title->title . ProductOption::hasPriceAddition($option->price),
+                        'sku'        => $option->sku,
+                        'value'      => $option->title->value,
+                        'value_opt'  => $option->title->value_opt,
+                        'style'      => ProductHelper::getColorOptionStyle($option),
+                        'quantity'   => $option->quantity,
+                        'price'      => $option->price,
+                        'sort_order' => $option->title->sort_order,
+                        'active'     => 1
+                    ];
+
+                    if ( ! isset($parents[$option->top->id])) {
+                        $parents[$option->top->id] = [
+                            'id'         => $option->id,
+                            'option_id'  => $option->top->id,
+                            'name'       => $option->top->title,
+                            'sku'        => '',
+                            'value'      => $option->top->value,
+                            'value_opt'  => $option->top->value_opt,
+                            'style'      => ProductHelper::getColorOptionStyle($option, true),
+                            'quantity'   => 0,
+                            'price'      => 0,
+                            'sort_order' => $option->top->sort_order,
+                            'active'     => 1
+                        ];
+                    }
+                }
+
+                $response['parent']           = $parent;
+                $response[$parent]['options'] = $parents;
+
+                $response[$parent]['options'] = collect($response[$parent]['options'])->sortBy('sort_order', SORT_NATURAL)->values()->all();
+            }
+
+            $response[$key]['options'] = collect($response[$key]['options'])->sortBy('sort_order', SORT_NATURAL)->values()->all();
+        }
+
+        //dd($response);
+        //Log::info($response);
+
+        return $response;
     }
 
 

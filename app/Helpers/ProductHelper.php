@@ -5,6 +5,8 @@ namespace App\Helpers;
 use App\Models\Back\Catalog\Product\Product;
 use App\Models\Back\Orders\OrderProduct;
 use App\Models\Front\Catalog\Category;
+use App\Models\Front\Catalog\ProductOption;
+use Darryldecode\Cart\ItemCollection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
@@ -177,5 +179,87 @@ class ProductHelper
         }
 
         return true;
+    }
+
+
+    /**
+     * @param ProductOption $option
+     *
+     * @return string
+     */
+    public static function getColorOptionStyle(ProductOption $option, bool $parent = false): string
+    {
+        if ($parent) {
+            if ($option->top->value_opt) {
+                return 'background: linear-gradient(45deg, ' . $option->top->value . ' 50%, ' . $option->top->value_opt . ' 50%);';
+
+            } else {
+                return 'background-color:' . $option->top->value;
+            }
+        }
+
+        if ($option->title->value_opt) {
+            return 'background: linear-gradient(45deg, ' . $option->title->value . ' 50%, ' . $option->title->value_opt . ' 50%);';
+
+        } else {
+            return 'background-color:' . $option->title->value;
+        }
+
+        return '';
+    }
+
+
+    /**
+     * @param array $item
+     *
+     * @return array
+     */
+    public static function hasOptionFromCartItem(array|ItemCollection $item): array
+    {
+        //  Log::info('public static function hasOptionFromCartItem(array $item)');
+        // Log::info('1');
+        //  Log::info($item);
+
+        //return [];
+
+        if (isset($item['attributes']['options']) && ! empty($item['attributes']['options'])) {
+            // Log::info('2');
+            $option = collect($item['attributes']['options'])->first();
+
+            //  Log::info($option);
+            $product_option = ProductOption::query()->find($option['id']);
+
+            if ($product_option) {
+                //Log::info('3');
+                // Log::info('public static function hasOptionFromCartItem(array $item): array ::::::: ');
+                $option['option_id'] = $product_option->option_id;
+                $option['parent_id'] = $product_option->parent_id;
+            }
+
+            return $option;
+        }
+
+        //  Log::info('4');
+
+        return [];
+    }
+
+
+    /**
+     * @param string $sku
+     *
+     * @return bool
+     */
+    public static function isDuplicateOptionSku(string $sku, $option_id): bool
+    {
+        $exist = ProductOption::query()->where('sku', $sku)->first();
+
+        //dd($exist, $option_id);
+
+        if ($exist && $exist->option_id != $option_id) {
+            return true;
+        }
+
+        return false;
     }
 }
