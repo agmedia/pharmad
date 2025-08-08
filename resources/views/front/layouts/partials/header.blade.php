@@ -91,8 +91,8 @@
     </div>
     <div class="offcanvas-footer d-block px-grid-gutter pt-4 pb-3 mb-2">
 
-        <a class=" btn btn-outline-primary btn-sm btn-icon" href="https://www.instagram.com/zuziobrt/"><i class="ci-instagram"></i></a>
-        <a class="btn btn-outline-primary btn-sm btn-icon" href="https://www.facebook.com/zuziobrt/"><i class="ci-facebook"></i></a>
+        <a class=" btn btn-outline-primary btn-sm btn-icon" href="https://www.instagram.com/ljekarnepharmad/"><i class="ci-instagram"></i></a>
+        <a class="btn btn-outline-primary btn-sm btn-icon" href="https://www.facebook.com/ljekarna.pharmad/"><i class="ci-facebook"></i></a>
 
 
 

@@ -9,7 +9,7 @@
             <div class="d-sm-flex justify-content-between align-items-center mx-auto px-4 py-1" >
                 <div class="fs-sm text-dark opacity-50 text-center text-sm-start py-3">2025. Ljekarne Pharmad © Sva prava pridržana. Web by <a class="text-dark" href="https://www.agmedia.hr" target="_blank" rel="noopener">AG media</a></div>
                 <div class="widget widget-links widget-dark  text-center text-md-end"><img src="{{ asset('media/cards/visa.svg') }}" alt="Visa" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35"> <img src="{{ asset('media/cards/maestro.svg') }}" alt="Maestro" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35"> <img src="{{ asset('media/cards/mastercard.svg') }}" alt="MasterCard" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35"> <img src="{{ asset('media/cards/diners.svg') }}" alt="Diners" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35">
-                    <img src="{{ config('settings.images_domain') }}media/cards/google_pay.svg" width="55" height="35" alt="Gogole pay" class="d-inline-block" style="width: 55px; margin-right: 3px;"><img src="h{{ config('settings.images_domain') }}media/cards/apple_pay.svg" width="55" height="35" alt="Apple Pay" class="d-inline-block" style="width: 55px; margin-right: 3px;">
+                    <img src="{{ config('settings.images_domain') }}media/cards/google_pay.svg" width="55" height="35" alt="Gogole pay" class="d-inline-block" style="width: 55px; margin-right: 3px;"><img src="{{ config('settings.images_domain') }}media/cards/apple_pay.svg" width="55" height="35" alt="Apple Pay" class="d-inline-block" style="width: 55px; margin-right: 3px;">
                 </div>
             </div>
         </div>
@@ -99,8 +99,8 @@
 
 
                         <div class="widget mt-4 text-md-nowrap text-center text-sm-start">
-                            <a class=" btn btn-outline-primary btn-sm btn-icon" href="https://www.instagram.com/zuziobrt/"><i class="ci-instagram"></i></a>
-                            <a class="btn btn-outline-primary btn-sm btn-icon" href="https://www.facebook.com/zuziobrt/"><i class="ci-facebook"></i></a>
+                            <a class=" btn btn-outline-primary btn-sm btn-icon" href="https://www.instagram.com/ljekarnepharmad/"><i class="ci-instagram"></i></a>
+                            <a class="btn btn-outline-primary btn-sm btn-icon" href="https://www.facebook.com/ljekarna.pharmad/"><i class="ci-facebook"></i></a>
                         </div>
                     </div>
                     <!-- Mobile dropdown menu (visible on screens below md)-->
