@@ -43,8 +43,7 @@
                                             @endif
                                         @endforeach
                                         <ul class="widget-list mt-2">
-                                            <li class="widget-list-item"><a class="widget-list-link" href="{{ route('catalog.route', ['group' => mb_strtolower(str_replace([' ', ','], ['-', ''], $_group))]) }}
-">Pogledajte sve <i class="fs-xs  ci-arrow-right"></i></a></li>
+                                            <li class="widget-list-item"><a class="widget-list-link" href="{{ route('catalog.route', ['group' => $_group ]) }}">Pogledajte sve <i class="fs-xs  ci-arrow-right"></i></a></li>
                                         </ul>
                                     </div>
                                 </div>

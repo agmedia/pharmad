@@ -100,7 +100,7 @@
 
         <nav class="mb-2 mt-3 text-center text-lg-start" aria-label="breadcrumb">
             <ol class="breadcrumb flex-lg-nowrap">
-                <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovnica {{$group}}</a></li>
+                <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovnica </a></li>
                 @if ($group && ! $cat && ! $subcat)
                     <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ \Illuminate\Support\Str::ucfirst(Str::lower(str_replace('-', ' ', $group))) }}</li>
                 @elseif ($group && $cat)
