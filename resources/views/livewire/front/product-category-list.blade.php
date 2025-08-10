@@ -1,4 +1,4 @@
-<section class="col">
+<section class="col" id="product-list-top">
     <!-- Toolbar-->
     <div class="d-flex justify-content-center justify-content-sm-between align-items-center pt-2 pb-2  mt-3">
         <div class="d-flex flex-wrap">
@@ -78,4 +78,39 @@
 </section>
 
 
-@livewireScripts
+@push('js_after')
+
+
+    <script>
+        (function () {
+            function scrollTopHandler(e) {
+                const behavior = 'smooth';
+                const containerSel = e.detail?.container || null;
+
+                // pričekaj da Livewire dovrši DOM patch
+                requestAnimationFrame(() => {
+                    // ako je specificiran scroll container
+                    if (containerSel) {
+                        const c = document.querySelector(containerSel);
+                        if (c) {
+                            if ('scrollTo' in c) c.scrollTo({ top: 0, left: 0, behavior });
+                            else c.scrollTop = 0;
+                            return;
+                        }
+                    }
+                    // scrollaj window (i fallback na document elemete)
+                    if ('scrollTo' in window) window.scrollTo({ top: 0, left: 0, behavior });
+                    document.documentElement.scrollTop = 0;
+                    document.body.scrollTop = 0;
+                });
+            }
+
+            // Livewire v2 emitira na window:
+            window.addEventListener('lw-scroll-top', scrollTopHandler);
+        })();
+    </script>
+
+
+@endpush
+
+

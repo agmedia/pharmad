@@ -17,7 +17,7 @@ use Livewire\WithPagination;
 class ProductCategoryList extends Component
 {
     use WithPagination;
-
+    public $muteScroll = false; // << flag
     /**
      * @var null
      */
@@ -91,7 +91,7 @@ class ProductCategoryList extends Component
 
     public function updatingSort()
     {
-       // dd($this->sort);
+        $this->muteScroll = true; // mutiraj scroll za sljedeću promjenu page-a
         $this->resetPage();
     }
 
@@ -99,6 +99,24 @@ class ProductCategoryList extends Component
     public function selectSortBtn()
     {
        // dd($this->sort);
+
+    }
+
+
+
+    public function updatedPage($page)
+    {
+
+        if ($this->muteScroll) {
+            // promjena page-a je side-effect od resetPage() zbog sortiranja
+            $this->muteScroll = false; // resetiraj flag
+            return;
+        }
+        // kad korisnik klikne paginaciju
+        $this->dispatchBrowserEvent('lw-scroll-top', [
+            'to' => 'product-list-top',
+            'offset' => 100,
+        ]);
     }
 
 

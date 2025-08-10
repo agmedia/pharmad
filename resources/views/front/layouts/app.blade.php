@@ -223,8 +223,11 @@
         }, 270);
     })
 </script>
-
+@livewireScripts
 @stack('js_after')
+
+
+
 
 </body>
 </html>
