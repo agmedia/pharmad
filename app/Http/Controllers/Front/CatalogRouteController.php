@@ -271,10 +271,30 @@ class CatalogRouteController extends Controller
 
         if ($request->has(config('settings.search_keyword') . '_api')) {
             $search = Helper::search(
-                $request->input(config('settings.search_keyword') . '_api')
+                $request->input(config('settings.search_keyword') . '_api'), true, true
             );
 
-            return response()->json($search);
+            $response = [];
+
+            foreach ($search['products'] as $id) {
+                $item = Product::query()->where('id', $id)->first();
+
+                //Log::info('id = '.$id);
+
+                $response[] = [
+                    'id' => $id,
+                    'sku' => $item->sku,
+                    'name' => $item->name,
+                    'url' => url($item->url),
+                    'main_price' => $item->main_price,
+                    'main_price_text' => $item->main_price_text,
+                    'main_special' => $item->main_special,
+                    'main_special_text' => $item->main_special_text,
+                    'image' => $item->thumb,
+                ];
+            }
+
+            return response()->json($response);
         }
 
         return response()->json(['error' => 'Greška kod pretrage..! Molimo pokušajte ponovo ili nas kotaktirajte! HVALA...']);

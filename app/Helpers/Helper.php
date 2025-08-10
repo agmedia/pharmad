@@ -81,7 +81,7 @@ class Helper
      *
      * @return array|false|Collection
      */
-    public static function search(string $target = '', bool $builder = false)
+    public static function search(string $target = '', bool $builder = false, bool $api = false)
     {
         if ($target != '') {
             $response = collect();
@@ -118,6 +118,10 @@ class Helper
 
             foreach ($authors as $author) {
                 $products = $products->merge($author->products->pluck('id'));
+            }
+
+            if ($api) {
+                $products = $products->take(5);
             }
 
             $response->put('products', $products->unique()->flatten());

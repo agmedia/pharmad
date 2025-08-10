@@ -16,8 +16,16 @@
             </a>
             <!-- Search-->
             <form action="{{ route('pretrazi') }}" id="search-form-first" class="w-100 d-none d-lg-flex flex-nowrap mx-4" method="get">
-                <div class="input-group "><i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                    <input class="form-control rounded-start w-100" type="text" name="{{ config('settings.search_keyword') }}" value="{{ request()->query('pojam') ?: '' }}" placeholder="Pretražite po nazivu ili brandu">
+                {{--  <div class="dropdown input-group"><i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+                   <input type="text" name="{{ config('settings.search_keyword') }}" class="form-control rounded-start w-100" placeholder="Type Here..." id="search_box" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onkeyup="javascript:load_data(this.value)" />
+                   <span id="search_result"></span>
+               </div>--}}
+                <div class="dropdown w-100">
+                    <div class="input-group "><i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+                        <input class="form-control rounded-start w-100" type="text" name="{{ config('settings.search_keyword') }}" value="{{ request()->query('pojam') ?: '' }}" placeholder="Pretraži artikle" id="search_box" data-toggle="dropdown" aria-haspopup="true" autocomplete="off" aria-expanded="false" onkeyup="javascript:load_data(this.value)">
+                    </div>
+
+                    <div id="search_result" class="live-search"></div>
                 </div>
             </form>
             <!-- Toolbar-->
@@ -100,3 +108,54 @@
 
     </div>
 </aside>
+@push('js_after')
+    <script>
+        function load_data(query) {
+            if(query.length > 2) {
+                console.log(query);
+
+                let all =  '{{ route('pretrazi') }}' + '?pojam=' + query;
+
+                $.ajax({
+                    method: 'get',
+                    url: '{{ route('api.front.autocomplete') }}' + '?pojam_api=' + query,
+
+                    success: function(json) {
+                        console.log(json);
+
+                        if (json.length > 0) {
+                            let html = '<table class="table products"> <tbody>';
+
+
+                            json.forEach(function (item) {
+                                html += '<tr><td class="image"><a href="' + item.url + '">' + '<img  width="80" alt="' + item.name + ' " src="' + item.image + '">' + '</a></td>' + '<td class="main"><a href="' + item.url + '">' + item.name + ' <br><small> ' + item.sku + '</small></a></td><td class="price"><a href="' + item.url + '"><div class="price"><span class="price">' + item.main_price_text + '</span></div>' + '</a></td></tr>';
+                            });
+
+
+
+                            html += '</tbody></table>';
+
+                            html += '<div class="result-text"><a href="' + all  + '" class="view-all-results">Pogledaj sve rezultate </a> </div>';
+
+                            document.getElementById('search_result').innerHTML = html;
+                        } else {
+                            let html = '<div class="result-text"><a href="#" class="view-all-results">Nema pronađenih rezultata</a></div>';
+
+                            document.getElementById('search_result').innerHTML = html;
+                        }
+
+                        /*if (json.status) {
+                            document.location = json.redirect;
+                        }*/
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                });
+            }
+            else {
+                document.getElementById('search_result').innerHTML = '';
+            }
+        }
+    </script>
+@endpush
