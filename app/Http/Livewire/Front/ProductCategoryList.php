@@ -53,6 +53,9 @@ class ProductCategoryList extends Component
      */
     protected $authors;
 
+
+    protected $paginationTheme = 'bootstrap';
+
     /**
      * @var
      */
