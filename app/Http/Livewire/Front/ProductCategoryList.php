@@ -120,7 +120,11 @@ class ProductCategoryList extends Component
     public function render()
     {
         if ($this->author) {
-            $this->authors[] = $this->author;
+            $_author = Author::where('slug', $this->author)->first();
+
+            if ($_author) {
+                $this->authors[$_author->id] = $_author->id;
+            }
         }
 
         if ($this->publisher) {
