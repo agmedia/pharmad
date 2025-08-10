@@ -74,6 +74,12 @@ class ProductCategoryList extends Component
         ]);
     }
 
+    public function updatingSelectedAuthors()
+    {
+        $this->muteScroll = true; // da ti ne skrolne gore zbog resetPage side-effecta
+        $this->resetPage();       // vrati na stranicu 1
+    }
+
     public function idChanged($data)
     {
         $this->start = $data['start'] ?? $this->start;
