@@ -54,7 +54,8 @@ class ProductCategoryList extends Component
         $this->resetPage();
     }
 
-    public function updatingSelectedAuthors()
+
+    public function selectSortBtn()
     {
         $this->muteScroll = true;
         $this->resetPage();
