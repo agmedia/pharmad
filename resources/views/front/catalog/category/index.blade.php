@@ -48,7 +48,7 @@
 
     @if (isset($author) && $author)
 
-        <nav class="mb-4" aria-label="breadcrumb">
+        <nav class="mb-2 mt-3 text-center text-lg-start" aria-label="breadcrumb">
             <ol class="breadcrumb flex-lg-nowrap">
                 <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovnica</a></li>
                 <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route.author') }}">Brendovi</a></li>
@@ -66,7 +66,7 @@
             </ol>
         </nav>
 
-        <section class="d-md-flex justify-content-between align-items-center mb-2 pb-2">
+        <section class="d-md-flex justify-content-between align-items-center text-center text-lg-start mb-1 pb-1">
             <h1 class="h2 mb-2 mb-md-0 me-3">{{ $author->title }}</h1>
         </section>
     @endif
