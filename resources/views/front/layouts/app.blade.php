@@ -12,7 +12,11 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" media="screen" href="{{ asset('vendor/simplebar/dist/simplebar.min.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('vendor/tiny-slider/dist/tiny-slider.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('vendor/nouislider/dist/nouislider.min.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('css/theme.css?v=2.8') }}">
+
+
 
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -158,6 +162,8 @@
 <script src="{{ asset('vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js') }}"></script>
 <script src="{{ asset('js/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
 <script src="{{ asset('js/shufflejs/dist/shuffle.min.js') }}"></script>
+
+<script src="{{ asset('vendor/nouislider/dist/nouislider.min.js') }}"></script>
 <!-- Main theme script-->
 <script src="{{ asset('js/cart.js?v=2.4') }}"></script>
 <script src="{{ asset('vendor/lightgallery/lightgallery.min.js') }}"></script>

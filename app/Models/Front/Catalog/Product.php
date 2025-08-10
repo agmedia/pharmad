@@ -567,8 +567,6 @@ class Product extends Model
      */
     public function filter(Request $request, Collection $ids = null): Builder
     {
-
-
         $query = $this->newQuery();
 
         $query->active()->hasStock();
@@ -591,9 +589,50 @@ class Product extends Model
             $query->whereIn('id', $_ids);
         }
 
+        // =========================
+        // AUTORI (JEDINI BLOK)
+        // =========================
+        if ($request->has('autor') && !empty($request->autor)) {
+            $raw = $request->input('autor');
+
+            // Pretvori u kolekciju elemenata (podržava: string "1,2", array ID-eva,
+            // array objekata/arraya s ['id'=>...], i checkbox mapu [12=>true, 27=>false])
+            $items = is_string($raw)
+                ? explode(',', $raw)
+                : (is_array($raw) ? $raw : [$raw]);
+
+            $authorIds = collect($items)
+                ->map(function ($item, $key) {
+                    // 1) već je broj (npr. 12)
+                    if (is_numeric($item)) return (int) $item;
+
+                    // 2) objekt sa ->id
+                    if (is_object($item) && isset($item->id)) return (int) $item->id;
+
+                    // 3) array s ['id' => 12]
+                    if (is_array($item) && isset($item['id'])) return (int) $item['id'];
+
+                    // 4) checkbox mapa: [12 => true] ili [12 => "on"]
+                    if (!is_numeric($item) && is_numeric($key)) return (int) $key;
+
+                    return null;
+                })
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+
+            if (!empty($authorIds)) {
+                // Ako Product ima author_id (belongsTo):
+                $query->whereIn('author_id', $authorIds);
+
+                // Ako je many-to-many (ima relaciju authors()):
+                // $query->whereHas('authors', fn($q) => $q->whereIn('authors.id', $authorIds));
+            }
+        }
+        // =========================
 
         if ($request->has('group')) {
-            // Akcije
             if ($request->input('group') == 'snizenja') {
                 $query->where('special', '!=', '')
                     ->where(function ($query) {
@@ -603,7 +642,6 @@ class Product extends Model
                         $query->whereDate('special_to', '>=', now())->orWhereNull('special_to');
                     });
             } else {
-                // Kategorija...
                 $group = $request->input('group');
 
                 $query->whereHas('categories', function ($query) use ($request, $group) {
@@ -617,7 +655,6 @@ class Product extends Model
                 $query->where('category_id', $request->input('cat')->id);
             });
         }
-        //dd($query->count());
 
         if ($request->has('subcat')) {
             $query->whereHas('categories', function ($query) use ($request) {
@@ -625,28 +662,16 @@ class Product extends Model
             });
         }
 
-        if ($request->has('autor')) {
-            $auts = [];
-
-            foreach ($request->input('autor') as $key => $item) {
-                if (isset($item->id)) {
-                    array_push($auts, $item->id);
-                } else {
-                    array_push($auts, $key);
-                }
-            }
-
-            $query->whereIn('author_id', $auts);
-        }
+        // === Uklonjen je stari DUPLIKAT autor bloka ovdje ===
 
         if ($request->has('nakladnik')) {
             $pubs = [];
 
             foreach ($request->input('nakladnik') as $key => $item) {
                 if (isset($item->id)) {
-                    array_push($pubs, $item->id);
+                    $pubs[] = $item->id;
                 } else {
-                    array_push($pubs, $key);
+                    $pubs[] = $key;
                 }
             }
 
@@ -668,31 +693,18 @@ class Product extends Model
         if ($request->has('sort')) {
             $sort = $request->input('sort');
 
-            if ($sort == 'novi') {
-                $query->orderBy('created_at', 'desc');
-            }
-
-            if ($sort == 'price_up') {
-                $query->orderBy('price');
-            }
-
-            if ($sort == 'price_down') {
-                $query->orderBy('price', 'desc');
-            }
-
-            if ($sort == 'naziv_up') {
-                $query->orderBy('name');
-            }
-
-            if ($sort == 'naziv_down') {
-                $query->orderBy('name', 'desc');
-            }
+            if ($sort == 'novi')       $query->orderBy('created_at', 'desc');
+            if ($sort == 'price_up')   $query->orderBy('price');
+            if ($sort == 'price_down') $query->orderBy('price', 'desc');
+            if ($sort == 'naziv_up')   $query->orderBy('name');
+            if ($sort == 'naziv_down') $query->orderBy('name', 'desc');
         } else {
             $query->orderBy('created_at', 'desc');
         }
 
         return $query;
     }
+
 
 
     /*******************************************************************************

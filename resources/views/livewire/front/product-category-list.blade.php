@@ -19,6 +19,66 @@
 
 
     </div>
+
+
+
+    <div class="offcanvas offcanvas-start bg-white w-100 rounded-3 shadow-lg py-1"
+         tabindex="-1"
+         id="shop-sidebar"
+         aria-labelledby="shop-sidebar-label"
+         style="max-width: 22rem;">
+        <div class="offcanvas-header">
+            <h5 id="shop-sidebar-label">Filteri</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+
+
+            <!-- Filter by Brand-->
+
+            <div class="widget widget-filter mb-4 pb-4 border-bottom">
+                <h3 class="widget-title">Brand</h3>
+
+                <!-- (Opcionalno) Tražilica autora -->
+
+
+                <ul class="widget-list widget-filter-list list-unstyled pt-1"
+                    style="max-height: 11rem;"
+                    data-simplebar
+                    data-simplebar-auto-hide="false">
+
+                    @forelse($authors as $author)
+                        <li class="widget-filter-item d-flex justify-content-between align-items-center mb-1">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="author-{{ $author->id }}"
+                                       value="{{ $author->id }}"
+                                       wire:model="selectedAuthors">
+                                <label class="form-check-label widget-filter-item-text" for="author-{{ $author->id }}">
+                                    {{ $author->title }}
+                                </label>
+                            </div>
+                            @isset($authorCounts)
+                                <span class="fs-xs text-muted">{{ $authorCounts[$author->id] ?? 0 }}</span>
+                            @else
+                                <span class="fs-xs text-muted">&nbsp;</span>
+                            @endisset
+                        </li>
+                    @empty
+                        <li class="text-muted fs-sm px-2">Nema brendova u ovoj kategoriji.</li>
+                    @endforelse
+
+
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
     <!-- Products grid-->
     <div class=" row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 row-cols-xxxl-6 mb-3 px-2">
         @forelse ($products as $product)
@@ -111,6 +171,14 @@
     </script>
 
 
-@endpush
+
+
+
+
+    @endpush
+
+
+
+
 
 

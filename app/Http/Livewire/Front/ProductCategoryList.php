@@ -1,266 +1,177 @@
 <?php
 
+
+
 namespace App\Http\Livewire\Front;
 
 use App\Models\Front\Catalog\Author;
 use App\Models\Front\Catalog\Product;
 use App\Models\Front\Catalog\Publisher;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-/**
- * Class ProductCategoryList
- * @package App\Http\Livewire\Front
- */
 class ProductCategoryList extends Component
 {
     use WithPagination;
-    public $muteScroll = false; // << flag
-    /**
-     * @var null
-     */
-    public $ids = null;
-
-    /**
-     * @var null
-     */
-    public $group = null;
-
-    /**
-     * @var null
-     */
-    public $cat = null;
-
-    /**
-     * @var null
-     */
-    public $subcat = null;
-
-    /**
-     * @var
-     */
-    public $author;
-
-    /**
-     * @var
-     */
-    public $publisher;
-
-    /**
-     * @var
-     */
-    protected $authors;
-
 
     protected $paginationTheme = 'bootstrap';
 
-    /**
-     * @var
-     */
-    protected $publishers;
+    public $muteScroll = false;
 
-    /**
-     * @var
-     */
-    protected $start;
+    public $ids = null;
+    public $group = null;
+    public $cat = null;
+    public $subcat = null;
 
-    /**
-     * @var
-     */
-    protected $end;
+    // URL parametri po slug-u (opcionalno)
+    public $author = null;
+    public $publisher = null;
 
-    /**
-     * @var
-     */
+    // --- AUTORI (jedini izvor istine za filter) ---
+    public $selectedAuthors = [];   // npr. ["74","84"] ili [74,84]
+    public $authorSearch = '';
+
+    // ostalo
     public $sort;
-
-    /**
-     * @var string[]
-     */
     protected $listeners = ['idChanged'];
 
-    /**
-     * @var \string[][]
-     */
+    // Ako želiš sort u URL-u
     protected $queryString = [
-        'sort' => ['except' => '']
+        'sort' => ['except' => ''],
     ];
 
+    // Opcionalne granice godina
+    protected $start;
+    protected $end;
+
+    // Publishers ostavljam kako su ti bili, ali nisu bitni za ovaj fix
+    protected $publishers = [];
 
     public function updatingSort()
     {
-        $this->muteScroll = true; // mutiraj scroll za sljedeću promjenu page-a
+        $this->muteScroll = true;
         $this->resetPage();
     }
 
-
-    public function selectSortBtn()
+    public function updatingSelectedAuthors()
     {
-       // dd($this->sort);
-
+        $this->muteScroll = true;
+        $this->resetPage();
     }
-
-
 
     public function updatedPage($page)
     {
-
         if ($this->muteScroll) {
-            // promjena page-a je side-effect od resetPage() zbog sortiranja
-            $this->muteScroll = false; // resetiraj flag
+            $this->muteScroll = false;
             return;
         }
-        // kad korisnik klikne paginaciju
+
         $this->dispatchBrowserEvent('lw-scroll-top', [
             'to' => 'product-list-top',
             'offset' => 100,
         ]);
     }
 
-
-    /**
-     * @param $data
-     */
     public function idChanged($data)
     {
-        /*$this->ids = collect($data['ids']);
-        $this->authors = $data['author'];
-        $this->publishers = $data['publisher'];*/
-        $this->start = $data['start'];
-        $this->end = $data['end'];
-
-
-        //$this->render();
+        $this->start = $data['start'] ?? $this->start;
+        $this->end   = $data['end']   ?? $this->end;
     }
 
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
     public function render()
     {
-        if ($this->author) {
-            $_author = Author::where('slug', $this->author)->first();
+        // 1) Normaliziraj AUTORE (iz URL-a i iz Livewire state-a)
+        if (request()->has('autor') && empty($this->selectedAuthors)) {
+            $aut = request()->input('autor');
+            $slugs = is_string($aut) ? explode(',', $aut) : (array) $aut;
+            $idsFromSlugs = Author::whereIn('slug', array_filter($slugs))->pluck('id')->all();
+            $this->selectedAuthors = array_values(array_unique(array_merge(
+                array_map('intval', (array) $this->selectedAuthors),
+                array_map('intval', $idsFromSlugs)
+            )));
+        }
 
-            if ($_author) {
-                $this->authors[$_author->id] = $_author->id;
+        if ($this->author) {
+            if ($a = Author::where('slug', $this->author)->first()) {
+                $this->selectedAuthors[] = (int) $a->id;
+                $this->selectedAuthors   = array_values(array_unique($this->selectedAuthors));
             }
         }
 
+        $authorIdsFilter = collect($this->selectedAuthors)
+            ->map(fn($v) => (int) $v)->filter()->unique()->values()->all();
+
+        // 2) Ostali URL parametri (publisher, godine…)
         if ($this->publisher) {
             $this->publishers[] = $this->publisher;
         }
+        if (!$this->start && request()->has('start')) $this->start = request()->input('start');
+        if (!$this->end   && request()->has('end'))   $this->end   = request()->input('end');
 
-
-
-
-        if (\request()->has('autor')) {
-            $aut = \request()->input('autor');
-
-            if (strpos($aut, ',') !== false) {
-                $arr = explode(',', $aut);
-
-                foreach ($arr as $item) {
-                    $_author = Author::where('slug', $item)->first();
-                    $this->authors[] = $_author;
-                }
-            } else {
-                $_author = Author::where('slug', $aut)->first();
-                $this->authors[] = $_author;
-            }
-        }
-
-        if (\request()->has('nakladnik')) {
-            $nak = \request()->input('nakladnik');
-
-            if (strpos($nak, ',') !== false) {
-                $arr = explode(',', $nak);
-
-                foreach ($arr as $item) {
-                    $_publisher = Publisher::where('slug', $item)->first();
-                    $this->publishers[] = $_publisher;
-                }
-            } else {
-                $_publisher = Publisher::where('slug', $nak)->first();
-                $this->publishers[] = $_publisher;
-            }
-        }
-
-        if ( ! $this->start && \request()->has('start')) {
-            $this->start = \request()->input('start');
-        }
-
-        if ( ! $this->end && \request()->has('end')) {
-            $this->end = \request()->input('end');
-        }
-
+        // 3) Sastavi $request_data za GLAVNI upit (s odabranim autorima)
         $request_data = [];
-
-        if ($this->group) {
-            $request_data['group'] = $this->group;
-        }
-
-        if ($this->cat) {
-            $request_data['cat'] = $this->cat;
-        }
-
-        if ($this->subcat) {
-            $request_data['subcat'] = $this->subcat;
-        }
-
-        if ($this->authors) {
-            $request_data['autor'] = $this->authors;
-        }
-
-        if ($this->publishers) {
-            $request_data['nakladnik'] = $this->publishers;
-        }
-
-        if ($this->start && strlen($this->start) == 4) {
-            $request_data['start'] = $this->start;
-        }
-
-        if ($this->end && strlen($this->end) == 4) {
-            $request_data['end'] = $this->end;
-        }
-
-        if ($this->sort) {
-            $request_data['sort'] = $this->sort;
-        }
+        if ($this->group)   $request_data['group'] = $this->group;
+        if ($this->cat)     $request_data['cat'] = $this->cat;
+        if ($this->subcat)  $request_data['subcat'] = $this->subcat;
+        if (!empty($authorIdsFilter)) $request_data['autor'] = $authorIdsFilter; // array ID-eva
+        if (!empty($this->publishers)) $request_data['nakladnik'] = $this->publishers;
+        if ($this->start && strlen($this->start) == 4) $request_data['start'] = $this->start;
+        if ($this->end   && strlen($this->end) == 4)   $request_data['end']   = $this->end;
+        if ($this->sort) $request_data['sort'] = $this->sort;
 
         $request = new Request($request_data);
 
+        // 4) Normaliziraj $ids
+        if (is_string($this->ids)) $this->ids = json_decode($this->ids, true);
+        if (is_array($this->ids))  $this->ids = collect($this->ids);
 
+        // 5) Glavni rezultat proizvoda
+        $products = (new Product())
+            ->filter($request, $this->ids)
+            ->with('author')
+            ->paginate(config('settings.pagination.front'))
+            ->withQueryString();
 
-      // $this->ids = collect();
+        // 6) FACETS: bazni upit bez autora -> iz njega izvučemo relevantne autore
+        $facetData = $request_data;
+        unset($facetData['autor']); // makni autore iz facets-a
+        $facetReq = new Request($facetData);
 
-        if (is_string($this->ids)) {
-            $this->ids = json_decode($this->ids, true); // pretvori u array
-        }
+        $base = (new Product())->filter($facetReq, $this->ids);
 
-        if (is_array($this->ids)) {
-            $this->ids = collect($this->ids);
-        }
+        // a) ID-evi autora prisutni u trenutnom setu
+        $authorIdsInContext = (clone $base)
+            ->whereNotNull('author_id')
+            ->distinct()
+            ->pluck('author_id')
+            ->toArray();
 
+        // b) (Opcionalno) brojači po autoru
+        $authorCounts = (clone $base)
+            ->selectRaw('author_id, COUNT(*) as total')
+            ->whereNotNull('author_id')
+            ->groupBy('author_id')
+            ->pluck('total', 'author_id')
+            ->toArray();
 
-        $products = (new Product())->filter($request, $this->ids)->with('author')->paginate(config('settings.pagination.front'))->withQueryString();
-
-
+        // c) Sidebar lista autora: samo oni relevantni + pretraga
+        $authors = Author::query()
+            ->when(!empty($authorIdsInContext), fn($q) => $q->whereIn('id', $authorIdsInContext))
+            ->when($this->authorSearch, fn($q) => $q->where('title', 'like', '%'.$this->authorSearch.'%'))
+            ->orderBy('title')
+            ->get(['id','title','slug']);
 
         return view('livewire.front.product-category-list', [
-            'products' => $products
+            'products'     => $products,
+            'authors'      => $authors,
+            'authorCounts' => $authorCounts, // po želji koristi u viewu
         ]);
     }
 
 
-    /**
-     * @return string
-     */
     public function paginationView()
     {
         return 'vendor.pagination.bootstrap-livewire';
     }
-
 }
