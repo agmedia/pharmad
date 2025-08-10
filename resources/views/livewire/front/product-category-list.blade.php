@@ -71,6 +71,15 @@
 
 
                 </ul>
+
+                <!-- Gumb za čišćenje filtera -->
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-sm btn-outline-secondary w-100"
+                            wire:click="clearFilters">
+                        Očisti filtere
+                    </button>
+                </div>
             </div>
 
 

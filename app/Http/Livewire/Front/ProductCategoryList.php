@@ -86,6 +86,20 @@ class ProductCategoryList extends Component
         $this->end   = $data['end']   ?? $this->end;
     }
 
+    public function clearFilters()
+    {
+        $this->selectedAuthors = [];
+        $this->authorSearch = '';
+
+        // Ako želiš resetirati i ostale filtere:
+        // $this->publishers = [];
+        // $this->start = null;
+        // $this->end = null;
+        // $this->sort = null;
+
+        $this->resetPage(); // vrati na prvu stranicu
+    }
+
     public function render()
     {
         // 1) Normaliziraj AUTORE (iz URL-a i iz Livewire state-a)
