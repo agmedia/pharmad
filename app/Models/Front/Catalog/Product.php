@@ -567,17 +567,28 @@ class Product extends Model
      */
     public function filter(Request $request, Collection $ids = null): Builder
     {
+
+
         $query = $this->newQuery();
 
         $query->active()->hasStock();
 
-        if ($ids && $ids->count() && ! \request()->has('pojam')) {
-            $query->whereIn('id', $ids->unique());
+        if ($ids && $ids->count() && ! $request->has('pojam')) {
+            $query->whereIn('id', $ids->unique()->values()->all());
         }
 
-        if ($request->has('ids') && $request->input('ids') != '') {
-            $_ids = explode(',', substr($request->input('ids'), 1, -1));
-            $query->whereIn('id', collect($_ids)->unique());
+        if ($request->filled('ids')) {
+            $raw = trim($request->input('ids'));
+            $raw = str($raw)->trim('[]')->toString();
+
+            $_ids = collect(explode(',', $raw))
+                ->map(fn ($v) => (int) trim($v))
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+
+            $query->whereIn('id', $_ids);
         }
 
 

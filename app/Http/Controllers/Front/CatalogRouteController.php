@@ -264,6 +264,8 @@ class CatalogRouteController extends Controller
                 $request->input(config('settings.search_keyword'))
             );
 
+
+
             $crumbs = null;
 
             return view('front.catalog.category.index', compact('group', 'cat', 'subcat', 'ids', 'crumbs'));

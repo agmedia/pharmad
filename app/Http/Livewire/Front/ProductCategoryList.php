@@ -88,14 +88,14 @@ class ProductCategoryList extends Component
 
     public function updatingSort()
     {
-        dd($this->sort);
+       // dd($this->sort);
         $this->resetPage();
     }
 
 
     public function selectSortBtn()
     {
-        dd($this->sort);
+       // dd($this->sort);
     }
 
 
@@ -104,13 +104,14 @@ class ProductCategoryList extends Component
      */
     public function idChanged($data)
     {
-        $this->ids = collect($data['ids']);
-        /*$this->authors = $data['author'];
+        /*$this->ids = collect($data['ids']);
+        $this->authors = $data['author'];
         $this->publishers = $data['publisher'];*/
         $this->start = $data['start'];
         $this->end = $data['end'];
 
-        $this->render();
+
+        //$this->render();
     }
 
 
@@ -130,6 +131,9 @@ class ProductCategoryList extends Component
         if ($this->publisher) {
             $this->publishers[] = $this->publisher;
         }
+
+
+
 
         if (\request()->has('autor')) {
             $aut = \request()->input('autor');
@@ -207,7 +211,13 @@ class ProductCategoryList extends Component
 
         $request = new Request($request_data);
 
-        $this->ids = collect();
+
+
+      // $this->ids = collect();
+
+        if (is_string($this->ids)) {
+            $this->ids = json_decode($this->ids, true); // pretvori u array
+        }
 
         if (is_array($this->ids)) {
             $this->ids = collect($this->ids);
@@ -216,7 +226,7 @@ class ProductCategoryList extends Component
 
         $products = (new Product())->filter($request, $this->ids)->with('author')->paginate(config('settings.pagination.front'));
 
-        //dd($request->input('cat')->id, $products);
+
 
         return view('livewire.front.product-category-list', [
             'products' => $products
