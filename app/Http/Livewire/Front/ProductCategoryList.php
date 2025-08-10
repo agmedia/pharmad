@@ -224,7 +224,7 @@ class ProductCategoryList extends Component
         }
 
 
-        $products = (new Product())->filter($request, $this->ids)->with('author')->paginate(config('settings.pagination.front'));
+        $products = (new Product())->filter($request, $this->ids)->with('author')->paginate(config('settings.pagination.front'))->withQueryString();
 
 
 
