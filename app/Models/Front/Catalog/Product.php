@@ -632,6 +632,22 @@ class Product extends Model
         }
         // =========================
 
+        // Filtriranje po cjenovnim rasponima
+        if ($request->has('price_ranges') && is_array($request->price_ranges) && count($request->price_ranges)) {
+            $ranges = array_filter($request->price_ranges);
+            $query->where(function($q) use ($ranges) {
+                foreach ($ranges as $range) {
+                    if ($range === '100+') {
+                        $q->orWhere('price', '>=', 100);
+                    } else {
+                        [$min, $max] = explode('-', $range);
+                        $q->orWhereBetween('price', [(float) $min, (float) $max]);
+                    }
+                }
+            });
+        }
+
+
         if ($request->has('group')) {
             if ($request->input('group') == 'snizenja') {
                 $query->where('special', '!=', '')
