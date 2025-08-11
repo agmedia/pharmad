@@ -76,11 +76,18 @@ class CartController extends Controller
      */
     public function check(Request $request)
     {
-        $response = $this->cart->check($request);
+        // AgCart::check vraća string ili null
+        $message = $this->cart->check($request->all());
+
+        // uvijek pošalji i aktualni cart
+        $cart = $this->cart->get();
 
         $this->cart->resolveDB();
 
-        return response()->json($response);
+        return response()->json([
+            'message' => $message,
+            'cart'    => $cart,
+        ]);
     }
 
 
