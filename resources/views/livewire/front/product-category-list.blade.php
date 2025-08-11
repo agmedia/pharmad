@@ -2,7 +2,7 @@
     <!-- Toolbar-->
     <div class="d-flex justify-content-center justify-content-sm-between align-items-center pt-2 pb-2  mt-3">
         <div class="d-flex flex-wrap align-items-center">
-            <div class="dropdown me-2">
+            <div class="dropdown me-1">
                 <a class="btn btn-primary  dropdown-toggle collapsed"
                    href="#shop-sidebar" data-bs-toggle="collapse" aria-expanded="false">
                     <i class="ci-filter-alt"></i>
@@ -11,13 +11,13 @@
 
             @if(!empty($selectedAuthors) || !empty($selectedPriceRanges))
                 <a href="javascript:void(0);"
-                   class="btn btn-outline-danger b me-2 d-inline-flex align-items-center"
+                   class="btn btn-outline-danger  me-1 d-inline-flex align-items-center"
                    wire:click.prevent="clearFilters">
-                    <i class="ci-close-circle me-2"></i>
+                    <i class="ci-close-circle me-2"></i>  Očisti
                 </a>
             @endif
 
-            <div class="d-flex align-items-center flex-nowrap me-3 me-sm-4">
+            <div class="d-flex align-items-center flex-nowrap me-0 me-sm-4">
                 <label class="text-light opacity-75 text-nowrap fs-sm d-none d-sm-block" for="sorting"></label>
                 <select class="form-select " wire:model="sort" wire:change="selectSortBtn">
                     <option value="">Sortiraj</option>
