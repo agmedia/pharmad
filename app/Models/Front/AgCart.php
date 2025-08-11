@@ -155,7 +155,11 @@ class AgCart extends Model
      */
     public function add($request, $id = null): array
     {
-        // Updejtaj artikl sa apsolutnom količinom.
+        // Dohvati eventualne atribute/opcije iz requesta
+        $incomingAttributes = (array) data_get($request, 'item.attributes', []);
+        $incomingOptions    = data_get($request, 'item.options', []);
+
+        // Updejtaj artikl sa apsolutnom ili relativnom količinom.
         foreach ($this->cart->getContent() as $item) {
             if ($item->id == $request['item']['id']) {
                 $quantity = $request['item']['quantity'];
@@ -177,7 +181,16 @@ class AgCart extends Model
                     $relative = true;
                 }
 
-                return $this->updateCartItem($item->id, $quantity, $relative);
+                // ➜ merge postojećih attributes + novih iz fronta
+                $mergedAttributes = array_merge(
+                    (array) ($item->attributes ?? []),
+                    $incomingAttributes
+                );
+
+                // Ako nema novih, zadrži postojeće options
+                $mergedOptions = $incomingOptions ?: ($item->options ?? []);
+
+                return $this->updateCartItem($item->id, $quantity, $relative, $mergedAttributes, $mergedOptions);
             }
         }
 
@@ -208,7 +221,7 @@ class AgCart extends Model
     {
         $items = $this->cart->getContent();
 
-        // Refreshaj košaricu sa upisanim kuponom.
+        // Refreshaj košaricu sa upisanim kuponom — zadrži atribute/opcije stavki!
         foreach ($items as $item) {
             $this->remove($item->id);
             $this->addToCart($this->resolveItemRequest($item));
@@ -272,10 +285,13 @@ class AgCart extends Model
      */
     public function resolveItemRequest($item)
     {
+        // CartItem podržava ArrayAccess; data_get radi i na objektu
         return [
             'item' => [
-                'id'       => $item['id'],
-                'quantity' => $item['quantity']
+                'id'         => data_get($item, 'id'),
+                'quantity'   => data_get($item, 'quantity'),
+                'attributes' => (array) (data_get($item, 'attributes', []) ?: []), // ⬅️ zadrži option/options
+                'options'    => data_get($item, 'options', []),
             ]
         ];
     }
@@ -381,17 +397,32 @@ class AgCart extends Model
      * @param      $id
      * @param      $quantity
      * @param bool $relative
+     * @param array|null $attributes
+     * @param mixed $options
      *
      * @return array
      */
-    private function updateCartItem($id, $quantity, bool $relative): array
+    private function updateCartItem($id, $quantity, bool $relative, array $attributes = null, $options = null): array
     {
-        $this->cart->update($id, [
+        $update = [
             'quantity' => [
                 'relative' => $relative,
                 'value'    => $quantity
             ],
-        ]);
+        ];
+
+        if ($attributes !== null) {
+            // merge s postojećim (za svaki slučaj)
+            $current = $this->cart->get($id);
+            $existing = (array) ($current ? ($current->attributes ?? []) : []);
+            $update['attributes'] = array_merge($existing, $attributes);
+        }
+
+        if ($options !== null) {
+            $update['options'] = $options;
+        }
+
+        $this->cart->update($id, $update);
 
         return $this->get();
     }
@@ -412,6 +443,9 @@ class AgCart extends Model
             return ['error' => 'Nažalost nema dovoljnih količina artikla..!'];
         }
 
+        $incomingAttrs  = (array) data_get($request, 'item.attributes', []);
+        $incomingOpts   = data_get($request, 'item.options', []);
+
         $response = [
             'id'              => $product->id,
             'name'            => $product->name,
@@ -419,8 +453,12 @@ class AgCart extends Model
             'sec_price'       => $product->secondary_price,
             'quantity'        => $request['item']['quantity'],
             'associatedModel' => $product,
-            'attributes'      => $this->structureCartItemAttributes($product)
+            'attributes'      => $this->structureCartItemAttributes($product, $incomingAttrs)
         ];
+
+        if (!empty($incomingOpts)) {
+            $response['options'] = $incomingOpts;
+        }
 
         $conditions = $this->structureCartItemConditions($product);
 
@@ -434,15 +472,19 @@ class AgCart extends Model
 
     /**
      * @param $product
+     * @param array $incoming
      *
-     * @return string[]
+     * @return array
      */
-    private function structureCartItemAttributes($product)
+    private function structureCartItemAttributes($product, array $incoming = [])
     {
-        return [
+        $base = [
             'path' => $product->url,
             'tax'  => $product->tax($product->tax_id)
         ];
+
+        // ➜ spoji default atribute s onima iz fronta (option/options)
+        return array_merge($base, $incoming);
     }
 
 

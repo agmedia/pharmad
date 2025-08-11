@@ -224,6 +224,55 @@ class Order extends Model
         return $this;
     }
 
+    /**
+     * Vrati npr. " - Veličina 38" ili " - Boja Crvena, Veličina 38" iz cart stavke.
+     */
+    private function buildOptionSuffixFromCartItem($item): string
+    {
+        // $item je Cart stavka (objekt). Uzmi attributes kao array.
+        $attrs = $item->attributes ?? [];
+        if ($attrs instanceof \Illuminate\Support\Collection) {
+            $attrs = $attrs->toArray();
+        } else {
+            $attrs = (array) $attrs;
+        }
+
+        $parts = [];
+
+        // 1) Istaknuta opcija (ako postoji)
+        $opt = (array) ($attrs['option'] ?? []);
+        if (!empty($opt['name'])) {
+            $group = trim((string) ($opt['group'] ?? 'Opcija'));
+            $name  = trim((string) $opt['name']);
+            $parts[] = $group . ' ' . $name;
+        }
+
+        // 2) Ostale opcije (ako postoje)
+        foreach ((array) ($attrs['options'] ?? []) as $o) {
+            $o = (array) $o;
+            if (!empty($o['name'])) {
+                $g = trim((string) ($o['group'] ?? ''));
+                $n = trim((string) $o['name']);
+                $label = $g ? ($g.' '.$n) : $n;
+                if (!in_array($label, $parts, true)) {
+                    $parts[] = $label;
+                }
+            }
+        }
+
+        // 3) (opcionalno) Fallback po options.option_id ako želiš dohvat iz baze
+        // $optionId = data_get($item, 'options.option_id');
+        // if ($optionId && class_exists(\App\Models\ProductOptionValue::class)) {
+        //     $val = \App\Models\ProductOptionValue::with('option')->find($optionId);
+        //     if ($val) {
+        //         $label = trim(($val->option->name ?? '').' '.($val->name ?? ''));
+        //         if ($label !== '') $parts[] = $label;
+        //     }
+        // }
+
+        return $parts ? (' - ' . implode(', ', $parts)) : '';
+    }
+
 
     /**
      * @param int $order_id
@@ -244,10 +293,13 @@ class Order extends Model
                 $discount = Helper::calculateDiscount($item->price, $price);
             }
 
+            // ➜ Dodaj sufiks s opcijom u naziv
+            $displayName = $item->name . $this->buildOptionSuffixFromCartItem($item);
+
             OrderProduct::insert([
                 'order_id'   => $order_id,
                 'product_id' => $item->id,
-                'name'       => $item->name,
+                'name'       => $displayName,
                 'quantity'   => $item->quantity,
                 'org_price'  => $item->price,
                 'discount'   => $discount ? number_format($discount, 2) : 0,
