@@ -27,7 +27,7 @@ const router = new VueRouter({
     ]*/
 });
 
-Vue.component('filter-view', require('./components/Filter/Filter').default);
+//Vue.component('filter-view', require('./components/Filter/Filter').default);
 Vue.component('products-view', require('./components/ProductsList/ProductsList').default);
 Vue.component('pagination', require('./components/Pagination/LaravelVuePagination').default);
 

@@ -37,6 +37,3 @@
 
 @endsection
 
-@push('js_after')
-    @livewireScripts
-@endpush

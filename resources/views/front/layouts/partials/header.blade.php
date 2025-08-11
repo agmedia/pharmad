@@ -1,4 +1,3 @@
-<!-- Navbar-->
 <header class="bg-light shadow-sm fbck fixed-top" data-fixed-element>
     <div class="navbar navbar-expand-lg navbar-light py-0">
         <div class="container-fluid">
@@ -16,10 +15,6 @@
             </a>
             <!-- Search-->
             <form action="{{ route('pretrazi') }}" id="search-form-first" class="w-100 d-none d-lg-flex flex-nowrap mx-4" method="get">
-                {{--  <div class="dropdown input-group"><i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                   <input type="text" name="{{ config('settings.search_keyword') }}" class="form-control rounded-start w-100" placeholder="Type Here..." id="search_box" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onkeyup="javascript:load_data(this.value)" />
-                   <span id="search_result"></span>
-               </div>--}}
                 <div class="dropdown w-100">
                     <div class="input-group "><i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
                         <input class="form-control rounded-start w-100" type="text" name="{{ config('settings.search_keyword') }}" value="{{ request()->query('pojam') ?: '' }}" placeholder="Pretraži artikle" id="search_box" data-toggle="dropdown" aria-haspopup="true" autocomplete="off" aria-expanded="false" onkeyup="javascript:load_data(this.value)">
@@ -77,9 +72,10 @@
     </ul>
     <div class="offcanvas-body px-0 pt-3 pb-0" data-simplebar>
         <div class="tab-content" v-pre>
+            <div id="categories" class="sidebar-nav tab-pane fade show active" role="tabpanel">
             @livewire('front.filter', ['ids' => isset($ids) ? $ids : '', 'group' => isset($group) ? $group : '', 'cat' => isset($cat) ? $cat : null])
+            </div>
 
-            <!-- Menu-->
             <div class="sidebar-nav tab-pane fade" id="menu" role="tabpanel">
                 <div class="widget widget-categories">
                     <div class="accordion" id="shop-menu">

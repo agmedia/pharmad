@@ -146,11 +146,6 @@
     @endif
 
 
-    <!-- Offcanvas Sidebar -->
-
-
-
-
     @livewire('front.product-category-list', [
         'ids' => isset($ids) ? $ids : '',
         'group' => isset($group) ? $group : '',
@@ -158,7 +153,6 @@
         'subcat' => isset($subcat) ? $subcat['id'] : null,
         'author' => isset($author) ? $author['slug'] : null
     ])
-
 
     @if (isset($author) && $author && ! empty($author->description))
         <div class=" pb-4 mb-2 mt-4 mb-md-4" >

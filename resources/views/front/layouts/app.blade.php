@@ -211,7 +211,12 @@
         }, 270);
     })
 </script>
-@livewireScripts
+
+
+@push('js_after')
+    @livewireScripts
+@endpush
+
 @stack('js_after')
 </body>
 </html>

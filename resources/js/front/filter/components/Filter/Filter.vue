@@ -1,6 +1,6 @@
 <template>
 
-    <div class="sidebar-nav tab-pane fade show active" id="categories" role="tabpanel">
+    <div class="sidebar-nav tab-pane fade show active" id="categoriesold" role="tabpanel">
         <!-- Categories-->
         <div class="widget widget-categories" v-if="categories">
             <div class="accordion" id="shop-categories">

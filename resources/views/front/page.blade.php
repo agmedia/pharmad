@@ -30,20 +30,6 @@
 
     @if (request()->routeIs(['index']))
 
-      {{--@include('front.layouts.partials.hometemp') --}}
-    <!--  <section >
-          <div class="d-flex row justify-content-between">
-
-              <div class="col-md-12">
-                  <div class="alert alert-info d-flex  mb-1 " role="alert">
-                      <div class="alert-icon">
-                          <i class="ci-gift"></i>
-                      </div>
-                      <small>Besplatna dostava za narudžbe > 80€</small>
-                  </div>
-              </div>
-          </div>
-      </section> -->
       <h1 style="visibility: hidden;height:1px "> Ljekarne PharmAD -  Vaša internet ljekarna </h1>
 
         {!! $page->description !!}
