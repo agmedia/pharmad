@@ -2155,12 +2155,6 @@ __webpack_require__.r(__webpack_exports__);
   //
   mounted: function mounted() {
     var cart = this.$store.state.storage.getCart();
-
-    /*setTimeout(() => {
-        this.price = this.context_product.main_price;
-        this.shown_price = this.price;
-    }, 200);*/
-
     if (cart) {
       for (var key in cart.items) {
         if (this.id == cart.items[key].id) {
@@ -2175,6 +2169,72 @@ __webpack_require__.r(__webpack_exports__);
     this.setPrice();
   },
   methods: {
+    /**
+     * HELPERI ZA PRIKAZ OPCIJA
+     */
+    optionGroupLabel: function optionGroupLabel(key) {
+      return key === 'color' ? 'Boja' : key === 'size' ? 'Veličina' : 'Opcija';
+    },
+    toNum: function toNum(v) {
+      return Number(v || 0);
+    },
+    priceText: function priceText(num) {
+      var n = this.toNum(num);
+      if (!n || n === 0) return null;
+      // koristi postojeći formatter (valuta/format)
+      return this.$store.state.service.formatMainPrice(n);
+    },
+    /**
+     * Sastavi prikazne atribute za košaricu (ne mijenja backend payload)
+     */
+    buildCartAttributes: function buildCartAttributes() {
+      var parts = [];
+      if (Object.keys(this.selected_color).length) {
+        parts.push({
+          group: this.optionGroupLabel('color'),
+          id: this.selected_color.id,
+          name: this.selected_color.name,
+          price: this.toNum(this.selected_color.price),
+          price_text: this.priceText(this.selected_color.price)
+        });
+      }
+      if (Object.keys(this.selected_size).length) {
+        parts.push({
+          group: this.optionGroupLabel('size'),
+          id: this.selected_size.id,
+          name: this.selected_size.name,
+          price: this.toNum(this.selected_size.price),
+          price_text: this.priceText(this.selected_size.price)
+        });
+      }
+
+      // istaknuta (brzi prikaz) — ona koja NIJE parent, ako postoji parent/child
+      var highlighted = null;
+      if (this.parent === 'color' && Object.keys(this.selected_size).length) {
+        highlighted = {
+          group: this.optionGroupLabel('size'),
+          id: this.selected_size.id,
+          name: this.selected_size.name,
+          price: this.toNum(this.selected_size.price),
+          price_text: this.priceText(this.selected_size.price)
+        };
+      } else if (this.parent === 'size' && Object.keys(this.selected_color).length) {
+        highlighted = {
+          group: this.optionGroupLabel('color'),
+          id: this.selected_color.id,
+          name: this.selected_color.name,
+          price: this.toNum(this.selected_color.price),
+          price_text: this.priceText(this.selected_color.price)
+        };
+      } else if (parts.length) {
+        highlighted = parts[0];
+      }
+      return {
+        option: highlighted,
+        // jedna "glavna" opcija
+        options: parts // sve odabrane (npr. i Boja i Veličina)
+      };
+    },
     /**
      *
      */
@@ -2212,7 +2272,9 @@ __webpack_require__.r(__webpack_exports__);
       var item = {
         id: this.id,
         quantity: this.quantity,
-        options: this.setRequestOptions()
+        options: this.setRequestOptions(),
+        // ➜ novo: meta za prikaz u košarici
+        attributes: this.buildCartAttributes()
       };
       this.$store.dispatch('addToCart', item);
     },
@@ -2228,7 +2290,9 @@ __webpack_require__.r(__webpack_exports__);
         id: this.id,
         quantity: this.quantity,
         options: this.setRequestOptions(),
-        relative: true
+        relative: true,
+        // ➜ novo: meta za prikaz u košarici
+        attributes: this.buildCartAttributes()
       };
       this.$store.dispatch('updateCart', item);
     },
@@ -2617,6 +2681,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2682,66 +2773,85 @@ __webpack_require__.r(__webpack_exports__);
       show_buttons: true
     };
   },
+  computed: {
+    cartItems: function cartItems() {
+      var _this$$store$state$ca;
+      var items = ((_this$$store$state$ca = this.$store.state.cart) === null || _this$$store$state$ca === void 0 ? void 0 : _this$$store$state$ca.items) || [];
+      return Array.isArray(items) ? items : Object.values(items);
+    }
+  },
   mounted: function mounted() {
-    if (window.innerWidth < 800) {
-      this.mobile = true;
-    }
-    if (this.buttons == 'false') {
-      this.show_buttons = false;
-    } else {
-      this.show_buttons = true;
-    }
+    if (window.innerWidth < 800) this.mobile = true;
+    this.show_buttons = this.buttons !== 'false';
     this.checkIfEmpty();
     this.setCoupon();
   },
   methods: {
-    /**
-     *
-     * @param item
-     */
+    getItemUrl: function getItemUrl(item) {
+      return item.attributes && item.attributes.path ? item.attributes.path : item.associatedModel && item.associatedModel.url ? item.associatedModel.url : '';
+    },
+    // --- META helpers (čitanje ph_cart_meta iz localStorage-a) ---
+    _getMeta: function _getMeta() {
+      try {
+        return JSON.parse(localStorage.getItem('ph_cart_meta') || '{}');
+      } catch (e) {
+        return {};
+      }
+    },
+    _lineKeyFromItem: function _lineKeyFromItem(item) {
+      var optionId = item && item.options && item.options.option_id != null ? String(item.options.option_id) : '';
+      return String(item && item.id) + '|' + optionId;
+    },
+    _findMetaForItem: function _findMetaForItem(item) {
+      var meta = this._getMeta();
+      // 1) probaj pun ključ (id|option_id)
+      var fullKey = this._lineKeyFromItem(item);
+      if (meta[fullKey]) return meta[fullKey];
+      // 2) fallback: nema option_id u itemu nakon refresha → uzmi prvi meta ključ koji počinje s id|
+      var idPrefix = String(item && item.id) + '|';
+      var k = Object.keys(meta).find(function (x) {
+        return x.startsWith(idPrefix);
+      });
+      return k ? meta[k] : null;
+    },
+    // Vrati "merged" attributes za prikaz (server attributes + meta fallback)
+    getDisplayAttributes: function getDisplayAttributes(item) {
+      var a = item && item.attributes ? item.attributes : {};
+      var m = this._findMetaForItem(item) || {};
+      return _objectSpread(_objectSpread({}, a), m);
+    },
+    // Jedna opcija za prikaz (option ili prva iz options) iz merged atributa
+    getDisplayOption: function getDisplayOption(item) {
+      var a = this.getDisplayAttributes(item);
+      if (a.option && (a.option.name || a.option.group)) return a.option;
+      if (Array.isArray(a.options) && a.options.length) return a.options[0];
+      return null;
+    },
+    hasConditions: function hasConditions(item) {
+      return item && item.conditions && Object.keys(item.conditions).length > 0;
+    },
+    hasActionBadge: function hasActionBadge(item) {
+      return this.hasConditions(item) && item.associatedModel && item.associatedModel.action && item.associatedModel.action.coupon == this.$store.state.cart.coupon;
+    },
     updateCart: function updateCart(item) {
       this.$store.dispatch('updateCart', item);
     },
-    /**
-     *
-     * @param item
-     */
     removeFromCart: function removeFromCart(item) {
       this.$store.dispatch('removeFromCart', item);
     },
-    /**
-     *
-     * @param qty
-     * @returns {number|*}
-     * @constructor
-     */
     CheckQuantity: function CheckQuantity(qty) {
-      if (qty < 1) {
-        return 1;
-      }
-      return qty;
+      return qty < 1 ? 1 : qty;
     },
-    /**
-     *
-     */
     checkIfEmpty: function checkIfEmpty() {
       var cart = this.$store.state.storage.getCart();
       if (cart && !cart.count && window.location.pathname != '/kosarica') {
         window.location.href = '/kosarica';
       }
     },
-    /**
-     *
-     */
     setCoupon: function setCoupon() {
       var cart = this.$store.state.storage.getCart();
-      if (cart) {
-        this.coupon = cart.coupon;
-      }
+      if (cart) this.coupon = cart.coupon;
     },
-    /**
-     *
-     */
     checkCoupon: function checkCoupon() {
       this.$store.dispatch('checkCoupon', this.coupon);
     }
@@ -4077,6 +4187,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -4087,7 +4200,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 var storage_cart = {
   name: 'ph_cart',
   cart: {
-    count: 0
+    count: 0,
+    items: []
   }
 };
 var messages = {
@@ -4104,25 +4218,14 @@ var AgService = /*#__PURE__*/function () {
   }
   _createClass(AgService, [{
     key: "getCart",
-    value:
-    /**
-     *
-     * @returns {*}
-     */
-    function getCart() {
+    value: function getCart() {
       var _this = this;
       return axios.get('cart/get').then(function (response) {
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this.returnError(messages.error);
       });
     }
-
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
   }, {
     key: "checkCart",
     value: function checkCart(ids) {
@@ -4131,16 +4234,10 @@ var AgService = /*#__PURE__*/function () {
         ids: ids
       }).then(function (response) {
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this2.returnError(messages.error);
       });
     }
-
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
   }, {
     key: "addToCart",
     value: function addToCart(item) {
@@ -4158,23 +4255,17 @@ var AgService = /*#__PURE__*/function () {
           ecommerce: null
         });
         window.dataLayer.push({
-          'event': 'add_to_cart',
-          'ecommerce': {
-            'items': [product.dataLayer]
+          event: 'add_to_cart',
+          ecommerce: {
+            items: [product.dataLayer]
           }
         });
         _this3.returnSuccess(messages.cartAdd);
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this3.returnError(messages.error);
       });
     }
-
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
   }, {
     key: "updateCart",
     value: function updateCart(item) {
@@ -4188,16 +4279,10 @@ var AgService = /*#__PURE__*/function () {
         }
         _this4.returnSuccess(messages.cartUpdate);
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this4.returnError(messages.error);
       });
     }
-
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
   }, {
     key: "removeItem",
     value: function removeItem(item) {
@@ -4205,138 +4290,78 @@ var AgService = /*#__PURE__*/function () {
       return axios.get('cart/remove/' + item.id).then(function (response) {
         _this5.returnSuccess(messages.cartRemove);
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this5.returnError(messages.error);
       });
     }
-
-    /**
-     *
-     * @param coupon
-     * @returns {*}
-     */
   }, {
     key: "checkCoupon",
     value: function checkCoupon(coupon) {
       var _this6 = this;
-      if (!coupon) {
-        coupon = null;
-      }
+      if (!coupon) coupon = null;
       return axios.get('cart/coupon/' + coupon).then(function (response) {
         _this6.returnSuccess(messages.couponSuccess);
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this6.returnError(messages.error);
       });
     }
-
-    /**
-     *
-     * @param option
-     * @returns {*}
-     */
   }, {
     key: "checkOptions",
     value: function checkOptions(option, is_parent) {
       var _this7 = this;
       return axios.get('products/options/' + option + '?is_parent=' + is_parent).then(function (response) {
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this7.returnError(messages.error);
       });
     }
-
-    /**
-     *
-     * @param coupon
-     * @returns {*}
-     */
   }, {
     key: "updateLoyalty",
     value: function updateLoyalty(loyalty) {
       var _this8 = this;
-      if (!loyalty) {
-        loyalty = null;
-      }
+      if (!loyalty) loyalty = null;
       return axios.get('cart/loyalty/' + loyalty).then(function (response) {
         _this8.returnSuccess(messages.couponSuccess);
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this8.returnError(messages.error);
       });
     }
-
-    /**
-     *
-     * @returns {*}
-     */
   }, {
     key: "getSettings",
     value: function getSettings() {
       var _this9 = this;
       return axios.get('settings/get').then(function (response) {
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this9.returnError(messages.error);
       });
     }
-
-    /**
-     *
-     * @param msg
-     * @returns {*}
-     */
   }, {
     key: "returnSettings",
     value: function returnSettings(settings) {
       window.AGSettings = settings;
     }
-
-    /**
-     *
-     * @param msg
-     * @returns {*}
-     */
   }, {
     key: "returnError",
     value: function returnError(msg) {
       window.ToastWarning.fire(msg);
     }
-
-    /**
-     *
-     * @param msg
-     * @returns {*}
-     */
   }, {
     key: "returnSuccess",
     value: function returnSuccess(msg) {
       window.ToastSuccess.fire(msg);
     }
-
-    /**
-     * Returns HR formated price string.
-     *
-     * @param price
-     * @returns {string}
-     */
   }, {
     key: "formatPrice",
     value: function formatPrice(price) {
       return Number(price).toLocaleString('hr-HR', {
         style: 'currency',
-        //currencyDisplay: 'narrowSymbol',
         currencyDisplay: 'symbol',
         currency: 'HRK'
       });
     }
-
-    /**
-     * Returns HR formated price string.
-     *
-     * @param price
-     * @returns {string}
-     */
   }, {
     key: "formatMainPrice",
     value: function formatMainPrice(price) {
@@ -4349,14 +4374,6 @@ var AgService = /*#__PURE__*/function () {
         return this.resolvePrice(store.state.settings['currency.list'], price);
       }
     }
-
-    /**
-     *
-     * @param currency_list
-     * @param price
-     * @param main
-     * @returns {string}
-     */
   }, {
     key: "resolvePrice",
     value: function resolvePrice(currency_list, price) {
@@ -4365,9 +4382,7 @@ var AgService = /*#__PURE__*/function () {
       var main_currency = {};
       list.forEach(function (item) {
         if (main) {
-          if (item.main) {
-            main_currency = item;
-          }
+          if (item.main) main_currency = item;
         } else {
           if (!item.main) {
             main_currency = item;
@@ -4379,13 +4394,6 @@ var AgService = /*#__PURE__*/function () {
       var right = main_currency.symbol_right ? '' + main_currency.symbol_right : '';
       return left + Number(price * main_currency.value).toFixed(main_currency.decimal_places) + right;
     }
-
-    /**
-     * Returns HR formated price string.
-     *
-     * @param price
-     * @returns {string}
-     */
   }, {
     key: "formatSecondaryPrice",
     value: function formatSecondaryPrice(price) {
@@ -4398,28 +4406,12 @@ var AgService = /*#__PURE__*/function () {
         return this.resolvePrice(store.state.settings['currency.list'], price, false);
       }
     }
-
-    /**
-     * Calculate tax on items.
-     * Item can be number or object.
-     *
-     * @param items
-     * @return {string}
-     */
   }, {
     key: "getDiscountAmount",
     value: function getDiscountAmount(price, special) {
       var discount = (price - special) / price * 100;
       return Math.round(discount).toFixed(0);
     }
-
-    /**
-     * Calculate tax on items.
-     * Item can be number or object.
-     *
-     * @param items
-     * @return {string}
-     */
   }, {
     key: "calculateItemsTax",
     value: function calculateItemsTax(items) {
@@ -4442,21 +4434,10 @@ var AgStorage = /*#__PURE__*/function () {
   }
   _createClass(AgStorage, [{
     key: "getCart",
-    value:
-    /**
-     *
-     * @returns {JSON}
-     */
-    function getCart() {
+    value: function getCart() {
       var item = localStorage.getItem(storage_cart.name);
       return item && item != 'undefined' ? JSON.parse(item) : null;
     }
-
-    /**
-     *
-     * @param value
-     * @returns localStorage item
-     */
   }, {
     key: "setCart",
     value: function setCart(value) {
@@ -4465,73 +4446,146 @@ var AgStorage = /*#__PURE__*/function () {
   }]);
   return AgStorage;
 }();
-/**/
+/* ---------- META ZA OPCIJE (trajna) ---------- */
+var AgCartMeta = /*#__PURE__*/function () {
+  function AgCartMeta() {
+    _classCallCheck(this, AgCartMeta);
+    this.name = 'ph_cart_meta';
+  }
+  _createClass(AgCartMeta, [{
+    key: "getMeta",
+    value: function getMeta() {
+      var raw = localStorage.getItem(this.name);
+      return raw && raw !== 'undefined' ? JSON.parse(raw) : {};
+    }
+  }, {
+    key: "setMeta",
+    value: function setMeta(obj) {
+      localStorage.setItem(this.name, JSON.stringify(obj || {}));
+    }
+  }, {
+    key: "setLine",
+    value: function setLine(key, attrs) {
+      var m = this.getMeta();
+      m[key] = attrs || null;
+      this.setMeta(m);
+    }
+  }, {
+    key: "removeLine",
+    value: function removeLine(key) {
+      var m = this.getMeta();
+      delete m[key];
+      this.setMeta(m);
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      this.setMeta({});
+    }
+  }]);
+  return AgCartMeta;
+}();
+/* ---------- Helperi za overlay meta -> preko server carta ---------- */
+function lineKey(item) {
+  var opt = item && item.options ? item.options : {};
+  var optionId = opt.option_id != null ? String(opt.option_id) : '';
+  return String(item && item.id) + '|' + optionId;
+}
+function findMetaForItem(serverItem, meta) {
+  var exact = meta[lineKey(serverItem)];
+  if (exact) return exact;
+  var prefix = String(serverItem && serverItem.id) + '|';
+  var candidates = Object.keys(meta).filter(function (k) {
+    return k.startsWith(prefix) && meta[k];
+  });
+  if (candidates.length === 1) return meta[candidates[0]];
+  return candidates.length ? meta[candidates[0]] : null;
+}
+function overlayCartWithMeta(serverCart, metaObj) {
+  var cart = serverCart || {
+    count: 0,
+    items: []
+  };
+  var meta = metaObj || {};
+  var apply = function apply(it) {
+    var m = findMetaForItem(it, meta);
+    if (m) it.attributes = _objectSpread(_objectSpread({}, it.attributes || {}), m);
+    return it;
+  };
+  if (Array.isArray(cart.items)) {
+    cart.items = cart.items.map(apply);
+  } else if (cart.items && _typeof(cart.items) === 'object') {
+    Object.keys(cart.items).forEach(function (k) {
+      cart.items[k] = apply(cart.items[k]);
+    });
+  }
+  return cart;
+}
+
+/* ---------- STORE ---------- */
 var store = {
   state: {
     storage: new AgStorage(),
     service: new AgService(),
+    cartMeta: new AgCartMeta(),
+    // ⬅️ trajna meta za opcije
     cart: storage_cart.cart,
     messages: messages,
     settings: null
   },
   actions: {
-    /**
-     *
-     * @param context
-     * @returns {*}
-     */
+    /* Rehidratacija iz localStorage-a + meta (zove se na bootu aplikacije) */hydrateFromStorage: function hydrateFromStorage(context) {
+      var s = context.state;
+      var cached = s.storage.getCart() || {
+        count: 0,
+        items: []
+      };
+      var merged = overlayCartWithMeta(cached, s.cartMeta.getMeta());
+      s.cart = merged;
+      s.storage.setCart(merged);
+    },
     getCart: function getCart(context) {
       context.commit('setCart');
     },
-    /**
-     *
-     * @param context
-     * @param item
-     */
     addToCart: function addToCart(context, item) {
-      var state = context.state;
-      state.service.addToCart(item).then(function (cart) {
+      var s = context.state;
+      // spremi meta odmah (da preživi refresh)
+      s.cartMeta.setLine(lineKey(item), item.attributes);
+      s.service.addToCart(item).then(function (cart) {
         if (cart) {
-          state.storage.setCart(cart);
-          state.cart = cart;
+          var merged = overlayCartWithMeta(cart, s.cartMeta.getMeta());
+          s.storage.setCart(merged);
+          s.cart = merged;
         }
       });
     },
-    /**
-     *
-     * @param context
-     * @param item
-     */
     updateCart: function updateCart(context, item) {
-      var state = context.state;
-      state.service.updateCart(item).then(function (cart) {
+      var s = context.state;
+      if (item.attributes) s.cartMeta.setLine(lineKey(item), item.attributes);
+      s.service.updateCart(item).then(function (cart) {
         if (cart) {
-          state.storage.setCart(cart);
-          state.cart = cart;
+          var merged = overlayCartWithMeta(cart, s.cartMeta.getMeta());
+          s.storage.setCart(merged);
+          s.cart = merged;
         }
       });
     },
-    /**
-     *
-     * @param context
-     * @param item
-     */
     removeFromCart: function removeFromCart(context, item) {
-      var state = context.state;
-      state.service.removeItem(item).then(function (cart) {
-        state.storage.setCart(cart);
-        state.cart = cart;
+      var s = context.state;
+      s.cartMeta.removeLine(lineKey(item));
+      s.service.removeItem(item).then(function (cart) {
+        var merged = overlayCartWithMeta(cart, s.cartMeta.getMeta());
+        s.storage.setCart(merged);
+        s.cart = merged;
       });
     },
-    /**
-     *
-     * @param context
-     * @param ids
-     */
     checkCart: function checkCart(context, ids) {
-      var state = context.state;
-      state.service.checkCart(ids).then(function (response) {
-        state.storage.setCart(response.cart);
+      var s = context.state;
+      s.service.checkCart(ids).then(function (response) {
+        var serverCart = response.cart || response;
+        var merged = overlayCartWithMeta(serverCart, s.cartMeta.getMeta());
+        s.storage.setCart(merged);
+        s.cart = merged;
         if (response.message && window.location.pathname != '/uspjeh') {
           window.ToastWarningLong.fire(response.message);
           if (window.location.pathname != '/kosarica') {
@@ -4542,73 +4596,50 @@ var store = {
         }
       });
     },
-    /**
-     *
-     * @param context
-     * @param coupon
-     */
     checkCoupon: function checkCoupon(context, coupon) {
-      var state = context.state;
-      state.cart.coupon = coupon;
-      state.storage.setCart(state.cart);
-      state.service.checkCoupon(coupon).then(function (response) {
+      var s = context.state;
+      s.cart.coupon = coupon;
+      s.storage.setCart(s.cart);
+      s.service.checkCoupon(coupon).then(function (response) {
         if (response) {
-          state.service.returnSuccess(messages.couponSuccess);
+          s.service.returnSuccess(messages.couponSuccess);
         } else {
-          state.service.returnError(messages.couponError);
+          s.service.returnError(messages.couponError);
         }
         context.commit('setCart');
       });
     },
-    /**
-     *
-     * @param context
-     * @param coupon
-     */
     updateLoyalty: function updateLoyalty(context, loyalty) {
-      var state = context.state;
-      state.cart.loyalty = loyalty;
-      state.storage.setCart(state.cart);
-      state.service.updateLoyalty(loyalty).then(function (response) {
+      var s = context.state;
+      s.cart.loyalty = loyalty;
+      s.storage.setCart(s.cart);
+      s.service.updateLoyalty(loyalty).then(function (response) {
         if (response) {
-          state.service.returnSuccess(messages.couponSuccess);
+          s.service.returnSuccess(messages.couponSuccess);
         } else {
-          state.service.returnError(messages.couponError);
+          s.service.returnError(messages.couponError);
         }
         context.commit('setCart');
       });
     },
-    /**
-     *
-     * @param context
-     */
     flushCart: function flushCart(context) {
-      context.state.cart = context.state.storage.setCart(storage_cart.cart);
+      context.state.cartMeta.clear(); // ⬅️ očisti i metu
+      context.state.storage.setCart(storage_cart.cart);
+      context.state.cart = storage_cart.cart;
     },
-    /**
-     *
-     * @param context
-     * @param item
-     */
     getSettings: function getSettings(context, item) {
-      var state = context.state;
-      state.service.getSettings(item).then(function (settings) {
-        if (settings) {
-          state.settings = settings;
-        }
+      var s = context.state;
+      s.service.getSettings(item).then(function (settings) {
+        if (settings) s.settings = settings;
       });
     }
   },
   mutations: {
-    /**
-     *
-     * @param state
-     * @returns {*}
-     */
     setCart: function setCart(state) {
-      return state.cart = state.service.getCart().then(function (cart) {
-        state.cart = cart;
-        return state.storage.setCart(cart);
+      return state.service.getCart().then(function (cart) {
+        var merged = overlayCartWithMeta(cart, state.cartMeta.getMeta());
+        state.cart = merged;
+        return state.storage.setCart(merged);
       });
     }
   }
@@ -4658,7 +4689,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.table th, .table td {\n    padding: 0.75rem 0.45rem !important;\n    vertical-align: top;\n    border-top: 1px solid #dee2e6;\n}\n.empty th, .empty td {\n    padding: 1rem !important;\n    vertical-align: top;\n    border-top: 1px solid #dee2e6;\n}\n.mobile-prices {\n    font-size: .66rem;\n    color: #999999;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.table th, .table td { padding: 0.75rem 0.45rem !important; vertical-align: top; border-top: 1px solid #dee2e6;\n}\n.empty th, .empty td { padding: 1rem !important; vertical-align: top; border-top: 1px solid #dee2e6;\n}\n.mobile-prices { font-size: .66rem; color: #999999;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -6662,10 +6693,18 @@ var render = function() {
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm._l(_vm.$store.state.cart.items, function(item) {
+      _vm._l(_vm.cartItems, function(item) {
         return _c(
           "div",
           {
+            key:
+              item.id +
+              "-" +
+              (item.options && item.options.option_id
+                ? item.options.option_id
+                : "noopt") +
+              "-" +
+              item.quantity,
             staticClass:
               "d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom"
           },
@@ -6681,7 +6720,7 @@ var render = function() {
                   "a",
                   {
                     staticClass: "d-inline-block flex-shrink-0 mx-auto me-sm-4",
-                    attrs: { href: _vm.base_path + item.attributes.path }
+                    attrs: { href: _vm.base_path + _vm.getItemUrl(item) }
                   },
                   [
                     _c("img", {
@@ -6699,25 +6738,52 @@ var render = function() {
                   _c("h3", { staticClass: "product-title fs-base mb-2" }, [
                     _c(
                       "a",
-                      { attrs: { href: _vm.base_path + item.attributes.path } },
+                      { attrs: { href: _vm.base_path + _vm.getItemUrl(item) } },
                       [_vm._v(_vm._s(item.name))]
                     )
                   ]),
+                  _vm._v(" "),
+                  _vm.getDisplayOption(item)
+                    ? _c("div", { staticClass: "fs-sm text-muted" }, [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(
+                              _vm.getDisplayOption(item).group || "Opcija"
+                            ) +
+                            ":\n                    "
+                        ),
+                        _c("strong", [
+                          _vm._v(_vm._s(_vm.getDisplayOption(item).name))
+                        ]),
+                        _vm._v(" "),
+                        Number(_vm.getDisplayOption(item).price) > 0
+                          ? _c("span", [
+                              _vm._v(
+                                "\n          — " +
+                                  _vm._s(
+                                    _vm.getDisplayOption(item).price_text ||
+                                      Number(
+                                        _vm.getDisplayOption(item).price
+                                      ).toFixed(2) + " €"
+                                  ) +
+                                  "\n        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    : _vm._e(),
                   _vm._v(" "),
                   _c("div", { staticClass: "fs-lg text-primary pt-2" }, [
                     _vm._v(
                       "\n                    " +
                         _vm._s(
-                          Object.keys(item.conditions).length
+                          _vm.hasConditions(item)
                             ? item.associatedModel.main_special_text
                             : item.associatedModel.main_price_text
                         ) +
                         "\n                    "
                     ),
-                    Object.keys(item.conditions).length &&
-                    item.associatedModel.action &&
-                    item.associatedModel.action.coupon ==
-                      _vm.$store.state.cart.coupon
+                    _vm.hasActionBadge(item)
                       ? _c(
                           "span",
                           {
@@ -6726,7 +6792,7 @@ var render = function() {
                           },
                           [
                             _vm._v(
-                              "\n                        " +
+                              "\n          " +
                                 _vm._s(item.associatedModel.action.title) +
                                 " (" +
                                 _vm._s(
@@ -6734,13 +6800,13 @@ var render = function() {
                                     item.associatedModel.action.discount
                                   ).toFixed(0)
                                 ) +
-                                "\n                        " +
+                                "\n          " +
                                 _vm._s(
                                   item.associatedModel.action.type == "F"
                                     ? "€"
                                     : "%"
                                 ) +
-                                ")\n                    "
+                                ")\n        "
                             )
                           ]
                         )
@@ -6752,7 +6818,7 @@ var render = function() {
                         _vm._v(
                           "\n                    " +
                             _vm._s(
-                              Object.keys(item.conditions).length
+                              _vm.hasConditions(item)
                                 ? item.associatedModel.secondary_special_text
                                 : item.associatedModel.secondary_price_text
                             ) +
@@ -6780,9 +6846,10 @@ var render = function() {
                   directives: [
                     {
                       name: "model",
-                      rawName: "v-model",
+                      rawName: "v-model.number",
                       value: item.quantity,
-                      expression: "item.quantity"
+                      expression: "item.quantity",
+                      modifiers: { number: true }
                     }
                   ],
                   staticClass: "form-control",
@@ -6797,11 +6864,18 @@ var render = function() {
                       $event.preventDefault()
                       return _vm.updateCart(item)
                     },
+                    change: function($event) {
+                      $event.preventDefault()
+                      return _vm.updateCart(item)
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.$set(item, "quantity", $event.target.value)
+                      _vm.$set(item, "quantity", _vm._n($event.target.value))
+                    },
+                    blur: function($event) {
+                      return _vm.$forceUpdate()
                     }
                   }
                 }),
@@ -6860,7 +6934,7 @@ var staticRenderFns = [
     return _c(
       "div",
       { staticClass: "d-block pt-3 pb-2 mt-1 text-center text-sm-start" },
-      [_c("h2", { staticClass: "h6 text-primary  mb-0" }, [_vm._v("Artikli")])]
+      [_c("h2", { staticClass: "h6 text-primary mb-0" }, [_vm._v("Artikli")])]
     )
   }
 ]

@@ -34,7 +34,7 @@ mix
 .sass('resources/sass/dashmix/themes/xplay.scss', 'public/css/themes/')*/
 
 /* JS */
-.js('resources/js/app.js', 'public/js/laravel2.app.js')
+//.js('resources/js/app.js', 'public/js/laravel2.app.js')
 //.js('resources/js/dashmix/app.js', 'public/js/dashmix.app.js')
 
 /* Page JS */
@@ -55,3 +55,6 @@ mix
 .options({
     processCssUrls: false
 })*/;
+
+
+mix.version(); // <— OVO DODAJ

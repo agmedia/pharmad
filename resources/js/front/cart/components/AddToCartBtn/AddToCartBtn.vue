@@ -1,33 +1,33 @@
 <template>
     <div class="cart  pt-2 pb-2 mb-3">
         <div class="d-flex align-items-center pt-2 mw-500" >
-        <div class="mw-500" v-if="Object.keys(this.color_options).length">
-            <div class="fs-sm mb-4">
-                <span class="text-heading fw-medium me-1"><span class="text-danger">*</span> Boja:</span><span class="text-muted">{{ color_name }} <span class="text-warning">{{ extra_price }}</span></span>
-            </div>
-            <div class="position-relative me-n4 mb-3" id="select" >
-                <div v-for="(option, index) in color_options" class="form-check form-option form-check-inline mb-2" :data-target="option.option_id">
-                    <input class="form-check-input" type="radio" :value="option.id" :id="option.id" :disabled="!option.active" v-model="color"/>
-                    <label v-bind:class="{ opacity: !option.active }" class="form-option-label rounded-circle opacity-80" :for="option.id"><span class="form-option-color rounded-circle" :style="option.style"></span> </label>
+            <div class="mw-500" v-if="Object.keys(this.color_options).length">
+                <div class="fs-sm mb-4">
+                    <span class="text-heading fw-medium me-1"><span class="text-danger">*</span> Boja:</span><span class="text-muted">{{ color_name }} <span class="text-warning">{{ extra_price }}</span></span>
+                </div>
+                <div class="position-relative me-n4 mb-3" id="select" >
+                    <div v-for="(option, index) in color_options" class="form-check form-option form-check-inline mb-2" :data-target="option.option_id">
+                        <input class="form-check-input" type="radio" :value="option.id" :id="option.id" :disabled="!option.active" v-model="color"/>
+                        <label v-bind:class="{ opacity: !option.active }" class="form-option-label rounded-circle opacity-80" :for="option.id"><span class="form-option-color rounded-circle" :style="option.style"></span> </label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="mw-500" v-if="Object.keys(this.size_options).length && size_disabled">
-            <div class="mb-3" >
-                <div class="d-flex justify-content-between align-items-center pb-1 opac">
-                    <label class="form-label" for="product-size"><span class="text-danger">*</span>Veličina: <span class="text-muted">{{ size_name }}</span></label>
+            <div class="mw-500" v-if="Object.keys(this.size_options).length && size_disabled">
+                <div class="mb-3" >
+                    <div class="d-flex justify-content-between align-items-center pb-1 opac">
+                        <label class="form-label" for="product-size"><span class="text-danger">*</span>Veličina: <span class="text-muted">{{ size_name }}</span></label>
+                    </div>
+                    <select class="form-select" required id="product-size" v-model="size">
+                        <option value="0">Odaberite veličinu </option>
+                        <option v-for="option in size_options" :disabled="!option.active" v-bind:value="option.id">{{ option.name }}</option>
+                    </select>
                 </div>
-                <select class="form-select" required id="product-size" v-model="size">
-                    <option value="0">Odaberite veličinu </option>
-                    <option v-for="option in size_options" :disabled="!option.active" v-bind:value="option.id">{{ option.name }}</option>
-                </select>
             </div>
-        </div>
         </div>
 
         <div class="d-flex align-items-center pt-0 mw-500" >
-        <input class="form-control me-3 mb-1" type="number" inputmode="numeric" pattern="[0-9]*" v-model="quantity" min="1" :max="available" style="width: 5rem;">
-        <button class="btn btn-primary btn-shadow me-3 mb-1 " @click="add()" :disabled="disabled"><i class="ci-cart"></i> Dodaj u Košaricu</button>
+            <input class="form-control me-3 mb-1" type="number" inputmode="numeric" pattern="[0-9]*" v-model="quantity" min="1" :max="available" style="width: 5rem;">
+            <button class="btn btn-primary btn-shadow me-3 mb-1 " @click="add()" :disabled="disabled"><i class="ci-cart"></i> Dodaj u Košaricu</button>
         </div>
         <p style="width: 100%;" class="fs-md fw-light text-danger" v-if="has_in_cart">Imate {{ has_in_cart }} artikala u košarici.</p>
     </div>
@@ -91,11 +91,6 @@ export default {
     mounted() {
         let cart = this.$store.state.storage.getCart();
 
-        /*setTimeout(() => {
-            this.price = this.context_product.main_price;
-            this.shown_price = this.price;
-        }, 200);*/
-
         if (cart) {
             for (const key in cart.items) {
                 if (this.id == cart.items[key].id) {
@@ -114,6 +109,74 @@ export default {
     },
 
     methods: {
+        /**
+         * HELPERI ZA PRIKAZ OPCIJA
+         */
+        optionGroupLabel(key) {
+            return key === 'color' ? 'Boja' : key === 'size' ? 'Veličina' : 'Opcija';
+        },
+        toNum(v) {
+            return Number(v || 0);
+        },
+        priceText(num) {
+            const n = this.toNum(num);
+            if (!n || n === 0) return null;
+            // koristi postojeći formatter (valuta/format)
+            return this.$store.state.service.formatMainPrice(n);
+        },
+
+        /**
+         * Sastavi prikazne atribute za košaricu (ne mijenja backend payload)
+         */
+        buildCartAttributes() {
+            const parts = [];
+            if (Object.keys(this.selected_color).length) {
+                parts.push({
+                    group: this.optionGroupLabel('color'),
+                    id: this.selected_color.id,
+                    name: this.selected_color.name,
+                    price: this.toNum(this.selected_color.price),
+                    price_text: this.priceText(this.selected_color.price),
+                });
+            }
+            if (Object.keys(this.selected_size).length) {
+                parts.push({
+                    group: this.optionGroupLabel('size'),
+                    id: this.selected_size.id,
+                    name: this.selected_size.name,
+                    price: this.toNum(this.selected_size.price),
+                    price_text: this.priceText(this.selected_size.price),
+                });
+            }
+
+            // istaknuta (brzi prikaz) — ona koja NIJE parent, ako postoji parent/child
+            let highlighted = null;
+            if (this.parent === 'color' && Object.keys(this.selected_size).length) {
+                highlighted = {
+                    group: this.optionGroupLabel('size'),
+                    id: this.selected_size.id,
+                    name: this.selected_size.name,
+                    price: this.toNum(this.selected_size.price),
+                    price_text: this.priceText(this.selected_size.price),
+                };
+            } else if (this.parent === 'size' && Object.keys(this.selected_color).length) {
+                highlighted = {
+                    group: this.optionGroupLabel('color'),
+                    id: this.selected_color.id,
+                    name: this.selected_color.name,
+                    price: this.toNum(this.selected_color.price),
+                    price_text: this.priceText(this.selected_color.price),
+                };
+            } else if (parts.length) {
+                highlighted = parts[0];
+            }
+
+            return {
+                option: highlighted,   // jedna "glavna" opcija
+                options: parts         // sve odabrane (npr. i Boja i Veličina)
+            };
+        },
+
         /**
          *
          */
@@ -160,7 +223,9 @@ export default {
             let item = {
                 id: this.id,
                 quantity: this.quantity,
-                options: this.setRequestOptions()
+                options: this.setRequestOptions(),
+                // ➜ novo: meta za prikaz u košarici
+                attributes: this.buildCartAttributes()
             }
 
             this.$store.dispatch('addToCart', item);
@@ -178,7 +243,9 @@ export default {
                 id: this.id,
                 quantity: this.quantity,
                 options: this.setRequestOptions(),
-                relative: true
+                relative: true,
+                // ➜ novo: meta za prikaz u košarici
+                attributes: this.buildCartAttributes()
             }
 
             this.$store.dispatch('updateCart', item);
