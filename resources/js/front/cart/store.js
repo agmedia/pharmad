@@ -1,6 +1,6 @@
 /* */
 let storage_cart = {
-    name: 'sl_cart',
+    name: 'ph_cart',
     cart: { count: 0 }
 };
 let messages = {
@@ -115,6 +115,19 @@ class AgService {
             return response.data
         })
         .catch(error => { return this.returnError(messages.error) })
+    }
+
+    /**
+     *
+     * @param option
+     * @returns {*}
+     */
+    checkOptions(option, is_parent) {
+        return axios.get('products/options/' + option + '?is_parent=' + is_parent)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => { return this.returnError(messages.error) })
     }
 
     /**

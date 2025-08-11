@@ -4085,7 +4085,7 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _ty
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 /* */
 var storage_cart = {
-  name: 'sl_cart',
+  name: 'ph_cart',
   cart: {
     count: 0
   }
@@ -4232,21 +4232,37 @@ var AgService = /*#__PURE__*/function () {
 
     /**
      *
+     * @param option
+     * @returns {*}
+     */
+  }, {
+    key: "checkOptions",
+    value: function checkOptions(option, is_parent) {
+      var _this7 = this;
+      return axios.get('products/options/' + option + '?is_parent=' + is_parent).then(function (response) {
+        return response.data;
+      })["catch"](function (error) {
+        return _this7.returnError(messages.error);
+      });
+    }
+
+    /**
+     *
      * @param coupon
      * @returns {*}
      */
   }, {
     key: "updateLoyalty",
     value: function updateLoyalty(loyalty) {
-      var _this7 = this;
+      var _this8 = this;
       if (!loyalty) {
         loyalty = null;
       }
       return axios.get('cart/loyalty/' + loyalty).then(function (response) {
-        _this7.returnSuccess(messages.couponSuccess);
+        _this8.returnSuccess(messages.couponSuccess);
         return response.data;
       })["catch"](function (error) {
-        return _this7.returnError(messages.error);
+        return _this8.returnError(messages.error);
       });
     }
 
@@ -4257,11 +4273,11 @@ var AgService = /*#__PURE__*/function () {
   }, {
     key: "getSettings",
     value: function getSettings() {
-      var _this8 = this;
+      var _this9 = this;
       return axios.get('settings/get').then(function (response) {
         return response.data;
       })["catch"](function (error) {
-        return _this8.returnError(messages.error);
+        return _this9.returnError(messages.error);
       });
     }
 
@@ -4324,10 +4340,10 @@ var AgService = /*#__PURE__*/function () {
   }, {
     key: "formatMainPrice",
     value: function formatMainPrice(price) {
-      var _this9 = this;
+      var _this10 = this;
       if (!store.state.settings) {
         this.getSettings().then(function (response) {
-          return _this9.resolvePrice(response['currency.list'], price);
+          return _this10.resolvePrice(response['currency.list'], price);
         });
       } else {
         return this.resolvePrice(store.state.settings['currency.list'], price);
@@ -4373,10 +4389,10 @@ var AgService = /*#__PURE__*/function () {
   }, {
     key: "formatSecondaryPrice",
     value: function formatSecondaryPrice(price) {
-      var _this10 = this;
+      var _this11 = this;
       if (!store.state.settings) {
         this.getSettings().then(function (response) {
-          return _this10.resolvePrice(response['currency.list'], price, false);
+          return _this11.resolvePrice(response['currency.list'], price, false);
         });
       } else {
         return this.resolvePrice(store.state.settings['currency.list'], price, false);
