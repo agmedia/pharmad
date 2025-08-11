@@ -398,8 +398,7 @@ class Product extends Model
         if ($request->has('search') && ! empty($request->input('search'))) {
             $query->where('name', 'like', '%' . $request->input('search') . '%')
                   ->orWhere('sku', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('polica', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('year', 'like', '' . $request->input('search') . '');
+                  ->orWhere('polica', 'like', '%' . $request->input('search') . '%');
         }
 
         if ($request->has('category') && ! empty($request->input('category'))) {
@@ -414,9 +413,6 @@ class Product extends Model
             $query->where('author_id', $request->input('author'));
         }
 
-        if ($request->has('publisher') && ! empty($request->input('publisher'))) {
-            $query->where('publisher_id', $request->input('publisher'));
-        }
 
         if ($request->has('status')) {
             if ($request->input('status') == 'active') {

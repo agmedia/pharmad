@@ -41,7 +41,7 @@
                     <form action="{{ route('products') }}" method="get">
 
                         <div class="form-group row items-push mb-0">
-                            <div class="col-md-9 mb-0">
+                            <div class="col-md-7 mb-0">
                                 <div class="form-group">
                                     <div class="input-group flex-nowrap">
                                         <input type="text" class="form-control py-3 text-center" name="search" id="search-input" value="{{ request()->input('search') }}" placeholder="Upiši pojam pretraživanja">
@@ -51,13 +51,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <select class="js-select2 form-control" id="category-select" name="category" style="width: 100%;" data-placeholder="Odaberi kategoriju">
                                         <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
                                         @foreach ($categories as $group => $cats)
                                             @foreach ($cats as $id => $category)
-                                                <option value="{{ $id }}" class="font-weight-bold small" {{ $id == request()->input('category') ? 'selected' : '' }}>{{ $group . ' >> ' . $category['title'] }}</option>
+                                                <option value="{{ $id }}" class="font-weight-bold small" {{ $id == request()->input('category') ? 'selected' : '' }}>{{ \App\Helpers\Helper::humanizeSlug($group) . ' >> ' . $category['title'] }}</option>
                                                 @if ( ! empty($category['subs']))
                                                     @foreach ($category['subs'] as $sub_id => $subcategory)
                                                         <option value="{{ $sub_id }}" class="pl-3 text-sm" {{ $sub_id == request()->input('category') ? 'selected' : '' }}>{{ $subcategory['title'] }}</option>
@@ -215,14 +215,15 @@
 
             //
             $('#category-select').on('change', (e) => {
-                setPageURL('category', e.currentTarget.selectedOptions[0]);
+                setPageURL('category', $(e.currentTarget).val() || '');
             });
             $('#status-select').on('change', (e) => {
-                setPageURL('status', e.currentTarget.selectedOptions[0]);
+                setPageURL('status', $(e.currentTarget).val() || '');
             });
             $('#sort-select').on('change', (e) => {
-                setPageURL('sort', e.currentTarget.selectedOptions[0]);
+                setPageURL('sort', $(e.currentTarget).val() || '');
             });
+
 
             //
             Livewire.on('authorSelect', (e) => {

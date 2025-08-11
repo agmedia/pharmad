@@ -746,6 +746,14 @@ class Helper
         return false;
     }
 
+    public static function humanizeSlug(string $slug): string
+    {
+        $s = str_replace(['-','_'], ' ', $slug);
+        $s = mb_strtolower($s, 'UTF-8');
+        return mb_strtoupper(mb_substr($s, 0, 1, 'UTF-8'), 'UTF-8')
+            . mb_substr($s, 1, null, 'UTF-8');
+    }
+
 
     private static function dummyReviews()
     {
