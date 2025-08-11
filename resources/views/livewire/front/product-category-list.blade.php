@@ -37,6 +37,7 @@
     </div>
 
     <div class="offcanvas offcanvas-start bg-white w-100 rounded-3 shadow-lg py-1"
+         wire:ignore
          tabindex="-1"
          id="shop-sidebar"
          aria-labelledby="shop-sidebar-label"
