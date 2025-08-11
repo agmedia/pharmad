@@ -11,9 +11,9 @@
 
             @if(!empty($selectedAuthors) || !empty($selectedPriceRanges))
                 <a href="javascript:void(0);"
-                   class="btn btn-outline-primary b me-2 d-inline-flex align-items-center"
+                   class="btn btn-outline-danger b me-2 d-inline-flex align-items-center"
                    wire:click.prevent="clearFilters">
-                    <i class="ci-close-circle me-2"></i> Očisti filtere
+                    <i class="ci-close-circle me-2"></i> Očisti
                 </a>
             @endif
 
