@@ -40,6 +40,15 @@ class CatalogRouteController extends Controller
      */
     public function resolve(Request $request, $group, Category $cat = null, $subcat = null, Product $prod = null)
     {
+
+        $group_title = null;
+
+        if ($group) {
+            $groupData = Category::where('group', $group)->first(['group_title']);
+            $group_title = $groupData ? $groupData->group_title : null;
+        }
+
+
         //
         if ($subcat) {
             $sub_category = Category::where('slug', $subcat)->where('parent_id', $cat->id)->first();
@@ -50,6 +59,8 @@ class CatalogRouteController extends Controller
 
             $subcat = $sub_category;
         }
+
+
 
         // Check if there is Product set.
         if ($prod) {
@@ -68,11 +79,11 @@ class CatalogRouteController extends Controller
             $shipping_methods = Settings::getList('shipping', 'list.%', true);
             $payment_methods = Settings::getList('payment', 'list.%', true);
 
-            $prod->kat = CategoryProducts::where('product_id', $prod->id)->where('category_id', 109)->first();
+           // $prod->kat = CategoryProducts::where('product_id', $prod->id)->where('category_id', 109)->first();
 
 
 
-            return view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'seo', 'crumbs', 'bookscheme','shipping_methods','payment_methods', 'gdl'));
+            return view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'group_title', 'seo', 'crumbs', 'bookscheme','shipping_methods','payment_methods', 'gdl'));
         }
 
         // If only group...
@@ -107,7 +118,7 @@ class CatalogRouteController extends Controller
 
         $crumbs = (new Breadcrumb())->category($group, $cat, $subcat)->resolve();
 
-        return view('front.catalog.category.index', compact('group', 'cat', 'subcat', 'prod', 'crumbs', 'meta_tags'));
+        return view('front.catalog.category.index', compact('group', 'cat', 'subcat', 'group_title',  'prod', 'crumbs', 'meta_tags'));
     }
 
 

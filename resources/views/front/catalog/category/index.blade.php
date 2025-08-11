@@ -3,7 +3,7 @@
 
 @if (isset($group) && $group)
     @if ($group && ! $cat && ! $subcat)
-        @section ( 'title',  \Illuminate\Support\Str::ucfirst(Str::lower(str_replace('-', ' ', $group))). ' - Ljekarne PharmAD' )
+        @section ( 'title',  ucfirst($group_title). ' - Ljekarne PharmAD' )
 
 
 
@@ -102,9 +102,9 @@
             <ol class="breadcrumb flex-lg-nowrap">
                 <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>Naslovna </a></li>
                 @if ($group && ! $cat && ! $subcat)
-                    <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ \Illuminate\Support\Str::ucfirst(Str::lower(str_replace('-', ' ', $group))) }}</li>
+                    <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ ucfirst($group_title) }}</li>
                 @elseif ($group && $cat)
-                    <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route', ['group' => $group]) }}">{{ \Illuminate\Support\Str::ucfirst(Str::lower(str_replace('-', ' ', $group))) }}</a></li>
+                    <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route', ['group' => $group]) }}">{{ ucfirst($group_title) }}</a></li>
                 @endif
                 @if ($cat && ! $subcat)
                     <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ $cat->title }}</li>
@@ -117,7 +117,7 @@
 
         <section class="d-md-flex justify-content-between align-items-center text-center text-lg-start mb-1 pb-1">
             @if ($group && ! $cat && ! $subcat)
-                <h1 class="h2 mb-2 mb-md-0 me-3"> {{ \Illuminate\Support\Str::ucfirst(Str::lower(str_replace('-', ' ', $group))) }}</h1>
+                <h1 class="h2 mb-2 mb-md-0 me-3"> {{ ucfirst($group_title) }}</h1>
             @endif
             @if ($cat && ! $subcat)
                 <h1 class="h2 mb-2 mt-2 mb-md-0 me-3">{{ $cat->title }}</h1>
