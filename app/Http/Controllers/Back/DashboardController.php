@@ -160,6 +160,35 @@ class DashboardController extends Controller
     }
 
 
+    public function updateOpenCartCategories()
+    {
+        $count = 0;
+        $import = new OC_Import();
+        $categories  = $import->getCategories();
+
+        if ($categories->count()) {
+            foreach ($categories as $category) {
+                $count++;
+                $main_description = $import->getCategoryDescription($category->category_id);
+
+                if ($main_description) {
+                    $cats = Category::query()->where('group', Str::slug($main_description->meta_keyword))->get();
+
+                    if ($cats->count()) {
+                        foreach ($cats as $cat) {
+                            $cat->update([
+                                'group_title' => $main_description->meta_keyword
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+
+        return redirect()->route('dashboard')->with(['success' => 'Update je uspješno obavljen..! ' . $count . ' kategorija obnovljeno.']);
+    }
+
+
     /**
      * @return \Illuminate\Http\RedirectResponse
      */
