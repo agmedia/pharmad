@@ -165,6 +165,31 @@ class CheckoutController extends Controller
 
 
     /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function successKeks(Request $request)
+    {
+        if ($this->validateKeksResponse($request)) {
+            $id    = substr($request->input('bill_id'), 8);
+            $order = Order::query()->where('id', $id)->first();
+
+            $order->setData($id)->finish($request);
+
+            $order->update([
+                'order_status_id' => config('settings.order.new_status')
+            ]);
+
+            return response()->json(['status' => 0, 'message' => 'Accepted']);
+        }
+
+        return response()->json(['status' => 1, 'message' => 'Failed']);
+    }
+
+
+
+    /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function error()
@@ -228,6 +253,30 @@ class CheckoutController extends Controller
         $response['order_status_id'] = $order_status_id;
 
         return $response;
+    }
+
+
+
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function validateKeksResponse(Request $request): bool
+    {
+        if ($request->has('status') && ! $request->input('status')) {
+            $token = $request->header('Authorization');
+
+            if ($token) {
+                $keks_token = Settings::get('payment', 'list.keks')->first();
+
+                if (isset($keks_token->data->token)) {
+                    return hash_equals($keks_token->data->token, str_replace('Token ', '', $token));
+                }
+            }
+        }
+
+        return false;
     }
 
 }

@@ -149,6 +149,11 @@ h3.product-title{
 }
 .live-search .table.products tr {
     cursor:pointer;
+    font-size:15px
+}
+
+.live-search .table.products tr a {
+    color:#373f50;
 }
 .live-search .table.products tr:hover {
     background:#fcfcfc;

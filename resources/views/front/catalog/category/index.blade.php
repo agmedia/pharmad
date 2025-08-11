@@ -96,7 +96,7 @@
         </section>
     @endif
 
-            @if (isset($group) && $group)
+     @if (isset($group) && $group)
 
         <nav class="mb-2 mt-3 text-center text-lg-start" aria-label="breadcrumb">
             <ol class="breadcrumb flex-lg-nowrap">

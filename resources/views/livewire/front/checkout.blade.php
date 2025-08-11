@@ -402,26 +402,7 @@ every time the user selects a new location.
  <script type="module"
             src="https://map.gls-croatia.com/widget/gls-dpm.js"></script>
 
-    <script type="text/javascript">
 
-
-        var _bn_map_widget_config = {
-            type: "popup",
-            partnerId: 123,
-            parentElement: "#boxnowmap",
-            afterSelect: function (selected) {
-                if(selected.boxnowLockerPostalCode !== 'undefined'){
-                    document.getElementById('comment').value = selected.boxnowLockerPostalCode + ', ' + selected.boxnowLockerAddressLine1 + '_' + selected.boxnowLockerId;
-
-                    document.getElementById("comment").dispatchEvent(new Event('input'));
-
-                }
-
-
-            }
-        };
-        (function (d) { var e = d.createElement("script"); e.src = "https://widget-cdn.boxnow.hr/map-widget/client/v5.js"; e.async = true; e.defer = true; d.getElementsByTagName("head")[0].appendChild(e); })(document);
-    </script>
 
 
 

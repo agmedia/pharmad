@@ -384,6 +384,9 @@ Route::get('akcijska-ponuda/{cat?}/{subcat?}', [CatalogRouteController::class, '
 //
 Route::get('{group}/{cat?}/{subcat?}/{prod?}', [CatalogRouteController::class, 'resolve'])->name('catalog.route');
 
+// SPECIAL ROUTES
+Route::post('kekspay/provjera-narudzbe', [\App\Models\Front\Checkout\Payment\Keks::class, 'check'])->name('keks.provjera');
+
 
 Route::fallback(function () {
     return view('front.404');

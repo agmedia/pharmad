@@ -43,7 +43,7 @@
 
 
                 <ul class="widget-list widget-filter-list list-unstyled pt-1"
-                    style="max-height: 11rem;"
+                    style="max-height: 12rem;"
                     data-simplebar
                     data-simplebar-auto-hide="false">
 
@@ -95,6 +95,7 @@
                 @include('front.catalog.category.product')
 
         @empty
+    </div>
             <div class="col-md-12 px-2 mb-4">
                 @php
                    $name = Route::currentRouteName()
@@ -135,7 +136,7 @@
                 @endif
 
 
-            </div>
+
         @endforelse
     </div>
 
