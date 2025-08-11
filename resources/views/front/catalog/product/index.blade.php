@@ -154,7 +154,7 @@
 
    @endif
             @if ( $prod->quantity > 0)
-   <add-to-cart-btn id="{{ $prod->id }}" available="{{ $prod->quantity }}"></add-to-cart-btn>
+                <add-to-cart-btn product="{{ json_encode($prod->toArray()) }}" action="{{ json_encode($prod->special(true)) }}" available="{{ $prod->quantity }}" sizeguide="" options="{{ json_encode($prod->optionsList()) }}"></add-to-cart-btn>
             @endif
    <!-- Product panels-->
    <div class="accordion mb-4" id="productPanels">
