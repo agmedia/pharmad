@@ -1,5 +1,5 @@
 <div class="mb-0 input-group">
-    <input type="search" wire:model.debounce.300ms="search" class="form-control  @error('author_id') is-invalid @enderror" id="author-input" placeholder="{{ !$list ? 'Dodaj autora...' : 'Odaberi autora...' }}" autocomplete="off">
+    <input type="search" wire:model.debounce.300ms="search" class="form-control  @error('author_id') is-invalid @enderror" id="author-input" placeholder="{{ !$list ? 'Dodaj brand...' : 'Odaberi brend...' }}" autocomplete="off">
     @if ( ! $list)
         <input type="hidden" wire:model="author_id" name="author_id">
         <span class="input-group-append" data-toggle="modal" data-target="#new-author-modal">
@@ -10,7 +10,7 @@
                 <div class="mb-4 col-sm-12 col-md-12">
                     <label class="form-label required" for="input-title">Ime autora</label>
                     <input type="text" class="form-control  @if (session()->has('title')) is-invalid @endif" id="input-title" wire:model.defer="new.title" placeholder="">
-                    @if (session()->has('title')) <label class="small text-danger">Ime autora je obvezno...</label> @endif
+                    @if (session()->has('title')) <label class="small text-danger">Ime brenda je obvezno...</label> @endif
                 </div>
 
                 <div class="mb-0 mt-1 col-md-12 text-right">

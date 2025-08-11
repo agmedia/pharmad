@@ -165,6 +165,9 @@
                                     <a class="btn btn-sm btn-alt-secondary" href="{{ route('products.edit', ['product' => $product]) }}">
                                         <i class="fa fa-fw fa-pencil-alt"></i>
                                     </a>
+                                    <a class="btn btn-sm btn-alt-warning" href="{{ route('products.duplicate', ['product' => $product]) }}">
+                                        <i class="fa fa-fw fa-copy"></i>
+                                    </a>
                                     <button class="btn btn-sm btn-alt-danger" onclick="event.preventDefault(); deleteItem({{ $product->id }}, '{{ route('products.destroy.api') }}');"><i class="fa fa-fw fa-trash-alt"></i></button>
                                 </td>
                             </tr>
