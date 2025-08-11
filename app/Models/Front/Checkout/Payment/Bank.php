@@ -83,7 +83,7 @@ class Bank
                             'name'      => 'Ljekarne PharmAD',
                             'street'    => 'Zagrebačka 99',
                             'place'     => '10291 Prigorje Brdovečko',
-                            'iban'      => 'HR332360000110269364',
+                            'iban'      => 'HR3323600001102693642',
                             'model'     => '00',
                             'reference' => $pozivnabroj,
                         ),
@@ -104,6 +104,8 @@ class Bank
 
         $response = curl_exec($ch);
         curl_close($ch);
+
+        Log::info($response);
 
         $response = base64_encode($response);
 
