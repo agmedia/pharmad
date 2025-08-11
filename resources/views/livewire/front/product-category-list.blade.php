@@ -1,21 +1,39 @@
 <section class="col" id="product-list-top">
     <!-- Toolbar-->
     <div class="d-flex justify-content-center justify-content-sm-between align-items-center pt-2 pb-2  mt-3">
-        <div class="d-flex flex-wrap">
-            <div class="dropdown me-2 "><a class="btn btn-primary dropdown-toggle collapsed" href="#shop-sidebar" data-bs-toggle="collapse" aria-expanded="false"><i class="ci-filter-alt"></i></a></div>
-            <div class="d-flex align-items-center flex-nowrap me-3 me-sm-4 pb-3">
-                <label class="text-light opacity-75 text-nowrap fs-sm  d-none d-sm-block" for="sorting"></label>
-                <select class="form-select" wire:model="sort" wire:change="selectSortBtn">
+        <div class="d-flex flex-wrap align-items-center">
+            <div class="dropdown me-2">
+                <a class="btn btn-primary  dropdown-toggle collapsed"
+                   href="#shop-sidebar" data-bs-toggle="collapse" aria-expanded="false">
+                    <i class="ci-filter-alt"></i>
+                </a>
+            </div>
+
+            @if(!empty($selectedAuthors) || !empty($selectedPriceRanges))
+                <a href="javascript:void(0);"
+                   class="btn btn-outline-primary b me-2 d-inline-flex align-items-center"
+                   wire:click.prevent="clearFilters">
+                    <i class="ci-close-circle me-2"></i> Očisti filtere
+                </a>
+            @endif
+
+            <div class="d-flex align-items-center flex-nowrap me-3 me-sm-4">
+                <label class="text-light opacity-75 text-nowrap fs-sm d-none d-sm-block" for="sorting"></label>
+                <select class="form-select " wire:model="sort" wire:change="selectSortBtn">
                     <option value="">Sortiraj</option>
                     @foreach (config('settings.sorting_list') as $item)
-                        <option value="{{ $item['value'] }}" @if(request()->get('sort') == $item['value']) selected @endif>{{ $item['title'] }}</option>
+                        <option value="{{ $item['value'] }}" @if(request()->get('sort') == $item['value']) selected @endif>
+                            {{ $item['title'] }}
+                        </option>
                     @endforeach
                 </select>
             </div>
         </div>
+
+
         <!--  <div class="d-flex pb-3"><a class="nav-link-style nav-link-light me-3" href="#"><i class="ci-arrow-left"></i></a><span class="fs-md text-light">{{ $products->currentPage() }} / {{ $products->lastPage() }}</span><a class="nav-link-style nav-link-light ms-3" href="#"><i class="ci-arrow-right"></i></a></div>-->
 
-        <div class="d-flex pb-3">  <span class="fs-sm text-light btn btn-primary btn-sm text-nowrap ms-2 d-none d-sm-block">Ukupno {{ $products->total() }} artikala</span></div>
+        <div class="d-flex pb-3">  <span class="fs-sm text-light btn btn-primary  text-nowrap ms-2 d-none d-sm-block">Ukupno {{ $products->total() }} artikala</span></div>
     </div>
 
     <div class="offcanvas offcanvas-start bg-white w-100 rounded-3 shadow-lg py-1"
