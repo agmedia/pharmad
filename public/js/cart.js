@@ -2612,13 +2612,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     carturl: String,
     checkouturl: String
   },
-  //
   data: function data() {
     return {
       base_path: window.location.origin + '/',
@@ -2626,43 +2665,93 @@ __webpack_require__.r(__webpack_exports__);
       mobile: false
     };
   },
-  //
+  computed: {
+    cart: function cart() {
+      var s = this.$store && this.$store.state ? this.$store.state : {};
+      var c = s.cart || {};
+      var count = Number(c.count || 0);
+      var rawItems = c.items;
+      var items = Array.isArray(rawItems) ? rawItems : rawItems ? Object.values(rawItems) : [];
+      return Object.assign({}, c, {
+        count: count,
+        items: items
+      });
+    },
+    count: function count() {
+      return Number(this.cart.count || 0);
+    },
+    cartItems: function cartItems() {
+      return this.cart.items || [];
+    },
+    formattedTotal: function formattedTotal() {
+      var svc = this.$store && this.$store.state ? this.$store.state.service : null;
+      var total = this.$store && this.$store.state && this.$store.state.cart ? this.$store.state.cart.total || 0 : 0;
+      return svc && typeof svc.formatMainPrice === 'function' ? svc.formatMainPrice(total) : Number(total).toFixed(2);
+    },
+    hasSecondary: function hasSecondary() {
+      return !!(this.$store && this.$store.state && this.$store.state.cart && this.$store.state.cart.secondary_price);
+    },
+    formattedTotalSecondary: function formattedTotalSecondary() {
+      var svc = this.$store && this.$store.state ? this.$store.state.service : null;
+      var total = this.$store && this.$store.state && this.$store.state.cart ? this.$store.state.cart.total || 0 : 0;
+      return svc && typeof svc.formatSecondaryPrice === 'function' ? svc.formatSecondaryPrice(total) : '';
+    }
+  },
   mounted: function mounted() {
     this.checkCart();
-    if (window.location.pathname == '/kosarica/success') {
+    if (window.location.pathname === '/kosarica/success') {
       this.$store.dispatch('flushCart');
     }
     if (window.innerWidth < 800) {
       this.mobile = true;
     }
-    if (window.location.pathname == '/pregled') {
+    if (window.location.pathname === '/pregled') {
       window.setInterval(this.checkCart, 15000);
     }
   },
-  //
   methods: {
-    /**
-     *
-     */
-    checkCart: function checkCart() {
-      var kos = [];
-      var cart = this.$store.state.storage.getCart();
-      console.log(cart);
-      this.$store.dispatch('getSettings');
-      if (!cart) {
-        return this.$store.dispatch('getCart');
-      }
-      Object.keys(cart.items).forEach(function (key) {
-        kos.push(cart.items[key].id);
-      });
-      this.$store.dispatch('checkCart', kos);
+    itemKey: function itemKey(item) {
+      var optId = item && item.options && item.options.option_id ? item.options.option_id : '';
+      return (item && item.id ? item.id : 'x') + '-' + optId;
     },
-    /**
-     *
-     * @param item
-     */
+    hasConditions: function hasConditions(item) {
+      var c = item && item.conditions ? item.conditions : null;
+      return c ? Object.keys(c).length > 0 : false;
+    },
+    productUrl: function productUrl(item) {
+      var path = item && item.attributes && item.attributes.path ? item.attributes.path : item && item.associatedModel && item.associatedModel.url ? item.associatedModel.url : '';
+      return this.base_path + path;
+    },
+    checkCart: function checkCart() {
+      try {
+        var storage = this.$store && this.$store.state && this.$store.state.storage && this.$store.state.storage.getCart ? this.$store.state.storage.getCart() : null;
+        if (this.$store && this.$store.dispatch) {
+          this.$store.dispatch('getSettings');
+        }
+        if (!storage) {
+          if (this.$store && this.$store.dispatch) {
+            this.$store.dispatch('getCart');
+          }
+          return;
+        }
+        var raw = storage.items;
+        var items = Array.isArray(raw) ? raw : raw ? Object.values(raw) : [];
+        var kos = items.map(function (i) {
+          return i.id;
+        }).filter(Boolean);
+        if (this.$store && this.$store.dispatch) {
+          this.$store.dispatch('checkCart', kos);
+        }
+      } catch (e) {
+        if (this.$store && this.$store.dispatch) {
+          this.$store.dispatch('getCart');
+        }
+      }
+    },
     removeFromCart: function removeFromCart(item) {
-      this.$store.dispatch('removeFromCart', item);
+      if (this.$store && this.$store.dispatch) {
+        this.$store.dispatch('removeFromCart', item);
+      }
       window.location.reload();
     }
   }
@@ -6439,21 +6528,20 @@ var render = function() {
     _c(
       "a",
       {
-        staticClass: "navbar-tool-icon-box  dropdown-toggle",
+        staticClass: "navbar-tool-icon-box dropdown-toggle",
         attrs: { href: _vm.carturl }
       },
       [
         _c("span", { staticClass: "navbar-tool-label" }, [
-          _vm._v(
-            _vm._s(_vm.$store.state.cart ? _vm.$store.state.cart.count : 0)
-          )
+          _vm._v(_vm._s(_vm.count))
         ]),
+        _vm._v(" "),
         _c("i", { staticClass: "navbar-tool-icon ci-bag" })
       ]
     ),
     _vm._v(" "),
     _c("div", { staticClass: "dropdown-menu dropdown-menu-end" }, [
-      _vm.$store.state.cart.count
+      _vm.count > 0
         ? _c(
             "div",
             {
@@ -6461,10 +6549,13 @@ var render = function() {
               staticStyle: { width: "24rem" }
             },
             [
-              _vm._l(_vm.$store.state.cart.items, function(item) {
+              _vm._l(_vm.cartItems, function(item) {
                 return _c(
                   "div",
-                  { attrs: { "data-simplebar-auto-hide": "false" } },
+                  {
+                    key: _vm.itemKey(item),
+                    attrs: { "data-simplebar-auto-hide": "false" }
+                  },
                   [
                     _c(
                       "div",
@@ -6497,13 +6588,17 @@ var render = function() {
                               "a",
                               {
                                 staticClass: "d-block flex-shrink-0 pt-2",
-                                attrs: { href: "#" }
+                                attrs: { href: _vm.productUrl(item) }
                               },
                               [
                                 _c("img", {
                                   staticStyle: { width: "5rem" },
                                   attrs: {
-                                    src: item.associatedModel.image,
+                                    src:
+                                      item.associatedModel &&
+                                      item.associatedModel.image
+                                        ? item.associatedModel.image
+                                        : "",
                                     alt: item.name,
                                     title: item.name
                                   }
@@ -6518,12 +6613,7 @@ var render = function() {
                                 [
                                   _c(
                                     "a",
-                                    {
-                                      attrs: {
-                                        href:
-                                          _vm.base_path + item.attributes.path
-                                      }
-                                    },
+                                    { attrs: { href: _vm.productUrl(item) } },
                                     [_vm._v(_vm._s(item.name))]
                                   )
                                 ]
@@ -6538,49 +6628,67 @@ var render = function() {
                                     { staticClass: "text-primary me-2" },
                                     [
                                       _vm._v(
-                                        _vm._s(
-                                          Object.keys(item.conditions).length
-                                            ? item.associatedModel
-                                                .main_special_text
-                                            : item.associatedModel
-                                                .main_price_text
-                                        )
+                                        "\n                " +
+                                          _vm._s(
+                                            _vm.hasConditions(item)
+                                              ? item.associatedModel &&
+                                                item.associatedModel
+                                                  .main_special_text
+                                                ? item.associatedModel
+                                                    .main_special_text
+                                                : ""
+                                              : item.associatedModel &&
+                                                item.associatedModel
+                                                  .main_price_text
+                                              ? item.associatedModel
+                                                  .main_price_text
+                                              : ""
+                                          ) +
+                                          "\n              "
                                       )
                                     ]
                                   ),
+                                  _vm._v(" "),
                                   _c("span", { staticClass: "text-muted" }, [
                                     _vm._v("x " + _vm._s(item.quantity))
                                   ])
                                 ]
                               ),
                               _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "widget-product-meta" },
-                                [
-                                  item.associatedModel.secondary_price
-                                    ? _c(
+                              item.associatedModel &&
+                              item.associatedModel.secondary_price
+                                ? _c(
+                                    "div",
+                                    { staticClass: "widget-product-meta" },
+                                    [
+                                      _c(
                                         "span",
                                         { staticClass: "text-dark fs-sm me-2" },
                                         [
                                           _vm._v(
-                                            _vm._s(
-                                              Object.keys(item.conditions)
-                                                .length
-                                                ? item.associatedModel
-                                                    .secondary_special_text
-                                                : item.associatedModel
-                                                    .secondary_price_text
-                                            )
+                                            "\n                " +
+                                              _vm._s(
+                                                _vm.hasConditions(item)
+                                                  ? item.associatedModel
+                                                      .secondary_special_text ||
+                                                      ""
+                                                  : item.associatedModel
+                                                      .secondary_price_text ||
+                                                      ""
+                                              ) +
+                                              "\n              "
                                           )
                                         ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "span",
+                                        { staticClass: "text-muted" },
+                                        [_vm._v("x " + _vm._s(item.quantity))]
                                       )
-                                    : _vm._e(),
-                                  _c("span", { staticClass: "text-muted" }, [
-                                    _vm._v("x " + _vm._s(item.quantity))
-                                  ])
-                                ]
-                              )
+                                    ]
+                                  )
+                                : _vm._e()
                             ])
                           ]
                         )
@@ -6601,30 +6709,20 @@ var render = function() {
                     _c("span", { staticClass: "text-muted" }, [
                       _vm._v("Ukupno:")
                     ]),
+                    _vm._v(" "),
                     _c("span", { staticClass: "text-primary fs-base ms-1" }, [
-                      _vm._v(
-                        _vm._s(
-                          _vm.$store.state.service.formatMainPrice(
-                            _vm.$store.state.cart.total
-                          )
-                        )
-                      )
+                      _vm._v(_vm._s(_vm.formattedTotal))
                     ]),
                     _vm._v(" "),
-                    _vm.$store.state.cart.secondary_price
+                    _vm.hasSecondary
                       ? _c("span", { staticClass: "text-muted" }, [
-                          _vm._v(
-                            _vm._s(
-                              _vm.$store.state.service.formatSecondaryPrice(
-                                _vm.$store.state.cart.total
-                              )
-                            )
-                          )
+                          _vm._v(_vm._s(_vm.formattedTotalSecondary))
                         ])
                       : _vm._e()
                   ])
                 ]
               ),
+              _vm._v(" "),
               _c(
                 "a",
                 {
@@ -6633,7 +6731,7 @@ var render = function() {
                 },
                 [
                   _c("i", { staticClass: "ci-card me-2 fs-base align-middle" }),
-                  _vm._v("Dovrši kupnju")
+                  _vm._v("Dovrši kupnju\n            ")
                 ]
               )
             ],
