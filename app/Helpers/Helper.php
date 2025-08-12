@@ -290,9 +290,9 @@ class Helper
             }
 
 
-            if (static::isDescriptionTarget($data, 'publisher')) {
-                $items     = static::publisher($data)->get();
-                $tablename = 'publisher';
+            if (static::isDescriptionTarget($data, 'author')) {
+                $items     = static::author($data)->get();
+                $tablename = 'author';
             }
 
             if (static::isDescriptionTarget($data, 'reviews')) {
@@ -489,25 +489,25 @@ class Helper
      *
      * @return Builder
      */
-    private static function publisher(array $data): Builder
+    private static function author(array $data): Builder
     {
-        $publisher = (new Publisher())->newQuery();
+        $author = (new Author())->newQuery();
 
-        $publisher->active();
+        $author->active();
 
         if (isset($data['new']) && $data['new'] == 'on') {
-            $publisher->latest();
+            $author->latest();
         }
 
         if (isset($data['popular']) && $data['popular'] == 'on') {
-            $publisher->latest();
+            $author->latest();
         }
 
         if (isset($data['list']) && $data['list']) {
-            $publisher->whereIn('id', $data['list']);
+            $author->whereIn('id', $data['list']);
         }
 
-        return $publisher;
+        return $author;
     }
 
 
