@@ -261,7 +261,7 @@
         <!-- Email Header : BEGIN -->
         <tr>
             <td style="padding: 20px 0 15px 0; text-align: center">
-                <label class="large bold" style="color: white;">   <img src="{{ asset('media/img/logo-ljekarne-pharmad.png') }}" alt="Ljekarne PharmAD" border="0" style="max-width:200px;height: auto;"></label>
+                  <img src="{{ asset('media/img/logo-ljekarne-pharmad.png') }}" alt="Ljekarne PharmAD" border="0" style="max-width:200px;height: auto;">
             </td>
         </tr>
         <!-- Email Header : END -->

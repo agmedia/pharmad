@@ -5334,7 +5334,7 @@ textarea.form-control-lg {
     --cz-badge-padding-x: 0.625em;
     --cz-badge-padding-y: 0.25em;
     --cz-badge-font-size: 0.75em;
-    --cz-badge-font-weight: normal;
+    --cz-badge-font-weight: bold;
     --cz-badge-color: #fff;
     --cz-badge-border-radius: 0.175rem;
     display: inline-block;

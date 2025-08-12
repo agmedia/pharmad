@@ -117,7 +117,7 @@
        @endif
 
    @if ($prod->main_price > $prod->main_special)
-       <span class="badge bg-primary ">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($prod->price, $prod->special())), 0) }}%</span>
+       <span class="badge bg-warning">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($prod->price, $prod->special())), 0) }}%</span>
    @endif
 
 

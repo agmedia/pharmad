@@ -2,7 +2,7 @@
 
     <div class="card product-card shadow pb-2 ">
         @if ($product->main_price > $product->main_special)
-            <span class="badge bg-primary badge-shadow">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($product->price, $product->special())), 0) }}%</span>
+            <span class="badge bg-warning badge-shadow">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($product->price, $product->special())), 0) }}%</span>
         @endif
         <a class="card-img-top d-block overflow-hidden text-center" href="{{ url($product->url) }}">
             <img loading="lazy" src="{{ str_replace('.webp','-thumb.webp', $product->image) }}" width="300" height="300" alt="{{ $product->name }}">
