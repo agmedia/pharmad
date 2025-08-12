@@ -409,14 +409,15 @@ class DashboardController extends Controller
             }
 
             $linksJson = json_encode([$product->id]);
-            $discount  = round($regular - $sale, 4); // product_actions.discount (15,4)
-            $sale      = round($sale, 2);            // products.special (15,2)
-            $price     = round($regular, 2);         // products.price (15,2)
-            $quantity  = max(0, (int) $stock);       // products.quantity
+            $discount  = round($regular - $sale, 4);
+            $sale      = round($sale, 2);
+            $price     = round($regular, 2);
+            $quantity  = max(0, (int) $stock);
+            $status    = $quantity > 0 ? 1 : 0;
 
             DB::beginTransaction();
             try {
-                // nađi/upiši akciju (single, vezana samo za ovaj proizvod)
+                // nađi/upiši akciju
                 $existing = DB::table('product_actions')
                     ->where('group', 'single')
                     ->where('links', $linksJson)
@@ -444,9 +445,9 @@ class DashboardController extends Controller
                     $actionId = DB::table('product_actions')->insertGetId([
                         'title'         => 'Posebna ponuda',
                         'type'          => 'F',
-                        'discount'      => $discount,   // razlika regular - sale
+                        'discount'      => $discount,
                         'group'         => 'single',
-                        'links'         => $linksJson,  // ["{product_id}"]
+                        'links'         => $linksJson,
                         'date_start'    => null,
                         'date_end'      => null,
                         'data'          => null,
@@ -464,7 +465,7 @@ class DashboardController extends Controller
                     ]);
                 }
 
-                // upiši i price/quantity + special u products
+                // update product
                 $product->update([
                     'price'        => $price,
                     'quantity'     => $quantity,
@@ -473,6 +474,7 @@ class DashboardController extends Controller
                     'special_to'   => null,
                     'action_id'    => $actionId,
                     'special_lock' => 1,
+                    'status'       => $status,
                     'updated_at'   => $now,
                 ]);
 
@@ -498,28 +500,28 @@ class DashboardController extends Controller
                 ->when(!empty($onSaleProductIds), function ($q) use ($onSaleProductIds) {
                     $q->whereNotIn('p.id', $onSaleProductIds);
                 })
-                ->select('p.id as product_id', 'a.id as action_id')
+                ->select('p.id as product_id', 'p.quantity', 'a.id as action_id')
                 ->get();
 
             if ($stale->count() > 0) {
-                $staleProductIds = $stale->pluck('product_id')->all();
-                $staleActionIds  = $stale->pluck('action_id')->unique()->all();
-
                 DB::beginTransaction();
-                // resetiraj samo akcijska polja (ne diramo price/quantity kod čišćenja)
-                DB::table('products')
-                    ->whereIn('id', $staleProductIds)
-                    ->update([
-                        'action_id'    => 0,
-                        'special'      => null,
-                        'special_from' => null,
-                        'special_to'   => null,
-                        'special_lock' => 0,
-                        'updated_at'   => $now,
-                    ]);
+                foreach ($stale as $row) {
+                    $newStatus = $row->quantity > 0 ? 1 : 0;
 
-                DB::table('product_actions')->whereIn('id', $staleActionIds)->delete();
+                    DB::table('products')
+                        ->where('id', $row->product_id)
+                        ->update([
+                            'action_id'    => 0,
+                            'special'      => null,
+                            'special_from' => null,
+                            'special_to'   => null,
+                            'special_lock' => 0,
+                            'status'       => $newStatus,
+                            'updated_at'   => $now,
+                        ]);
 
+                    DB::table('product_actions')->where('id', $row->action_id)->delete();
+                }
                 DB::commit();
             }
         } catch (\Throwable $e) {
@@ -531,6 +533,7 @@ class DashboardController extends Controller
             ->route('dashboard')
             ->with(['success' => "Import akcija završen. Ažurirano: {$updatedCount}, preskočeno: {$skippedCount}."]);
     }
+
 
 
 
