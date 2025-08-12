@@ -60,7 +60,6 @@ class CheckoutController extends Controller
      */
     public function view(Request $request)
     {
-
         $data = $this->checkSession();
 
         if (empty($data)) {
