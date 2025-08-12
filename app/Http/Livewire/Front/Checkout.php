@@ -174,6 +174,14 @@ class Checkout extends Component
         $this->changeStep($this->step);
     }
 
+
+    public function updatingPickupAddress($value)
+    {
+        $this->pickup_address = $value;
+
+        CheckoutSession::setComment($this->pickup_address);
+    }
+
     public function updatingComment($value)
     {
         $this->comment = $value;
@@ -315,9 +323,15 @@ class Checkout extends Component
         $this->shipping = $shipping;
         $this->checkShipping($shipping);
         CheckoutSession::setShipping($shipping);
-        if($shipping = 'gls_eu'){
+
+        if($shipping == 'gls_eu'){
             CheckoutSession::setComment('');
         }
+
+        if ($shipping == 'pickup') {
+            CheckoutSession::setComment($this->pickup_address);
+        }
+
         return redirect()->route('naplata', ['step' => 'dostava']);
     }
 
