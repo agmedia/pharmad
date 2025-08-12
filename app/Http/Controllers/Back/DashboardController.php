@@ -361,6 +361,181 @@ class DashboardController extends Controller
     }
 
 
+
+
+
+
+
+    public function importPharmadActions(Request $request)
+    {
+        $feedUrl = 'https://api.ljekarne-pharmad.hr/is_izvoz.xml';
+
+        try {
+            $xml = @simplexml_load_file($feedUrl);
+            if (!$xml) {
+                return back()->with(['error' => 'Feed nije dostupan ili je neispravan.']);
+            }
+        } catch (\Throwable $e) {
+            Log::error('Pharmad feed error', ['err' => $e->getMessage()]);
+            return back()->with(['error' => 'Greška pri učitavanju feeda.']);
+        }
+
+        $now          = Carbon::now();
+        $updatedCount = 0;
+        $skippedCount = 0;
+        $onSaleProductIds = [];
+
+        foreach ($xml->post as $item) {
+            $regular  = (float) ($item->RegularPrice ?? 0);
+            $sale     = (float) ($item->SalePrice ?? 0);
+            $stock    = (int)   ($item->Stock ?? 0);
+
+            // samo stvarne akcije
+            if ($regular <= 0 || $sale <= 0 || $sale >= $regular) {
+                $skippedCount++;
+                continue;
+            }
+
+            $sku = trim((string) ($item->Sku ?? ''));
+            if (!$sku) {
+                $skippedCount++;
+                continue;
+            }
+
+            $product = Product::query()->where('sku', $sku)->first();
+            if (!$product) {
+                $skippedCount++;
+                continue;
+            }
+
+            $linksJson = json_encode([$product->id]);
+            $discount  = round($regular - $sale, 4); // product_actions.discount (15,4)
+            $sale      = round($sale, 2);            // products.special (15,2)
+            $price     = round($regular, 2);         // products.price (15,2)
+            $quantity  = max(0, (int) $stock);       // products.quantity
+
+            DB::beginTransaction();
+            try {
+                // nađi/upiši akciju (single, vezana samo za ovaj proizvod)
+                $existing = DB::table('product_actions')
+                    ->where('group', 'single')
+                    ->where('links', $linksJson)
+                    ->first();
+
+                if ($existing) {
+                    DB::table('product_actions')->where('id', $existing->id)->update([
+                        'title'         => 'Posebna ponuda',
+                        'type'          => 'F',
+                        'discount'      => $discount,
+                        'date_start'    => null,
+                        'date_end'      => null,
+                        'data'          => null,
+                        'coupon'        => null,
+                        'min_cart'      => null,
+                        'logged'        => 0,
+                        'quantity'      => 0,
+                        'lock'          => 1,
+                        'uses_customer' => 1,
+                        'status'        => 1,
+                        'updated_at'    => $now,
+                    ]);
+                    $actionId = (int) $existing->id;
+                } else {
+                    $actionId = DB::table('product_actions')->insertGetId([
+                        'title'         => 'Posebna ponuda',
+                        'type'          => 'F',
+                        'discount'      => $discount,   // razlika regular - sale
+                        'group'         => 'single',
+                        'links'         => $linksJson,  // ["{product_id}"]
+                        'date_start'    => null,
+                        'date_end'      => null,
+                        'data'          => null,
+                        'coupon'        => null,
+                        'min_cart'      => null,
+                        'logged'        => 0,
+                        'quantity'      => 0,
+                        'lock'          => 1,
+                        'uses_customer' => 1,
+                        'viewed'        => 0,
+                        'clicked'       => 0,
+                        'status'        => 1,
+                        'created_at'    => $now,
+                        'updated_at'    => $now,
+                    ]);
+                }
+
+                // upiši i price/quantity + special u products
+                $product->update([
+                    'price'        => $price,
+                    'quantity'     => $quantity,
+                    'special'      => $sale,
+                    'special_from' => null,
+                    'special_to'   => null,
+                    'action_id'    => $actionId,
+                    'special_lock' => 1,
+                    'updated_at'   => $now,
+                ]);
+
+                DB::commit();
+
+                $onSaleProductIds[] = $product->id;
+                $updatedCount++;
+            } catch (\Throwable $e) {
+                DB::rollBack();
+                Log::error('Pharmad akcija - DB greška', [
+                    'product_id' => $product->id ?? null,
+                    'err'        => $e->getMessage(),
+                ]);
+                $skippedCount++;
+            }
+        }
+
+        // ČIŠĆENJE: makni single-akcije s proizvoda koji više nisu na akciji u feedu
+        try {
+            $stale = DB::table('products as p')
+                ->join('product_actions as a', 'a.id', '=', 'p.action_id')
+                ->where('a.group', 'single')
+                ->when(!empty($onSaleProductIds), function ($q) use ($onSaleProductIds) {
+                    $q->whereNotIn('p.id', $onSaleProductIds);
+                })
+                ->select('p.id as product_id', 'a.id as action_id')
+                ->get();
+
+            if ($stale->count() > 0) {
+                $staleProductIds = $stale->pluck('product_id')->all();
+                $staleActionIds  = $stale->pluck('action_id')->unique()->all();
+
+                DB::beginTransaction();
+                // resetiraj samo akcijska polja (ne diramo price/quantity kod čišćenja)
+                DB::table('products')
+                    ->whereIn('id', $staleProductIds)
+                    ->update([
+                        'action_id'    => 0,
+                        'special'      => null,
+                        'special_from' => null,
+                        'special_to'   => null,
+                        'special_lock' => 0,
+                        'updated_at'   => $now,
+                    ]);
+
+                DB::table('product_actions')->whereIn('id', $staleActionIds)->delete();
+
+                DB::commit();
+            }
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::warning('Čišćenje akcija - greška', ['err' => $e->getMessage()]);
+        }
+
+        return redirect()
+            ->route('dashboard')
+            ->with(['success' => "Import akcija završen. Ažurirano: {$updatedCount}, preskočeno: {$skippedCount}."]);
+    }
+
+
+
+
+
     /**
      * Import initialy from Excel files.
      *
