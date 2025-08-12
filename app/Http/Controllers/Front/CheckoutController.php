@@ -60,7 +60,7 @@ class CheckoutController extends Controller
      */
     public function view(Request $request)
     {
-        dd($request, CheckoutSession::getShipping());
+
         $data = $this->checkSession();
 
         if (empty($data)) {
