@@ -145,7 +145,7 @@ class Author extends Model
         if ($this->request->hasFile('image')) {
             $name = Str::slug($author->title) . '.' . $this->request->image->extension();
 
-            $this->request->image->storeAs('/', $name, 'publisher');
+            $this->request->image->storeAs('/', $name, 'author');
 
             return $author->update([
                 'image' => config('filesystems.disks.author.url') . $name
