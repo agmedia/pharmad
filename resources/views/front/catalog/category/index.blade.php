@@ -4,11 +4,6 @@
 @if (isset($group) && $group)
     @if ($group && ! $cat && ! $subcat)
         @section ( 'title',  ucfirst($group_title). ' - Ljekarne PharmAD' )
-
-
-
-
-
     @endif
     @if ($cat && ! $subcat)
         @section ( 'title',  $cat->title . ' - Ljekarne PharmAD' )

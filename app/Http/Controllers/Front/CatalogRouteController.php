@@ -48,7 +48,6 @@ class CatalogRouteController extends Controller
             $group_title = $groupData ? $groupData->group_title : null;
         }
 
-
         //
         if ($subcat) {
             $sub_category = Category::where('slug', $subcat)->where('parent_id', $cat->id)->first();
@@ -59,8 +58,6 @@ class CatalogRouteController extends Controller
 
             $subcat = $sub_category;
         }
-
-
 
         // Check if there is Product set.
         if ($prod) {
