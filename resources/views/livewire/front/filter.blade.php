@@ -68,6 +68,14 @@
 
             </div>
 
+
+            <h3 class="accordion-header px-grid-gutter">
+                <a class="nav-link-style d-block fs-md py-3" href="{{ route('catalog.route.actions') }}">
+                    <span class="d-flex align-items-center"><i class="ci-discount fs-lg mt-n1 me-2"></i>Akcije</span>
+                </a>
+            </h3>
+        </div>
+
             <div class="accordion-item border-bottom">
                 <h3 class="accordion-header px-grid-gutter">
                     <a class="nav-link-style d-block fs-md py-3" href="{{ route('catalog.route.author') }}">

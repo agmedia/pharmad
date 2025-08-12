@@ -323,10 +323,10 @@ class CatalogRouteController extends Controller
     {
         $ids = Product::query()->whereNotNull('special')->pluck('id');
         $group = 'snizenja';
-
+        $group_title = 'Akcije';
         $crumbs = null;
 
-        return view('front.catalog.category.index', compact('group', 'cat', 'subcat', 'ids', 'crumbs'));
+        return view('front.catalog.category.index', compact('group', 'group_title','cat', 'subcat', 'ids', 'crumbs'));
     }
 
 
