@@ -132,6 +132,14 @@ h3.product-title{
 
 }
 
+.bg-logo{
+    background-image: url('../media/img/logobigback.svg'), url('../media/img/logobigbackr.svg');
+    background-repeat: no-repeat, no-repeat;
+    background-attachment: local;
+    background-position: 0px 15vh, right 15vh;
+    background-size: 660px 660px;
+}
+
 .thumb-height img{
     object-fit: scale-down;
     width: 270px;

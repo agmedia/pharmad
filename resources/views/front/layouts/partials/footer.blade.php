@@ -41,7 +41,7 @@
     </section>
 
 
-    <footer class="footer bg-light mt-0 pt-3" >
+    <footer class="footer bg-light mt-0 pt-3 bg-logo" >
 
         <div class="px-lg-5 pt-2 pb-4">
             <div class="mx-auto px-3" >
