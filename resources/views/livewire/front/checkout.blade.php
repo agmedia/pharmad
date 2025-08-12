@@ -285,47 +285,56 @@
                                                 <li class="list-group-item"> <a href="javascript:void(0)" wire:click="selectHpPak('{{ $item['code'] . ': ' . $item['city'] . ', ' . $item['zip'] . ', ' . $item['address'] . ', ' . $item['name'] }}')">
                                                     {{ $item['city'] . ', ' . $item['zip'] . ', ' . $item['address'] . ', ' . $item['name'] }}
                                                     </a></li>
-
                                             @endforeach
                                         </ul>
                                     </div>
                                 @endif
-
                                 @error('comment') <small class="text-danger">Obavezan odabir BoxNow paketomata </small> @enderror
                             </td>
                         </tr>
-
                     @endif
 
                     @if ($s_method->code == 'gls_eu' && $view_comment)
                         <tr>
                             <td colspan="4">
                                 <a href="javascript:;" class="boxnow-map-widget-button btn " style="color: #fff;padding: 10px 20px;margin-bottom: 15px;background-color: #6cd04e">Odaberite BOX NOW lokaciju</a>
-
                                 <div id="boxnowmap" style=""></div>
-
                                 <input class="form-control mt-2" type="text" id="comment"  wire:model="comment" placeholder="" readonly required>
-
                                 @error('comment') <small class="text-danger">Obavezan odabir BoxNow paketomata </small> @enderror
                             </td>
                         </tr>
                     @endif
 
+                    @if ($s_method->code == 'pickup' && $view_comment_pickup)
+                        <tr>
+                            <td colspan="4">
+                                <label class="form-label" for="checkout-country">Odaberite poslovnicu za preuzimanje <span class="text-danger">*</span></label>
+                                <select class="form-select @error('pickup_address') is-invalid @enderror" id="state-select" wire:model="pickup_address">
+                                    <option value=""></option>
+                                    @foreach (config('settings.pickup_stores') as $store)
+                                        <option value="{{ $store }}">{{ $store }}</option>
+                                    @endforeach
+                                </select>
+                                @error('pickup_address')             <script>location.reload();</script>         @enderror
+                                @error('pickup_address') <small class="text-danger">Obavezan odabir poslovnice za preuzimanje </small>
+                                @enderror
+                            </td>
+                        </tr>
+                    @endif
 
                     @if ($s_method->code == 'gls_paketomat' && $view_commentt)
                         <tr>
                             <td colspan="4">
-                        <div style="height: 600px">
-                            <gls-dpm country="hr" id="test-map" filter-type="parcel-locker"></gls-dpm>
-                        </div>
+                                <div style="height: 600px">
+                                    <gls-dpm country="hr" id="test-map" filter-type="parcel-locker"></gls-dpm>
+                                </div>
 
+                                <input class="form-control mt-2" type="text" id="comment"  wire:model="comment" placeholder="" readonly required>
 
-                        <input class="form-control mt-2" type="text" id="comment"  wire:model="comment" placeholder="" readonly required>
+                                @error('comment')             <script>location.reload();</script>         @enderror
+                                @error('comment') <small class="text-danger">Obavezan odabir gls paketomata </small>
 
-                        @error('comment')             <script>location.reload();</script>         @enderror
-                        @error('comment') <small class="text-danger">Obavezan odabir gls paketomata </small>
-
-                        @enderror
+                                @enderror
                             </td>
                         </tr>
 

@@ -135,6 +135,13 @@ return [
         ]
     ],
 
+    'pickup_stores' => [
+        0 => 'Dubrava Zabočka 90B, 49210 Zabok - 0,00€',
+        1 => 'Zagrebačka 61, 10292 Šenkovec - 0,00€',
+        2 => 'Kraljevec na Sutli 131, 49294 Kraljevec na Sutli - 0,00€',
+        3 => 'Zagrebačka 99, 10291 Prigorje Brdovečko - 0,00€',
+    ],
+
     'sitemap' => [
         0 => 'pages',
         1 => 'categories',

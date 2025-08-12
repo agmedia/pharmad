@@ -88,6 +88,9 @@ class Checkout extends Component
     public $comment = '';
     public $view_comment = false;
     public $view_commentt = false;
+    public $view_comment_pickup = false;
+
+    public $pickup_address = '';
 
     public $hp_paketomat = '';
     public $view_hp_paketomat = false;
@@ -117,7 +120,6 @@ class Checkout extends Component
     ];
 
     protected $comment_rules = [
-
         'comment'=> 'required',
     ];
 
@@ -126,6 +128,13 @@ class Checkout extends Component
      */
     protected $payment_rules = [
         'payment' => 'required',
+    ];
+
+    /**
+     * @var string[]
+     */
+    protected $pickup_rules = [
+        'pickup_address' => 'required',
     ];
 
     /**
@@ -269,6 +278,10 @@ class Checkout extends Component
 
         if ($step == 'placanje' and $this->shipping == 'gls_paketomat') {
             $this->validate($this->comment_rules);
+        }
+
+        if ($step == 'placanje' and $this->shipping == 'pickup') {
+            $this->validate($this->pickup_rules);
         }
 
         $this->step = $step;
@@ -416,8 +429,10 @@ class Checkout extends Component
     {
         if ($shipping == 'pickup') {
             $this->gdl_shipping = 'osobno preuzimanje';
+            $this->view_comment_pickup = true;
         } else {
             $this->gdl_shipping = 'dostava';
+            $this->view_comment_pickup = false;
         }
 
         if ($shipping == 'gls_eu') {
@@ -437,6 +452,7 @@ class Checkout extends Component
         } else {
             $this->view_hp_paketomat = false;
         }
+
     }
 
 
