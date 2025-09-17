@@ -11,6 +11,7 @@ use App\Mail\StatusPaid;
 use App\Mail\StatusReady;
 use App\Models\Back\Orders\Order;
 use App\Models\Back\Orders\OrderHistory;
+use App\Models\Back\Orders\OrderTotal;
 use App\Models\Back\Settings\Settings;
 use App\Models\Front\Checkout\Shipping\Gls;
 use App\Models\Front\Checkout\Shipping\Glsstari;
@@ -115,7 +116,17 @@ class OrderController extends Controller
         $updated = $order->validateRequest($request)->store($order->id);
 
         if ($updated) {
-            return redirect()->route('orders.edit', ['order' => $updated])->with(['success' => 'Narudžba je snimljena!']);
+            // 1) Uzmi naslov dostave iz postavki za odabrani shipping code
+            $shippingSetting = Settings::get('shipping', 'list.' . $request->shipping)->first();
+            $shippingTitle   = $shippingSetting ? $shippingSetting->title : ($request->shipping_title ?? 'Dostava');
+
+            // 2) Updejtaj redak u order_total za shipping
+            OrderTotal::where('order_id', $updated->id)
+                      ->where('code', 'shipping')
+                      ->update(['title' => $shippingTitle]);
+
+            return redirect()->route('orders.edit', ['order' => $updated])
+                             ->with(['success' => 'Narudžba je snimljena!']);
         }
 
         return redirect()->back()->with(['error' => 'Oops..! Dogodila se greška prilikom snimanja.']);

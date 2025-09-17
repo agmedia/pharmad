@@ -246,14 +246,94 @@ class Order extends Model
     {
         $order = $id ? $this->updateData($id) : $this->storeData();
 
-        if ($order) {
-            OrderProduct::store(json_decode($this->request->items), $order->id);
-            OrderTotal::store(json_decode($this->request->sums), $order->id);
-
-            return $order;
+        if (!$order) {
+            return false;
         }
 
-        return false;
+        // 1) Artikli
+        OrderProduct::store(json_decode($this->request->items), $order->id);
+
+        // 2) Totals iz forme (ako je JSON razbijen, dobit ćemo null -> napravimo prazan niz)
+        $totals = json_decode($this->request->sums, true) ?: [];
+
+        // 3) Ako je poslan iznos dostave, resolve-aj title iz Settings i upiši/override-aj "shipping"
+        if ($this->request->filled('shipping_amount')) {
+            // title iz postavki za kod dostave
+            $shippingSetting = Settings::get('shipping', 'list.' . $this->request->shipping)->first();
+            $shippingTitle   = $shippingSetting ? $shippingSetting->title : 'Dostava';
+
+            // normalizacija broja (podržava i "55,00")
+            $shippingValue = (float) str_replace(',', '.', $this->request->shipping_amount);
+
+            $found = false;
+            foreach ($totals as &$t) {
+                // podrži i array i object
+                $code = is_array($t) ? ($t['code'] ?? null) : ($t->code ?? null);
+                if ($code === 'shipping') {
+                    if (is_array($t)) {
+                        $t['value'] = $shippingValue;
+                        $t['title'] = $t['title'] ?? ($t['name'] ?? $shippingTitle);
+                    } else {
+                        $t->value = $shippingValue;
+                        $t->title = $t->title ?? ($t->name ?? $shippingTitle);
+                    }
+                    $found = true;
+                    break;
+                }
+            }
+            unset($t);
+
+            if (!$found) {
+                // dodaj shipping red
+                $totals[] = [
+                    'code'  => 'shipping',
+                    'title' => $shippingTitle,
+                    'value' => $shippingValue,
+                ];
+            }
+        }
+
+        // 3b) Ako je payment COD i poslan iznos naknade, upiši/override-aj "payment"
+        if (strtolower($this->request->payment) === 'cod' && $this->request->filled('payment_amount')) {
+            $paymentTitle = 'Naknada za pouzeće'; // po potrebi promijeni ili povuci iz configa
+            $paymentValue = (float) str_replace(',', '.', $this->request->payment_amount);
+
+            $foundPayment = false;
+            foreach ($totals as &$t) {
+                $code = is_array($t) ? ($t['code'] ?? null) : ($t->code ?? null);
+                if ($code === 'payment') {
+                    if (is_array($t)) {
+                        $t['value'] = $paymentValue;
+                        $t['title'] = $t['title'] ?? ($t['name'] ?? $paymentTitle);
+                    } else {
+                        $t->value = $paymentValue;
+                        $t->title = $t->title ?? ($t->name ?? $paymentTitle);
+                    }
+                    $foundPayment = true;
+                    break;
+                }
+            }
+            unset($t);
+
+            if (!$foundPayment) {
+                $totals[] = [
+                    'code'  => 'payment',
+                    'title' => $paymentTitle,
+                    'value' => $paymentValue,
+                ];
+            }
+        } else {
+            // (Opcionalno) ako payment NIJE COD, ukloni eventualni 'payment' red iz totals
+            $totals = array_values(array_filter($totals, function ($t) {
+                $code = is_array($t) ? ($t['code'] ?? null) : ($t->code ?? null);
+                return $code !== 'payment';
+            }));
+        }
+
+        // 4) Spremi totals
+        OrderTotal::store($totals, $order->id);
+
+        return $order;
     }
 
 

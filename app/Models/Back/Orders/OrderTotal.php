@@ -17,8 +17,8 @@ class OrderTotal extends Model
      * @var array
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
-    
-    
+
+
     /**
      * @param $totals
      * @param $order_id
@@ -28,25 +28,39 @@ class OrderTotal extends Model
     public static function store($totals, $order_id)
     {
         self::where('order_id', $order_id)->delete();
-        
-        for ($i = 0; $i < count($totals); $i++) {
+
+        // Ako je došao JSON objekata, prebacimo u uniformni pristup
+        $i = 0;
+        foreach ($totals as $t) {
+            $code  = is_array($t) ? ($t['code']  ?? null) : ($t->code  ?? null);
+            $title = is_array($t) ? ($t['title'] ?? $t['name'] ?? ($code ? ucfirst($code) : null))
+                : ($t->title ?? $t->name ?? ($code ? ucfirst($code) : null));
+            $value = is_array($t) ? ($t['value'] ?? 0) : ($t->value ?? 0);
+
+            if ($code === null) {
+                $i++;
+                continue;
+            }
+
             self::insertGetId([
                 'order_id'   => $order_id,
-                'code'       => $totals[$i]->code,
-                'title'      => $totals[$i]->name,
-                'value'      => $totals[$i]->value,
+                'code'       => $code,
+                'title'      => $title,
+                'value'      => $value,    // DECIMAL(15,4) prima i 55 i 55.0000
                 'sort_order' => $i,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]);
-    
-            if ($totals[$i]->code == 'total') {
-                Order::where('id', $order_id)->update([
-                    'total' => $totals[$i]->value
-                ]);
+
+            if ($code === 'total') {
+                Order::where('id', $order_id)->update(['total' => $value]);
             }
+
+
+
+            $i++;
         }
-        
+
         return true;
     }
     
