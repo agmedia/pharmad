@@ -47,7 +47,7 @@
             @foreach ($data['items'] as $review)
 
                     <blockquote class="mb-2">
-                        <div class="card card-body fs-md text-muted border-0 shadow-sm">
+                        <div class="card card-body fs-md text-muted p-4 border-0 shadow-sm">
                             <div class="mb-2">
                                 <div class="star-rating"> @for ($i = 0; $i < 5; $i++)
                                         @if (floor($review->stars) - $i >= 1)
