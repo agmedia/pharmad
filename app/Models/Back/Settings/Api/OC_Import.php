@@ -556,7 +556,7 @@ class OC_Import
      */
     private function getImportRange()
     {
-        return Settings::get('import', 'range');
+        return Settings::getValue('import', 'range');
     }
 
 

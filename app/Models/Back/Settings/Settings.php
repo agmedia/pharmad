@@ -57,6 +57,23 @@ class Settings extends Model
         return collect();
     }
 
+    public static function getValue(string $code, string $key)
+    {
+        $styles = Helper::resolveCache('settings')->remember($code.$key, config('cache.life'), function () use ($code, $key) {
+            return Settings::where('code', $code)->where('key', $key)->first();
+        });
+
+        if ($styles) {
+            if ($styles->json) {
+                return collect(json_decode($styles->value));
+            }
+
+            return $styles->value;
+        }
+
+        return collect();
+    }
+
 
     /**
      * @param string $code
