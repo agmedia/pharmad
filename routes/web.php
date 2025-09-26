@@ -377,7 +377,7 @@ Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPass
  * Groups, Categories and Products routes resolver.
  * https://www.antikvarijat-biblos.hr/kategorija-proizvoda/knjige/
  */
-Route::get('proizvod/{prod?}/', [CatalogRouteController::class, 'resolveOldUrl']);
+Route::get('{prod?}/', [CatalogRouteController::class, 'resolveOldUrl']);
 //Route::get('kategorija-proizvoda/{group?}/{cat?}/{subcat?}', [CatalogRouteController::class, 'resolveOldCategoryUrl']);
 //
 Route::get(config('settings.author_path') . '/{author?}/{cat?}/{subcat?}', [CatalogRouteController::class, 'author'])->name('catalog.route.author');
