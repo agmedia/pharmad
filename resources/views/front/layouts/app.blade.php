@@ -78,7 +78,7 @@
         }
 
     </style>
-    @if (config('app.env') == 'production')
+
         @yield('google_data_layer')
         <!-- Google Tag Manager -->
 
@@ -93,7 +93,7 @@
         </script>
 
 
-    @endif
+
 
 
 </head>
