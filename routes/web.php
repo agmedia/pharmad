@@ -381,8 +381,7 @@ Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPass
 //Route::get('kategorija-proizvoda/{group?}/{cat?}/{subcat?}', [CatalogRouteController::class, 'resolveOldCategoryUrl']);
 //
 
-Route::get('{prod}', [CatalogRouteController::class, 'resolveOldUrl'])
-    ->where('prod', '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*-\d+$');
+Route::get('{prod}', [CatalogRouteController::class, 'resolveOldUrl']);
 
 
 Route::get(config('settings.author_path') . '/{author?}/{cat?}/{subcat?}', [CatalogRouteController::class, 'author'])->name('catalog.route.author');
