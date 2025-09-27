@@ -381,7 +381,7 @@ Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPass
 //Route::get('kategorija-proizvoda/{group?}/{cat?}/{subcat?}', [CatalogRouteController::class, 'resolveOldCategoryUrl']);
 //
 
-Route::get('{prod}', [CatalogRouteController::class, 'resolveOldUrl']);
+
 
 
 Route::get(config('settings.author_path') . '/{author?}/{cat?}/{subcat?}', [CatalogRouteController::class, 'author'])->name('catalog.route.author');
@@ -391,7 +391,7 @@ Route::get('akcijska-ponuda/{cat?}/{subcat?}', [CatalogRouteController::class, '
 //
 Route::get('{group}/{cat?}/{subcat?}/{prod?}', [CatalogRouteController::class, 'resolve'])->name('catalog.route');
 
-
+Route::get('{prod}', [CatalogRouteController::class, 'resolveOldUrl']);
 
 // SPECIAL ROUTES
 Route::post('kekspay/provjera-narudzbe', [\App\Models\Front\Checkout\Payment\Keks::class, 'check'])->name('keks.provjera');
