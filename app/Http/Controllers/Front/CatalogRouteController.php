@@ -42,6 +42,26 @@ class CatalogRouteController extends Controller
     public function resolve(Request $request, $group, Category $cat = null, $subcat = null, Product $prod = null)
     {
 
+        if ($group && !$cat && !$subcat && !$prod) {
+            // 1) Pokušaj exact match
+            if ($p = Product::where('slug', $group)->where('status', 1)->first()) {
+                return redirect()->to(url($p->url), 301);
+            }
+
+            // 2) Ako je legacy oblik sa završnim -broj, probaj i bazni slug
+            if (preg_match('/^(?P<base>[A-Za-z0-9\-]+)-\d+$/', $group, $m)) {
+                $base = $m['base'];
+
+                if ($p = Product::where('slug', $base)->where('status', 1)->first()) {
+                    return redirect()->to(url($p->url), 301);
+                }
+
+                if ($p = Product::where('slug', 'LIKE', $base.'-%')->where('status', 1)->first()) {
+                    return redirect()->to(url($p->url), 301);
+                }
+            }
+        }
+
         $group_title = null;
 
         if ($group) {
@@ -138,6 +158,7 @@ class CatalogRouteController extends Controller
 
         abort(404);
     }
+
 
 
     /**

@@ -393,6 +393,8 @@ Route::get('{group}/{cat?}/{subcat?}/{prod?}', [CatalogRouteController::class, '
 
 Route::get('{prod}', [CatalogRouteController::class, 'resolveOldUrl']);
 
+
+
 // SPECIAL ROUTES
 Route::post('kekspay/provjera-narudzbe', [\App\Models\Front\Checkout\Payment\Keks::class, 'check'])->name('keks.provjera');
 
