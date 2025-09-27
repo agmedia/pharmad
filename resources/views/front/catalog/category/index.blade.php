@@ -141,7 +141,7 @@
     @endif
 
 
-    <div v-pre>
+    <div >
         @livewire('front.product-category-list', [
         'ids' => isset($ids) ? $ids : '',
         'group' => isset($group) ? $group : '',
