@@ -377,15 +377,18 @@ Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPass
  * Groups, Categories and Products routes resolver.
  * https://www.antikvarijat-biblos.hr/kategorija-proizvoda/knjige/
  */
-
+#Route::get('{prod?}/', [CatalogRouteController::class, 'resolveOldUrl']);
 //Route::get('kategorija-proizvoda/{group?}/{cat?}/{subcat?}', [CatalogRouteController::class, 'resolveOldCategoryUrl']);
 //
+
+Route::get('{prod}', [CatalogRouteController::class, 'resolveOldUrl'])
+    ->where('prod', '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*-\d+$');
+
+
 Route::get(config('settings.author_path') . '/{author?}/{cat?}/{subcat?}', [CatalogRouteController::class, 'author'])->name('catalog.route.author');
 Route::get(config('settings.publisher_path') . '/{publisher?}/{cat?}/{subcat?}', [CatalogRouteController::class, 'publisher'])->name('catalog.route.publisher');
 //
 Route::get('akcijska-ponuda/{cat?}/{subcat?}', [CatalogRouteController::class, 'actions'])->name('catalog.route.actions');
-
-Route::get('{prod?}/', [CatalogRouteController::class, 'resolveOldUrl']);
 //
 Route::get('{group}/{cat?}/{subcat?}/{prod?}', [CatalogRouteController::class, 'resolve'])->name('catalog.route');
 
