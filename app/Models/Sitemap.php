@@ -84,9 +84,7 @@ class Sitemap
             return $this->getAuthors();
         }
 
-        if ($sitemap == 'publishers' || $sitemap == 'publishers.xml') {
-            return $this->getPublishers();
-        }
+
 
         if ($sitemap == 'images' || $sitemap == 'img') {
             return $this->getImages();
