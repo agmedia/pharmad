@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Front\Catalog\Author;
-use App\Models\Front\Catalog\Brand;
 use App\Models\Front\Catalog\Category;
 use App\Models\Front\Catalog\Product;
 use App\Models\Front\Catalog\Publisher;
@@ -34,14 +33,8 @@ class Sitemap
      *
      * @param string|null $sitemap
      */
-    public function __construct(string|array $sitemap = null)
+    public function __construct(string $sitemap = null)
     {
-
-        if (is_array($sitemap)) {
-            $this->sitemap = $sitemap;
-
-            return $this->getIndexLastMods();
-        }
         $this->sitemap = $this->setSitemap($sitemap);
     }
 
@@ -282,33 +275,4 @@ class Sitemap
 
         return $this->response;
     }
-
-    /**
-     * @return void
-     */
-    private function getIndexLastMods(): void
-    {
-        foreach ($this->sitemap as $group) {
-            if ($group == 'pages') {
-                $last = Page::query()->where('group', 'page')->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
-            }
-            if ($group == 'categories') {
-                $last = Category::query()->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
-            }
-            if ($group == 'products') {
-                $last = Product::query()->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
-            }
-            if ($group == 'brands') {
-                $last = Brand::query()->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
-            }
-
-            $mod = Carbon::parse($last)->tz('UTC')->toAtomString();
-
-            $this->response[] = [
-                'url' => route('sitemap', ['sitemap' => $group]),
-                'lastmod' => $mod
-            ];
-        }
-    }
-
 }
