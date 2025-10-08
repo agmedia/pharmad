@@ -49,14 +49,14 @@
                                 <label for="title-input">Naziv kategorije</label>
                                 <input type="text" class="form-control" id="title-input" name="title" placeholder="Upišite naziv" value="{{ isset($category) ? $category->title : old('title') }}" onkeyup="SetSEOPreview()">
                             </div>
-                            <div class="form-group">
-                                <label for="group-select">Grupa</label>
-                                <select class="js-select2 form-control" id="group-select" name="group" style="width: 100%;">
-                                    @foreach ($groups as $group)
-                                        <option value="{{ $group }}">{{ $group }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <select class="js-select2 form-control" id="group-select" name="group" style="width: 100%;">
+                                @foreach ($groups as $group)
+                                    <option value="{{ $group }}"
+                                        {{ old('group', $category->group ?? '') == $group ? 'selected' : '' }}>
+                                        {{ $group }}
+                                    </option>
+                                @endforeach
+                            </select>
                             <div class="form-group">
                                 <label for="parent-select">Glavna kategorija</label>
                                 <select class="js-select2 form-control" id="parent-select" name="parent" style="width: 100%;">
