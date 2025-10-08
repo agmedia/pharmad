@@ -34,7 +34,7 @@ class Sitemap
      *
      * @param string|null $sitemap
      */
-    public function __construct(string $sitemap = null)
+    public function __construct(string|array $sitemap = null)
     {
 
         if (is_array($sitemap)) {
