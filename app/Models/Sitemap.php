@@ -136,7 +136,7 @@ class Sitemap
 
         foreach ($products->get() as $product) {
             $this->response[$product->id] = [
-                'loc' => url($product->translation->url)
+                'loc' => url($product->url)
             ];
 
             $this->response[$product->id]['images'][] = [
@@ -180,9 +180,9 @@ class Sitemap
            ];*/
 
         foreach ($pages as $page) {
-            if ($page->translation->slug == 'homepage') {
+            if ($page->slug == 'homepage') {
                 $this->response[] = [
-                    'url' => route('catalog.route.page', ['page' => $page->translation->slug]),
+                    'url' => route('catalog.route.page', ['page' => $page->slug]),
                     'lastmod' => $page->updated_at->tz('UTC')->toAtomString()
                 ];
             }
@@ -242,7 +242,7 @@ class Sitemap
         $products = Product::query()->active()->hasStock()->get();
 
         foreach ($products as $product) {
-            $url = url($product->translation->url);
+            $url = url($product->url);
 
             if (Str::contains($url, '/hr/')) {
                 $url = str_replace('/hr/', '/', $url);
