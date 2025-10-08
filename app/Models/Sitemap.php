@@ -5,9 +5,7 @@ namespace App\Models;
 use App\Models\Front\Catalog\Author;
 use App\Models\Front\Catalog\Category;
 use App\Models\Front\Catalog\Product;
-use App\Models\Front\Catalog\Brand;
-use App\Models\Front\Recepti;
-use App\Models\Front\Blog;
+use App\Models\Front\Catalog\Publisher;
 use App\Models\Front\Page;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -33,16 +31,10 @@ class Sitemap
     /**
      * Sitemap constructor.
      *
-     * @param string|array|null $sitemap
+     * @param string|null $sitemap
      */
-    public function __construct(string|array $sitemap = null)
+    public function __construct(string $sitemap = null)
     {
-        if (is_array($sitemap)) {
-            $this->sitemap = $sitemap;
-
-            return $this->getIndexLastMods();
-        }
-
         $this->sitemap = $this->setSitemap($sitemap);
     }
 
@@ -88,8 +80,12 @@ class Sitemap
             return $this->getProducts();
         }
 
-        if ($sitemap == 'brands' || $sitemap == 'brands.xml') {
-            return $this->getBrands();
+        if ($sitemap == 'authors' || $sitemap == 'authors.xml') {
+            return $this->getAuthors();
+        }
+
+        if ($sitemap == 'publishers' || $sitemap == 'publishers.xml') {
+            return $this->getPublishers();
         }
 
         if ($sitemap == 'images' || $sitemap == 'img') {
@@ -99,40 +95,11 @@ class Sitemap
 
 
     /**
-     * @return void
-     */
-    private function getIndexLastMods(): void
-    {
-        foreach ($this->sitemap as $group) {
-            if ($group == 'pages') {
-                $last = Page::query()->where('group', 'page')->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
-            }
-            if ($group == 'categories') {
-                $last = Category::query()->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
-            }
-            if ($group == 'products') {
-                $last = Product::query()->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
-            }
-            if ($group == 'brands') {
-                $last = Brand::query()->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
-            }
-
-            $mod = Carbon::parse($last)->tz('UTC')->toAtomString();
-
-            $this->response[] = [
-                'url' => route('sitemap', ['sitemap' => $group]),
-                'lastmod' => $mod
-            ];
-        }
-    }
-
-
-    /**
      * @return array
      */
     private function getImages(): array
     {
-        $products = Product::query()->active()->hasStock()->with('images');
+        $products = Product::query()->active()->hasStock()->select('url', 'id', 'image')->with('images');
 
         foreach ($products->get() as $product) {
             $this->response[$product->id] = [
@@ -159,10 +126,8 @@ class Sitemap
      */
     private function getPages()
     {
-        $pages = Page::query()->where('group', 'page')->where('status', '=', 1)->get();
-        $blogs = Blog::query()->where('status', '=', 1)->get();
-
-        $recepti = Recepti::query()->where('status', '=', 1)->get();
+        $pages = Page::query()->where('group', 'page')->where('slug', '!=', 'homepage')->where('status', '=', 1)->select('slug', 'status', 'updated_at')->get();
+        $blogs = Page::query()->where('group', 'blog')->where('status', '=', 1)->select('slug', 'status', 'updated_at')->get();
 
         $this->response[] = [
             'url' => route('index'),
@@ -174,36 +139,26 @@ class Sitemap
             'lastmod' => Carbon::now()->startOfYear()->tz('UTC')->toAtomString()
         ];
 
-        /*   $this->response[] = [
-               'url' => route('faq'),
-               'lastmod' => Carbon::now()->startOfYear()->tz('UTC')->toAtomString()
-           ];*/
+        $this->response[] = [
+            'url' => route('faq'),
+            'lastmod' => Carbon::now()->startOfYear()->tz('UTC')->toAtomString()
+        ];
 
         foreach ($pages as $page) {
-            if ($page->slug == 'homepage') {
-                $this->response[] = [
-                    'url' => route('catalog.route.page', ['page' => $page->slug]),
-                    'lastmod' => $page->updated_at->tz('UTC')->toAtomString()
-                ];
-            }
+            $this->response[] = [
+                'url' => route('catalog.route.page', ['page' => $page->slug]),
+                'lastmod' => $page->updated_at->tz('UTC')->toAtomString()
+            ];
         }
 
         foreach ($blogs as $blog) {
             $this->response[] = [
-                'url' => route('catalog.route.blog', ['cat' => $blog]),
+                'url' => route('catalog.route.blog', ['blog' => $blog->slug]),
                 'lastmod' => $blog->updated_at->tz('UTC')->toAtomString()
             ];
         }
 
-        foreach ($recepti as $recept) {
-            $this->response[] = [
-                'url' => route('catalog.route.recepti', ['cat' => $recept]),
-                'lastmod' => $recept->updated_at->tz('UTC')->toAtomString()
-            ];
-        }
-
-
-
+        //dd($coll);
 
         return $this->response;
     }
@@ -239,19 +194,17 @@ class Sitemap
      */
     private function getProducts()
     {
-        $products = Product::query()->active()->hasStock()->get();
+        $products = Product::query()->active()->hasStock()->select('url', 'updated_at')->get();
 
-        foreach ($products as $product) {
-            $url = url($product->url);
-
-            if (Str::contains($url, '/hr/')) {
-                $url = str_replace('/hr/', '/', $url);
-            }
+        foreach ($products->take(40000) as $product) {
 
             $this->response[] = [
-                'url' => $url,
+                'url' => url($product->url),
                 'lastmod' => $product->updated_at->tz('UTC')->toAtomString()
             ];
+
+
+
         }
 
         return $this->response;
@@ -261,27 +214,19 @@ class Sitemap
     /**
      * @return array
      */
-    private function getBrands()
+    private function getAuthors()
     {
-        $brands = Brand::query()->active()->get();
+        $authors = Author::query()->active()->select('url', 'updated_at')->get();
 
         $this->response[] = [
-            'url' => route('catalog.route.brand'),
+            'url' => route('catalog.route.author'),
             'lastmod' => Carbon::now()->startOfMonth()->tz('UTC')->toAtomString()
         ];
 
-        foreach ($brands as $brand) {
-
-            $url = url($brand->translation->url);
-
-            if (Str::contains($url, '/hr/')) {
-                $url = str_replace('/hr/', '/', $url);
-            }
-
-
+        foreach ($authors as $author) {
             $this->response[] = [
-                'url' => $url,
-                'lastmod' => $brand->updated_at->tz('UTC')->toAtomString()
+                'url' => url($author->url),
+                'lastmod' => $author->updated_at->tz('UTC')->toAtomString()
             ];
 
             /*$cats = Category::query()->topList()->whereHas('products', function ($query) use ($author) {
@@ -312,19 +257,19 @@ class Sitemap
     /**
      * @return array
      */
-    private function getRecepti()
+    private function getPublishers()
     {
-        $recepti = Recepti::query()->active()->get();
+        $publishers = Publisher::query()->active()->select('url', 'updated_at')->get();
 
         $this->response[] = [
-            'url' => route('catalog.route.recepti'),
+            'url' => route('catalog.route.publisher'),
             'lastmod' => Carbon::now()->startOfMonth()->tz('UTC')->toAtomString()
         ];
 
-        foreach ($recepti as $recept) {
+        foreach ($publishers as $publisher) {
             $this->response[] = [
-                'url' => url($recept->translation->url),
-                'lastmod' => $recept->updated_at->tz('UTC')->toAtomString()
+                'url' => url($publisher->url),
+                'lastmod' => $publisher->updated_at->tz('UTC')->toAtomString()
             ];
         }
 
