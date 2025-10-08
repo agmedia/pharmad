@@ -159,10 +159,10 @@ class HomeController extends Controller
     public function sitemapXML(Request $request, $sitemap = null)
     {
         if ( ! $sitemap) {
-            $items = config('settings.sitemap');
+            $sm = new Sitemap(config('settings.sitemap'));
 
             return response()->view('front.layouts.partials.sitemap-index', [
-                'items' => $items
+                'items' => $sm->getResponse()
             ])->header('Content-Type', 'text/xml');
         }
 
@@ -172,6 +172,7 @@ class HomeController extends Controller
             'items' => $sm->getSitemap()
         ])->header('Content-Type', 'text/xml');
     }
+
 
 
     /**
