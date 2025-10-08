@@ -157,7 +157,7 @@
         </div>
     @endif
 
-    <div class="container pb-4 mb-2 mt-5 mb-md-4" >
+    <div class="container-fluid pb-4 mb-2 mt-5 mb-md-4" >
         @if ($cat && !$subcat)
             {!! $cat->description !!}
         @elseif ($subcat)
