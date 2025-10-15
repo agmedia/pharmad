@@ -173,7 +173,7 @@ class Metatags
                 'name'  => config('app.name'),
                 'logo'  => [
                     '@type' => 'ImageObject',
-                    'url'   => 'https://www.ricekakis.com/wp-content/uploads/2024/12/logo.png'
+                    'url'   => ''
                 ]
             ],
             'mainEntityOfPage' => [
@@ -215,7 +215,7 @@ class Metatags
                 'name'  => config('app.name'),
                 'logo'  => [
                     '@type' => 'ImageObject',
-                    'url'   => 'https://www.ricekakis.com/wp-content/uploads/2024/12/logo.png'
+                    'url'   => ''
                 ]
             ]
         ];
