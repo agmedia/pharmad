@@ -193,7 +193,7 @@
                                             @enderror
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="dm-post-edit-slug">Autor</label>
+                                            <label for="dm-post-edit-slug">Brand</label>
                                             @livewire('back.layout.search.author-search', ['author_id' => isset($product) ? $product->author_id : 0])
                                         </div>
 
