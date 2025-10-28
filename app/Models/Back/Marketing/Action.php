@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
+use Illuminate\Support\Arr;                 // za Arr::wrap()
+use Illuminate\Database\Eloquent\Builder;   // za $target instanceof Builder
+
 class Action extends Model
 {
 
@@ -403,39 +406,60 @@ class Action extends Model
      */
     private function updateProducts($target, int $id, array $data): void
     {
-        $query    = [];
-        $products = Product::query();
+        $rows   = [];
+        $query  = Product::query();
 
-        if ($target != 'all') {
-            $products->whereIn('id', $target);
+        if ($target !== 'all') {
+            if ($target instanceof Builder) {
+                // ako je subquery, osiguraj da vraća samo kolonu id
+                $query->whereIn('id', (clone $target)->select('id'));
+            } else {
+                // ako je scalar ili array ID-eva
+                $query->whereIn('id', Arr::wrap($target));
+            }
         }
 
-        if ($this->request->min) {
-            $products->where('price', '>', $this->request->min);
+        if ($this->request->min !== null) {
+            $query->where('price', '>', $this->request->min);
         }
-        if ($this->request->max) {
-            $products->where('price', '<', $this->request->max);
+        if ($this->request->max !== null) {
+            $query->where('price', '<', $this->request->max);
         }
 
-        $products = $products->pluck('price', 'id');
+        // ne prepisuj $query u kolekciju — koristi drugi naziv
+        $pricesById = $query->pluck('price', 'id');
 
-        foreach ($products->all() as $k_id => $price) {
-            $query[] = [
-                'product_id' => $k_id,
-                'special'    => Helper::calculateDiscountPrice($price, $this->request->discount, $this->request->type)
+        foreach ($pricesById as $productId => $price) {
+            $rows[] = [
+                'product_id' => $productId,
+                'special'    => Helper::calculateDiscountPrice(
+                    $price,
+                    $this->request->discount,
+                    $this->request->type
+                ),
             ];
         }
 
         DB::table('temp_table')->truncate();
 
-        foreach (array_chunk($query, 500) as $chunk) {
+        foreach (array_chunk($rows, 500) as $chunk) {
             DB::table('temp_table')->insert($chunk);
         }
 
-        DB::select(DB::raw("UPDATE products p INNER JOIN temp_table tt ON p.id = tt.product_id SET p.special = tt.special, p.action_id = " . $id . ", p.special_from = '" . $data['start'] . "', p.special_to = '" . $data['end'] . "', p.special_lock = " . $data['lock'] . ";"));
+        // sigurnija varijanta UPDATE-a bez string konkatenacije
+        DB::table('products as p')
+            ->join('temp_table as tt', 'p.id', '=', 'tt.product_id')
+            ->update([
+                'p.special'      => DB::raw('tt.special'),
+                'p.action_id'    => $id,
+                'p.special_from' => $data['start'],
+                'p.special_to'   => $data['end'],
+                'p.special_lock' => $data['lock'],
+            ]);
 
         DB::table('temp_table')->truncate();
     }
+
 
     /*******************************************************************************
     *                                Copyright : AGmedia                           *
