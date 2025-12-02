@@ -22,7 +22,7 @@
     <div class="content">
         @include('back.layouts.partials.session')
         <!-- Super-admin view -->
-        @if (auth()->user()->can('*'))
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="block block-rounded ">
@@ -36,13 +36,15 @@
                             {{--<a href="{{ route('roles.set') }}" class="btn btn-hero-sm btn-rounded btn-hero-secondary mb-3 mr-3">Set Roles</a>
                             <a href="{{ route('ping.hp') }}" class="btn btn-hero-sm btn-rounded btn-hero-primary mb-3 mr-3">Ping HP</a>
                             <a href="{{ route('slugs.revision') }}" class="btn btn-hero-sm btn-rounded btn-hero-secondary mb-3 mr-3">Rewrite Empty Slugs</a>
-                            <br>--}}
+                            <br>--}}    @if (auth()->user()->can('*'))
                             <a href="{{ route('import.oc.categories') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Import OpenCart Categories</a>
                             <a href="{{ route('update.actions.feed') }}" class="btn btn-hero-sm btn-rounded btn-hero-danger mb-3 mr-3">Update Actions, PRices and Quantity</a>
                             <a href="{{ route('import.oc.manufacturers') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Import OpenCart Manufacturers</a>
                             <a href="{{ route('import.oc.products') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Import OpenCart Products</a>
                             <br>
                             <a href="{{ route('mailing.test') }}" class="btn btn-hero-sm btn-rounded btn-hero-success mb-3 mr-3">Mail Test</a>
+                            @endif
+                            <a href="{{ route('update.actions.feed') }}" class="btn btn-hero-sm btn-rounded btn-hero-danger mb-3 mr-3">Update Actions, Prices and Quantity</a>
                             <br>
                             {{--<a href="{{ route('letters.import') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">First Letters Import</a>
                             <a href="{{ route('set.pdv.products') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Set PDV 25 Products</a>
@@ -57,7 +59,7 @@
                     </div>
                 </div>
             </div>
-        @endif
+
         @if( auth()->user()->id != '1716')
 
         <!-- Quick Overview -->
