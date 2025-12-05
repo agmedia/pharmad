@@ -362,6 +362,62 @@ class DashboardController extends Controller
 
 
 
+    public function updatePharmadStockAndPrices(Request $request)
+    {
+        $feedUrl = 'https://api.ljekarne-pharmad.hr/is_izvoz.xml';
+
+        try {
+            $xml = @simplexml_load_file($feedUrl);
+            if (!$xml) {
+                return back()->with(['error' => 'Feed nije dostupan ili je neispravan.']);
+            }
+        } catch (\Throwable $e) {
+            Log::error('Pharmad feed error', ['err' => $e->getMessage()]);
+            return back()->with(['error' => 'Greška pri učitavanju feeda.']);
+        }
+
+        $now = Carbon::now();
+        $updated = 0;
+        $skipped = 0;
+
+        foreach ($xml->post as $item) {
+            $sku   = trim((string) ($item->Sku ?? ''));
+            $price = (float) ($item->RegularPrice ?? 0);
+            $stock = (int)   ($item->Stock ?? 0);
+
+            if (!$sku || $price <= 0) {
+                $skipped++;
+                continue;
+            }
+
+            $product = Product::query()->where('sku', $sku)->first();
+            if (!$product) {
+                $skipped++;
+                continue;
+            }
+
+            try {
+                $product->update([
+                    'price'      => round($price, 2),
+                    'quantity'   => max(0, $stock),
+                    'status'     => $stock > 0 ? 1 : 0,
+                    'updated_at' => $now
+                ]);
+
+                $updated++;
+            } catch (\Throwable $e) {
+                Log::error('Greška u updatePharmadStockAndPrices', [
+                    'sku' => $sku,
+                    'err' => $e->getMessage(),
+                ]);
+                $skipped++;
+            }
+        }
+
+        return redirect()
+            ->route('dashboard')
+            ->with(['success' => "Ažuriranje cijena i količina završeno. Ažurirano: {$updated}, preskočeno: {$skipped}."]);
+    }
 
 
 

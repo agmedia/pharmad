@@ -59,6 +59,10 @@ Route::middleware(['auth:sanctum', 'verified', 'no.customers'])->prefix('admin')
     Route::get('pingHP', [DashboardController::class, 'pingHP'])->name('ping.hp');
     Route::get('import-oc-categories', [DashboardController::class, 'importOpenCartCategories'])->name('import.oc.categories');
     Route::get('update-action-feed', [DashboardController::class, 'importPharmadActions'])->name('update.actions.feed');
+
+    Route::get('update-priceandquantity-feed', [DashboardController::class, 'updatePharmadStockAndPrices'])->name('update-priceandquantity-feed');
+
+
     Route::get('import-oc-manufacturers', [DashboardController::class, 'importOpenCartManufacturers'])->name('import.oc.manufacturers');
     Route::get('import-oc-products', [DashboardController::class, 'importOpenCartProducts'])->name('import.oc.products');
     Route::get('mailing-test', [DashboardController::class, 'mailing'])->name('mailing.test');
