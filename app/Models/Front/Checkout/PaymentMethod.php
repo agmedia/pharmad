@@ -145,11 +145,14 @@ class PaymentMethod
             }*/
         }
 
-        foreach ($this->methods as $method) {
-            if ($method->code == 'payway' && $shipping == 'pickup') {
-                $this->response_methods->put($method->code, $method);
-            }
+        if ($shipping === 'pickup') {
+            $this->response_methods = $this->response_methods
+                ->reject(fn ($method) => $method->code === 'cod');
         }
+
+       // return $this;
+
+
 
         return $this;
     }
