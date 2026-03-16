@@ -158,8 +158,11 @@ class Product extends Model
      */
     public function special()
     {
-        // If special is set, return special.
-        if ($this->special) {
+        $special = (float) $this->special;
+        $price   = (float) $this->price;
+
+        // Only treat special as valid when it is lower than the regular price.
+        if ($special > 0 && $price > 0 && $special < $price) {
             $from = now()->subDay();
             $to   = now()->addDay();
 
@@ -171,7 +174,7 @@ class Product extends Model
             }
 
             if ($from <= now() && now() <= $to) {
-                return $this->special;
+                return $special;
             }
         }
 

@@ -383,6 +383,7 @@ class DashboardController extends Controller
         foreach ($xml->post as $item) {
             $sku   = trim((string) ($item->Sku ?? ''));
             $price = (float) ($item->RegularPrice ?? 0);
+            $sale  = (float) ($item->SalePrice ?? 0);
             $stock = (int)   ($item->Stock ?? 0);
 
             if (!$sku || $price <= 0) {
@@ -397,6 +398,10 @@ class DashboardController extends Controller
             }
 
             try {
+                if ($sale <= 0 || $sale >= $price) {
+                    $this->clearPharmadSingleAction($product, $now, $stock);
+                }
+
                 $product->update([
                     'price'      => round($price, 2),
                     'quantity'   => max(0, $stock),
@@ -442,23 +447,27 @@ class DashboardController extends Controller
         $onSaleProductIds = [];
 
         foreach ($xml->post as $item) {
+            $sku      = trim((string) ($item->Sku ?? ''));
             $regular  = (float) ($item->RegularPrice ?? 0);
             $sale     = (float) ($item->SalePrice ?? 0);
             $stock    = (int)   ($item->Stock ?? 0);
+            $product  = $sku ? Product::query()->where('sku', $sku)->first() : null;
 
-            // samo stvarne akcije
-            if ($regular <= 0 || $sale <= 0 || $sale >= $regular) {
-                $skippedCount++;
-                continue;
-            }
-
-            $sku = trim((string) ($item->Sku ?? ''));
             if (!$sku) {
                 $skippedCount++;
                 continue;
             }
 
-            $product = Product::query()->where('sku', $sku)->first();
+            // samo stvarne akcije
+            if ($regular <= 0 || $sale <= 0 || $sale >= $regular) {
+                if ($product) {
+                    $this->clearPharmadSingleAction($product, $now, $stock);
+                }
+
+                $skippedCount++;
+                continue;
+            }
+
             if (!$product) {
                 $skippedCount++;
                 continue;
@@ -588,6 +597,58 @@ class DashboardController extends Controller
         return redirect()
             ->route('dashboard')
             ->with(['success' => "Import akcija završen. Ažurirano: {$updatedCount}, preskočeno: {$skippedCount}."]);
+    }
+
+    private function clearPharmadSingleAction(Product $product, Carbon $now, ?int $stock = null): void
+    {
+        $actionId = (int) $product->action_id;
+        $action   = $actionId
+            ? DB::table('product_actions')
+                ->where('id', $actionId)
+                ->first(['id', 'group'])
+            : null;
+
+        if ($action && $action->group !== 'single') {
+            return;
+        }
+
+        if (!$action && is_null($product->special) && !$product->special_lock) {
+            return;
+        }
+
+        $quantity = max(0, (int) ($stock ?? $product->quantity));
+        $status   = $quantity > 0 ? 1 : 0;
+
+        DB::beginTransaction();
+
+        try {
+            DB::table('products')
+                ->where('id', $product->id)
+                ->update([
+                    'action_id'    => 0,
+                    'special'      => null,
+                    'special_from' => null,
+                    'special_to'   => null,
+                    'special_lock' => 0,
+                    'quantity'     => $quantity,
+                    'status'       => $status,
+                    'updated_at'   => $now,
+                ]);
+
+            if ($action) {
+                DB::table('product_actions')->where('id', $action->id)->delete();
+            }
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            Log::warning('Pharmad akcija - cleanup greška', [
+                'product_id' => $product->id,
+                'sku'        => $product->sku,
+                'err'        => $e->getMessage(),
+            ]);
+        }
     }
 
 

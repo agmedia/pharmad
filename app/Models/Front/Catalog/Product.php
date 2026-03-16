@@ -330,8 +330,11 @@ class Product extends Model
             }
         }
 
-        // If special is set, return special.
-        if ($this->special && $coupon_ok) {
+        $special = (float) $this->special;
+        $price   = (float) $this->price;
+
+        // Only treat special as valid when it is a real discounted price.
+        if ($coupon_ok && $special > 0 && $price > 0 && $special < $price) {
             $from = now()->subDay();
             $to = now()->addDay();
 
@@ -343,11 +346,11 @@ class Product extends Model
             }
 
             if ($from <= now() && now() <= $to) {
-                return $this->special;
+                return $special;
             }
         }
 
-        return $this->price;
+        return $price;
     }
 
 
