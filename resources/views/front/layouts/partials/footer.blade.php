@@ -129,11 +129,11 @@
                         <div class="widget widget-links widget-dark pb-2">
                             <h3 class="widget-title fw-700 text-dark"><span>Načini plaćanja</span></h3>
                             <ul class="widget-list  ">
-                                <li class="widget-list-item"><a href="https://www.zuzi.hr/info/nacini-placanja" class="widget-list-link" > kreditnom karticom jednokratno ili na rate</a></li>
-                                <li class="widget-list-item"><a href="https://www.zuzi.hr/info/nacini-placanja" class="widget-list-link" > virmanom / općom uplatnicom / internet bankarstvom</a></li>
-                                <li class="widget-list-item"><a href="https://www.zuzi.hr/info/nacini-placanja" class="widget-list-link" >gotovinom prilikom pouzeća</a></li>
+                                <li class="widget-list-item"><a href="https://www.ljekarne-pharmad.hr/info/nacini-placanja" class="widget-list-link" > kreditnom karticom jednokratno ili na rate</a></li>
+                                <li class="widget-list-item"><a href="https://www.ljekarne-pharmad.hr/info/nacini-placanja" class="widget-list-link" > virmanom / općom uplatnicom / internet bankarstvom</a></li>
+                                <li class="widget-list-item"><a href="https://www.ljekarne-pharmad.hr/info/nacini-placanja" class="widget-list-link" >gotovinom prilikom pouzeća</a></li>
 
-                                <li class="widget-list-item"><a href="https://www.zuzi.hr/info/nacini-placanja" class="widget-list-link" >osobno preuzimanje i plaćanje u ljekarni</a></li>
+                                <li class="widget-list-item"><a href="https://www.ljekarne-pharmad.hr/info/nacini-placanja" class="widget-list-link" >osobno preuzimanje i plaćanje u ljekarni</a></li>
                             </ul>
 
                         </div>
