@@ -115,7 +115,7 @@
                     <span class="badge bg-warning ">Rasprodano</span>
        @endif
 
-   @if ($prod->main_price > $prod->main_special)
+   @if ($prod->special() < $prod->price)
        <span class="badge bg-warning">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($prod->price, $prod->special())), 0) }}%</span>
    @endif
 
@@ -124,7 +124,7 @@
    <h1 class="h3">{{ $prod->name }}</h1>
 
        <div class="mb-1">
-           @if ($prod->main_price > $prod->main_special)
+           @if ($prod->special() < $prod->price)
                <span class="h3 fw-normal text-accent me-1">{{ $prod->main_special_text }}</span>
                <span class="text-muted fs-lg me-3">*{{ $prod->main_price_text }}</span>
 
@@ -136,7 +136,7 @@
 
    @if($prod->secondary_price_text)
        <div class="mb-1 mt-1 text-start">
-           @if ($prod->main_price > $prod->main_special)
+           @if ($prod->special() < $prod->price)
                <span class=" fs-sm text-muted me-1"> {{ $prod->secondary_special_text }}</span>
                <span class="text-muted fs-sm me-3">*{{ $prod->secondary_price_text }}</span>
            @else
@@ -144,7 +144,7 @@
            @endif
        </div>
    @endif
-   @if ($prod->main_price > $prod->main_special)
+   @if ($prod->special() < $prod->price)
 
        <div class="mb-3 mt-1 text-start">
            <span class=" fs-sm text-muted me-1"> *Najniža cijena u zadnjih 30 dana.</span>

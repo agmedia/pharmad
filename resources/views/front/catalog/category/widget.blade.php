@@ -1,7 +1,7 @@
 <div class="col px-2 mb-3 d-flex align-items-stretch " >
 
     <div class="card product-card shadow pb-2 ">
-        @if ($product->main_price > $product->main_special)
+        @if ($product->special() < $product->price)
             <span class="badge bg-warning badge-shadow">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($product->price, $product->special())), 0) }}%</span>
         @endif
         <a class="card-img-top d-block overflow-hidden text-center" href="{{ url($product->url) }}">
@@ -19,7 +19,7 @@
             </div>
             <h3 class="product-title fs-sm text-truncate"><a href="{{ url($product->url) }}">{{ $product->name }}</a></h3>
 
-            @if ($product->main_price > $product->main_special)
+            @if ($product->special() < $product->price)
                 <div class="product-price"><small><span class="text-muted">NC30: <s>{{ $product->main_price_text }}</s>  @if($product->secondary_price_text){{ $product->secondary_price_text }} @endif</span></small>
                <span class="text-dark fs-md">{{ $product->main_special_text }} @if($product->secondary_special_text) <small class="text-muted">{{ $product->secondary_special_text }}</small> @endif</span></div>
             @else
@@ -31,4 +31,3 @@
         </div>
     </div>
 </div>
-

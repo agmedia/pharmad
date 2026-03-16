@@ -49,20 +49,62 @@ class Helper
      */
     public static function calculateDiscount($list_price, $seling_price, string $type = 'P')
     {
-        if (is_string($list_price)) {
-            $list_price = str_replace('.', '', $list_price);
-            $list_price = str_replace(',', '.', $list_price);
-        }
-        if (is_string($seling_price)) {
-            $seling_price = str_replace('.', '', $seling_price);
-            $seling_price = str_replace(',', '.', $seling_price);
-        }
+        $list_price   = self::normalizePriceValue($list_price);
+        $seling_price = self::normalizePriceValue($seling_price);
 
         if ($type == 'F') {
             return $list_price - $seling_price;
         }
 
+        if ($list_price <= 0) {
+            return 0;
+        }
+
         return (($list_price - $seling_price) / $list_price) * 100;
+    }
+
+
+    private static function normalizePriceValue($price): float
+    {
+        if (is_int($price) || is_float($price)) {
+            return (float) $price;
+        }
+
+        if (!is_string($price)) {
+            return (float) $price;
+        }
+
+        $price = trim($price);
+
+        if ($price === '') {
+            return 0.0;
+        }
+
+        $price = preg_replace('/[^\d,.\-]/', '', $price);
+
+        if ($price === '' || $price === null) {
+            return 0.0;
+        }
+
+        if (is_numeric($price)) {
+            return (float) $price;
+        }
+
+        $commaPos = strrpos($price, ',');
+        $dotPos   = strrpos($price, '.');
+
+        if ($commaPos !== false && $dotPos !== false) {
+            if ($commaPos > $dotPos) {
+                $price = str_replace('.', '', $price);
+                $price = str_replace(',', '.', $price);
+            } else {
+                $price = str_replace(',', '', $price);
+            }
+        } elseif ($commaPos !== false) {
+            $price = str_replace(',', '.', $price);
+        }
+
+        return (float) $price;
     }
 
 
