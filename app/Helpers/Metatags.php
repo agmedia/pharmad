@@ -162,16 +162,18 @@ class Metatags
      */
     public static function blogSchema(Blog $blog): array
     {
-        $url = LaravelLocalization::getLocalizedUrl(current_locale(), route('catalog.route.blog', ['cat' => $blog->slug]));
+        $url = LaravelLocalization::getLocalizedUrl(current_locale(), route('catalog.route.blog', ['blog' => $blog]));
+        $image = Str::startsWith($blog->image, ['http://', 'https://']) ? $blog->image : asset($blog->image);
+        $description = strip_tags($blog->meta_description ?: $blog->short_description ?: $blog->description);
 
         $response = [
             '@context'         => 'https://schema.org/',
             '@type'            => 'BlogPosting',
             '@id'              => $url . '/#richSnippet',
             'headline'         => $blog->title,
-            'description'      => strip_tags($blog->description),
-            'keywords'         => $blog->translation->keywords,
-            'image'            => $blog->image,
+            'description'      => $description,
+            'keywords'         => optional($blog->translation)->keywords,
+            'image'            => $image,
             'datePublished'    => Carbon::make($blog->created_at)->format('Y-m-d'),
             'dateModified'     => Carbon::make($blog->updated_at)->format('Y-m-d'),
             'inLanguage'       => current_locale(),
@@ -184,11 +186,11 @@ class Metatags
                 'name'  => config('app.name'),
                 'logo'  => [
                     '@type' => 'ImageObject',
-                    'url'   => ''
+                    'url'   => asset('media/img/logo-ljekarne-pharmad.png')
                 ]
             ],
             'mainEntityOfPage' => [
-                '@type' => 'ImageObject',
+                '@type' => 'WebPage',
                 '@id'   => $url
             ]
         ];
@@ -280,5 +282,32 @@ class Metatags
                 'query-input' => 'required name=search_term_string',
             ],
         ];
+    }
+
+    public static function webPageSchema(
+        string $title,
+        string $description,
+        string $url,
+        string $type = 'WebPage',
+        ?string $image = null
+    ): array {
+        $response = [
+            '@context'    => 'https://schema.org/',
+            '@type'       => $type,
+            'name'        => $title,
+            'description' => $description,
+            'url'         => $url,
+            'inLanguage'  => current_locale(),
+            'isPartOf'    => [
+                '@type' => 'WebSite',
+                '@id'   => url('/') . '#webSite',
+            ],
+        ];
+
+        if ($image) {
+            $response['image'] = $image;
+        }
+
+        return $response;
     }
 }

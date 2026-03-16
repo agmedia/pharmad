@@ -56,7 +56,7 @@
                 }
             ],
             title: 'Kolačići i privatnost',
-            message: 'www.ljekarne-pharmad.hr koristi kolačiće kako bi osigurala punu funkcionalnost ovih Internet stranica i omogućila bolje korisničko iskustvo. Za više informacija o kolačićima i privatnosti osobnih podataka na www.zuzi.hr kliknite na ',
+            message: 'www.ljekarne-pharmad.hr koristi kolačiće kako bi osigurala punu funkcionalnost ovih Internet stranica i omogućila bolje korisničko iskustvo. Za više informacija o kolačićima i privatnosti osobnih podataka na www.ljekarne-pharmad.hr kliknite na ',
             link: 'privatnost-i-kolacici',
             delay: 2000,
             expires: 30,

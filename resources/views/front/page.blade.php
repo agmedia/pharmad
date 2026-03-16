@@ -25,6 +25,21 @@
     @section ( 'title', $page->title. ' - Ljekarne PharmAD' )
     @section ( 'description', $page->meta_description )
     @section ( 'canonical', route('catalog.route.page', ['page' => $page]) )
+    @push('meta_tags')
+        <meta property="og:locale" content="hr_HR" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="{{ $page->title }} - Ljekarne PharmAD" />
+        <meta property="og:description" content="{{ $page->meta_description }}" />
+        <meta property="og:url" content="{{ route('catalog.route.page', ['page' => $page]) }}" />
+        <meta property="og:site_name" content="Ljekarne PharmAD" />
+        <meta property="og:image" content="{{ asset('media/img/cover-ljekarne-pharmad.jpg') }}" />
+        <meta property="og:image:secure_url" content="{{ asset('media/img/cover-ljekarne-pharmad.jpg') }}" />
+        <meta property="og:image:alt" content="{{ $page->title }} - Ljekarne PharmAD" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="{{ $page->title }} - Ljekarne PharmAD" />
+        <meta name="twitter:description" content="{{ $page->meta_description }}" />
+        <meta name="twitter:image" content="{{ asset('media/img/cover-ljekarne-pharmad.jpg') }}" />
+    @endpush
 @endif
 
 @section('content')
@@ -87,3 +102,11 @@
     @endif
 
 @endsection
+
+@unless (request()->routeIs(['index']))
+    @push('js_after')
+        <script type="application/ld+json">
+            {!! json_encode(\App\Helpers\Metatags::webPageSchema($page->title . ' - Ljekarne PharmAD', $page->meta_description ?: strip_tags($page->title), route('catalog.route.page', ['page' => $page]), 'WebPage', asset('media/img/cover-ljekarne-pharmad.jpg')), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+        </script>
+    @endpush
+@endunless

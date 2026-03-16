@@ -3,6 +3,21 @@
     @section ( 'title', 'Blog - Ljekarne PharmAD' )
     @section ( 'description', 'Medijske objave, članci i obavijesti -  Ljekarne PharmAD' )
     @section ( 'canonical', route('catalog.route.blog') )
+    @push('meta_tags')
+        <meta property="og:locale" content="hr_HR" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Blog - Ljekarne PharmAD" />
+        <meta property="og:description" content="Medijske objave, članci i obavijesti - Ljekarne PharmAD" />
+        <meta property="og:url" content="{{ route('catalog.route.blog') }}" />
+        <meta property="og:site_name" content="Ljekarne PharmAD" />
+        <meta property="og:image" content="{{ asset('media/img/cover-ljekarne-pharmad.jpg') }}" />
+        <meta property="og:image:secure_url" content="{{ asset('media/img/cover-ljekarne-pharmad.jpg') }}" />
+        <meta property="og:image:alt" content="Blog - Ljekarne PharmAD" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Blog - Ljekarne PharmAD" />
+        <meta name="twitter:description" content="Medijske objave, članci i obavijesti - Ljekarne PharmAD" />
+        <meta name="twitter:image" content="{{ asset('media/img/cover-ljekarne-pharmad.jpg') }}" />
+    @endpush
 @else
     @section ( 'title', $blog->title. ' - Ljekarne PharmAD' )
     @section ( 'description', $blog->meta_description )
@@ -16,12 +31,14 @@
         <meta property="og:url" content="{{ route('catalog.route.blog', ['blog' => $blog]) }}"  />
         <meta property="og:site_name" content="Ljekarne PharmAD" />
         <meta property="og:updated_time" content="{{ $blog->updated_at  }}" />
+        <meta property="article:published_time" content="{{ \Carbon\Carbon::make($blog->created_at)->toIso8601String() }}" />
+        <meta property="article:modified_time" content="{{ \Carbon\Carbon::make($blog->updated_at)->toIso8601String() }}" />
         <meta property="og:image" content="{{ asset($blog->image) }}" />
         <meta property="og:image:secure_url" content="{{ asset($blog->image) }}" />
         <meta property="og:image:width" content="640" />
         <meta property="og:image:height" content="480" />
         <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:alt" content="{{ asset($blog->image) }}" />
+        <meta property="og:image:alt" content="{{ $blog->title }}" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="{{ $blog->title }}" />
         <meta name="twitter:description" content="{{ $blog->meta_description }}" />
@@ -101,3 +118,44 @@
     @endif
 
 @endsection
+
+@if(isset($blog))
+    @php($blogBreadcrumbs = [
+        '@context' => 'https://schema.org/',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Naslovna',
+                'item' => route('index'),
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Blog',
+                'item' => route('catalog.route.blog'),
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 3,
+                'name' => $blog->title,
+                'item' => route('catalog.route.blog', ['blog' => $blog]),
+            ],
+        ],
+    ])
+    @push('js_after')
+        <script type="application/ld+json">
+            {!! json_encode(\App\Helpers\Metatags::blogSchema($blog), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+        </script>
+        <script type="application/ld+json">
+            {!! json_encode($blogBreadcrumbs, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+        </script>
+    @endpush
+@else
+    @push('js_after')
+        <script type="application/ld+json">
+            {!! json_encode(\App\Helpers\Metatags::webPageSchema('Blog - Ljekarne PharmAD', 'Medijske objave, članci i obavijesti - Ljekarne PharmAD', route('catalog.route.blog'), 'CollectionPage', asset('media/img/cover-ljekarne-pharmad.jpg')), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+        </script>
+    @endpush
+@endif

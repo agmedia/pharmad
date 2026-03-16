@@ -1,6 +1,5 @@
 @extends('front.layouts.app')
 
-
 @if (isset($group) && $group)
     @if ($group && ! $cat && ! $subcat)
         @section ( 'title',  ucfirst($group_title). ' - Ljekarne PharmAD' )
@@ -31,6 +30,26 @@
         @endforeach
     @endpush
 @endif
+
+@php($metaTitle = trim($__env->yieldContent('title')) ?: 'Ljekarne PharmAD')
+@php($metaDescription = trim($__env->yieldContent('description')) ?: 'Pregled proizvoda u webshopu Ljekarne PharmAD.')
+@php($socialImage = asset('media/img/cover-ljekarne-pharmad.jpg'))
+
+@push('meta_tags')
+    <meta property="og:locale" content="hr_HR" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ $metaTitle }}" />
+    <meta property="og:description" content="{{ $metaDescription }}" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:site_name" content="Ljekarne PharmAD" />
+    <meta property="og:image" content="{{ $socialImage }}" />
+    <meta property="og:image:secure_url" content="{{ $socialImage }}" />
+    <meta property="og:image:alt" content="{{ $metaTitle }}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ $metaTitle }}" />
+    <meta name="twitter:description" content="{{ $metaDescription }}" />
+    <meta name="twitter:image" content="{{ $socialImage }}" />
+@endpush
 
 
 @section('content')
@@ -167,9 +186,17 @@
 
 @endsection
 
+@if (!empty($crumbs))
+    @push('js_after')
+        <script type="application/ld+json">
+            {!! collect($crumbs)->toJson() !!}
+        </script>
+    @endpush
+@endif
+
 @push('js_after')
     <script type="application/ld+json">
-        {!! collect($crumbs)->toJson() !!}
+        {!! json_encode(\App\Helpers\Metatags::webPageSchema($metaTitle, $metaDescription, url()->current(), 'CollectionPage', $socialImage), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
     </script>
 @endpush
 
