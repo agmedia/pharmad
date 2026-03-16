@@ -446,17 +446,6 @@ class DashboardController extends Controller
             $sale     = (float) ($item->SalePrice ?? 0);
             $stock    = (int)   ($item->Stock ?? 0);
 
-            // SKIP: Yasenka u nazivu (toleriramo i tipkarsku "yasenbka")
-        $title = trim((string) ($item->Title ?? ''));
-            if ($title !== '' && (
-                    stripos($title, 'yasenka') !== false ||
-                    stripos($title, 'yasenbka') !== false
-                )
-            ) {
-                $skippedCount++;
-                continue;
-            }
-
             // samo stvarne akcije
             if ($regular <= 0 || $sale <= 0 || $sale >= $regular) {
                 $skippedCount++;
