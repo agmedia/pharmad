@@ -2,18 +2,15 @@
 @if(isset($blogs))
     @section ( 'title', 'Blog - Ljekarne PharmAD' )
     @section ( 'description', 'Medijske objave, članci i obavijesti -  Ljekarne PharmAD' )
+    @section ( 'canonical', route('catalog.route.blog') )
 @else
     @section ( 'title', $blog->title. ' - Ljekarne PharmAD' )
-@section ( 'description', $blog->meta_description )
+    @section ( 'description', $blog->meta_description )
+    @section ( 'canonical', route('catalog.route.blog', ['blog' => $blog]) )
 
     @push('meta_tags')
-
-
-
-
-        <link rel="canonical" href="{{ route('catalog.route.blog', ['blog' => $blog]) }}" />
         <meta property="og:locale" content="hr_HR" />
-        <meta property="og:type" content="product" />
+        <meta property="og:type" content="article" />
         <meta property="og:title" content="{{ $blog->title }}" />
         <meta property="og:description" content="{{ $blog->meta_description  }}" />
         <meta property="og:url" content="{{ route('catalog.route.blog', ['blog' => $blog]) }}"  />

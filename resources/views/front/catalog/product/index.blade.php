@@ -1,9 +1,8 @@
 @extends('front.layouts.app')
 @section ('title', $seo['title'])
 @section ('description', $seo['description'])
+@section ('canonical', url($prod->url))
 @push('meta_tags')
-
-    <link rel="canonical" href="{{ url($prod->url) }}" />
     <meta property="og:locale" content="hr_HR" />
     <meta property="og:type" content="product" />
     <meta property="og:title" content="{{ $seo['title'] }}" />

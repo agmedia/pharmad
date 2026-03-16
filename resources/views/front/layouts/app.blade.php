@@ -2,10 +2,16 @@
 <html lang="{{ config('app.locale') }}">
 <head>
     <meta charset="utf-8">
-    <title> @yield('title') </title>
+    <title>@yield('title', 'Ljekarne PharmAD')</title>
     <!-- SEO Meta Tags-->
-    <meta name="description" content="@yield('description')">
+    <meta name="description" content="@yield('description', 'U našim ljekarnama nudimo velik izbor dodataka prehrani, bezreceptnih lijekova, dermokozmetike i medicinskih proizvoda.')">
     <meta name="author" content="Ljekarne Pharmad">
+    @php($canonical = trim($__env->yieldContent('canonical')))
+    @if ($canonical !== '')
+        <link rel="canonical" href="{{ $canonical }}" />
+    @elseif (!request()->query())
+        <link rel="canonical" href="{{ url()->current() }}" />
+    @endif
     @stack('meta_tags')
     <!-- Viewport-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />

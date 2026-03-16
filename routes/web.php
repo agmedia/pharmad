@@ -363,7 +363,7 @@ Route::get('cache/thumb', [HomeController::class, 'thumbCache']);
 /**
  * Sitemap routes
  */
-Route::redirect('/sitemap.xml', '/sitemap');
+Route::get('/sitemap.xml', [HomeController::class, 'sitemapXML']);
 Route::get('sitemap/{sitemap?}', [HomeController::class, 'sitemapXML'])->name('sitemap');
 Route::get('image-sitemap', [HomeController::class, 'sitemapImageXML'])->name('sitemap.image');
 //

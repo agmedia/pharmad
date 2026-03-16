@@ -29,34 +29,30 @@ class Metatags
     {
         return [
             '@context'     => 'https://schema.org',
-            '@type'        => 'LocalBusiness',
-            '@id'          => config('app.url') . '#store',
-            'name'         => config('app.name'),
-            'image'        => asset('img/logo-kakis.png'),
-            'logo'         => asset('img/logo-kakis.png'),
-            'url'          => config('app.url'),
-            'address'      => [
-                '@type'           => 'PostalAddress',
-                'streetAddress'   => 'Petrinjska 9',
-                'addressLocality' => 'Zagreb',
-                'postalCode'      => '10000',
-                'addressCountry'  => 'HR'
+            '@type'        => 'Pharmacy',
+            '@id'          => url('/') . '#organization',
+            'name'         => 'Ljekarne PharmAD',
+            'image'        => asset('media/img/cover-ljekarne-pharmad.jpg'),
+            'logo'         => [
+                '@type' => 'ImageObject',
+                'url'   => asset('media/img/logo-ljekarne-pharmad.png'),
             ],
-            'geo'          => [
-                '@type'     => 'GeoCoordinates',
-                'latitude'  => 45.808,
-                'longitude' => 15.978
+            'url'          => url('/'),
+            'email'        => 'webshop@ljekarne-pharmad.hr',
+            'telephone'    => '+385994891210',
+            'contactPoint' => [
+                [
+                    '@type'             => 'ContactPoint',
+                    'contactType'       => 'customer support',
+                    'telephone'         => '+385994891210',
+                    'email'             => 'webshop@ljekarne-pharmad.hr',
+                    'areaServed'        => 'HR',
+                    'availableLanguage' => 'hr',
+                ]
             ],
-            'telephone'    => '+385915207047',
-            'openingHours' => [
-                'Mo-Fr 11:00-19:00',
-                'Sa 10:00-18:00'
-            ],
-            'priceRange'   => '€€',
             'sameAs'       => [
-                'https://www.facebook.com/ricekakis',
-                'https://www.instagram.com/ricekakis',
-                'https://www.tiktok.com/@ricekakis'
+                'https://www.facebook.com/ljekarna.pharmad/',
+                'https://www.instagram.com/ljekarnepharmad/'
             ]
         ];
     }
@@ -74,6 +70,8 @@ class Metatags
 
         if ($prod) {
             $price = ($prod->special()) ? $prod->special() : number_format($prod->price, 2, '.', '');
+            $brand = optional($prod->author)->title ?: config('app.name');
+            $ean   = preg_replace('/\D+/', '', (string) $prod->ean);
 
             $url = url($prod->url);
 
@@ -88,6 +86,7 @@ class Metatags
                 'description'   => $prod->meta_description,
                 'name'          => $prod->name,
                 'itemCondition' => 'https://schema.org/NewCondition',
+                'mpn'           => $prod->sku,
                 'image'         => [
                     '@type'  => 'ImageObject',
                     'url'    => asset($prod->image),
@@ -97,7 +96,7 @@ class Metatags
                 ],
                 'brand'         => [
                     '@type' => 'Brand',
-                    'name'  => $prod->brand ? $prod->brand->title : '',
+                    'name'  => $brand,
                 ],
                 'offers'        => [
                     '@type'           => 'Offer',
@@ -110,6 +109,16 @@ class Metatags
                 ],
             ];
 
+            if (strlen($ean) == 8) {
+                $response['gtin8'] = $ean;
+            } elseif (strlen($ean) == 12) {
+                $response['gtin12'] = $ean;
+            } elseif (strlen($ean) == 13) {
+                $response['gtin13'] = $ean;
+            } elseif (strlen($ean) == 14) {
+                $response['gtin14'] = $ean;
+            }
+
             if (isset($reviews) and $reviews->count()) {
                 $response['aggregateRating'] = [
                     '@type'       => 'AggregateRating',
@@ -117,8 +126,10 @@ class Metatags
                     'reviewCount' => $reviews->count(),
                 ];
 
+                $schemaReviews = [];
+
                 foreach ($reviews as $review) {
-                    $res_review = [
+                    $schemaReviews[] = [
                         '@type'         => 'Review',
                         'author'        => [
                             '@type' => 'author',
@@ -136,7 +147,7 @@ class Metatags
                     ];
                 }
 
-                $response['review'] = $res_review;
+                $response['review'] = $schemaReviews;
             }
         }
 
@@ -265,7 +276,7 @@ class Metatags
             'name'            => config('app.name'),
             'potentialAction' => [
                 '@type'       => 'SearchAction',
-                'target'      => url('/') . 'pretrazi?pojam={search_term_string}',
+                'target'      => url('/pretrazi') . '?pojam={search_term_string}',
                 'query-input' => 'required name=search_term_string',
             ],
         ];

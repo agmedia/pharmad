@@ -2,10 +2,10 @@
 @if (request()->routeIs(['index']))
     @section ( 'title', 'Ljekarne PharmAD -  Vaša internet ljekarna' )
     @section ( 'description', 'U našim ljekarnama nudimo Vam velik izbor dodataka prehrani, bezreceptnih lijekova, dermokozmetike, ortopedske obuće, ortopedskih pomagala, medicinskih pomagala, biljnih lijekova, eteričnih ulja, čajeva. Naš stručni tim pružit će vam svu potrebnu ljekarničku skrb. Stojimo vam na raspolaganju ...' )
+    @section ( 'canonical', url('/') )
     @push('meta_tags')
-        <link rel="canonical" href="{{ env('APP_URL')}}" />
         <meta property="og:locale" content="hr_HR" />
-        <meta property="og:type" content="product" />
+        <meta property="og:type" content="website" />
         <meta property="og:title" content="Ljekarne PharmAD -  Vaša internet ljekarna" />
         <meta property="og:description" content="U našim ljekarnama nudimo Vam velik izbor dodataka prehrani, bezreceptnih lijekova, dermokozmetike, ortopedske obuće, ortopedskih pomagala, medicinskih pomagala, biljnih lijekova, eteričnih ulja, čajeva. Naš stručni tim pružit će vam svu potrebnu ljekarničku skrb. Stojimo vam na raspolaganju..." />
         <meta property="og:url" content="{{ env('APP_URL')}}"  />
@@ -24,6 +24,7 @@
 @else
     @section ( 'title', $page->title. ' - Ljekarne PharmAD' )
     @section ( 'description', $page->meta_description )
+    @section ( 'canonical', route('catalog.route.page', ['page' => $page]) )
 @endif
 
 @section('content')
@@ -47,6 +48,15 @@
                   }
               }
           </style>
+      @endpush
+
+      @push('js_after')
+          <script type="application/ld+json">
+              {!! json_encode(\App\Helpers\Metatags::indexSchema(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+          </script>
+          <script type="application/ld+json">
+              {!! json_encode(\App\Helpers\Metatags::homepageSearchActionShema(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+          </script>
       @endpush
 
 

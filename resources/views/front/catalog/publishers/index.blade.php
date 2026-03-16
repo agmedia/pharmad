@@ -1,4 +1,6 @@
 @extends('front.layouts.app')
+@section('title', 'Lista izdavača - Ljekarne PharmAD')
+@section('description', 'Pregled izdavača i brendova dostupnih u webshopu Ljekarne PharmAD.')
 
 @if (isset($meta_tags))
     @push('meta_tags')
