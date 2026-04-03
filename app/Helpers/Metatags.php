@@ -162,7 +162,7 @@ class Metatags
      */
     public static function blogSchema(Blog $blog): array
     {
-        $url = LaravelLocalization::getLocalizedUrl(current_locale(), route('catalog.route.blog', ['blog' => $blog]));
+        $url = LaravelLocalization::getLocalizedUrl(app()->getLocale(), route('catalog.route.blog', ['blog' => $blog]));
         $image = Str::startsWith($blog->image, ['http://', 'https://']) ? $blog->image : asset($blog->image);
         $description = strip_tags($blog->meta_description ?: $blog->short_description ?: $blog->description);
 
@@ -176,7 +176,7 @@ class Metatags
             'image'            => $image,
             'datePublished'    => Carbon::make($blog->created_at)->format('Y-m-d'),
             'dateModified'     => Carbon::make($blog->updated_at)->format('Y-m-d'),
-            'inLanguage'       => current_locale(),
+            'inLanguage'       => app()->getLocale(),
             'author'           => [
                 '@type' => 'Organization',
                 'name'  => config('app.name'),
@@ -206,7 +206,7 @@ class Metatags
      */
     public static function recipeSchema(Recepti $recepti): array
     {
-        $url = LaravelLocalization::getLocalizedUrl(current_locale(), route('catalog.route.recepti', ['cat' => $recepti->slug]));
+        $url = LaravelLocalization::getLocalizedUrl(app()->getLocale(), route('catalog.route.recepti', ['cat' => $recepti->slug]));
 
         $response = [
             '@context'       => 'https://schema.org/',
@@ -218,7 +218,7 @@ class Metatags
             'recipeCategory' => $recepti->category() ? $recepti->category()->title : '',
             'keywords'       => $recepti->translation->keywords,
             'datePublished'  => Carbon::make($recepti->created_at)->format('Y-m-d'),
-            'inLanguage'     => current_locale(),
+            'inLanguage'     => app()->getLocale(),
             'author'         => [
                 '@type' => 'Organization',
                 'name'  => config('app.name'),
@@ -297,7 +297,7 @@ class Metatags
             'name'        => $title,
             'description' => $description,
             'url'         => $url,
-            'inLanguage'  => current_locale(),
+            'inLanguage'  => app()->getLocale(),
             'isPartOf'    => [
                 '@type' => 'WebSite',
                 '@id'   => url('/') . '#webSite',
