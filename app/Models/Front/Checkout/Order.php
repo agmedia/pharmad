@@ -289,7 +289,7 @@ class Order extends Model
             $price    = $item->price;
 
             if ($this->checkSpecial($item->associatedModel)) {
-                $price    = floatval($item->associatedModel->special);
+                $price    = (float) $item->associatedModel->special;
                 $discount = Helper::calculateDiscount($item->price, $price);
             }
 
@@ -412,7 +412,10 @@ class Order extends Model
             }
         }
 
-        if ($model->special && $coupon_ok) {
+        $special = (float) $model->special;
+        $price   = (float) $model->price;
+
+        if ($special > 0 && $price > 0 && $special < $price && $coupon_ok) {
             $from = now()->subDay();
             $to = now()->addDay();
 

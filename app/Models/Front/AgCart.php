@@ -496,8 +496,11 @@ class AgCart extends Model
      */
     private function structureCartItemConditions($product)
     {
-        // Ako artikl ima akciju.
-        if ($product->special()) {
+        $price   = (float) $product->price;
+        $special = (float) $product->special();
+
+        // Ako artikl ima stvarnu akcijsku cijenu.
+        if ($special > 0 && $price > 0 && $special < $price) {
             $coupon = $product->coupon();
 
             if ($coupon != '') {
@@ -505,7 +508,7 @@ class AgCart extends Model
                     'name'   => 'Kupon akcija',
                     'type'   => 'coupon',
                     'target' => $coupon,
-                    'value'  => -($product->price - $product->special())
+                    'value'  => -($price - $special)
                 ]);
             }
 
@@ -513,7 +516,7 @@ class AgCart extends Model
                 'name'   => 'Akcija',
                 'type'   => 'promo',
                 'target' => '',
-                'value'  => -($product->price - $product->special())
+                'value'  => -($price - $special)
             ]);
         }
 
