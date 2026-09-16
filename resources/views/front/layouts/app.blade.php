@@ -6,6 +6,7 @@
     <!-- SEO Meta Tags-->
     <meta name="description" content="@yield('description', 'U našim ljekarnama nudimo velik izbor dodataka prehrani, bezreceptnih lijekova, dermokozmetike i medicinskih proizvoda.')">
     <meta name="author" content="Ljekarne Pharmad">
+    <meta name="robots" content="@yield('robots', 'index,follow')">
     @php($canonical = trim($__env->yieldContent('canonical')))
     @if ($canonical !== '')
         <link rel="canonical" href="{{ $canonical }}" />

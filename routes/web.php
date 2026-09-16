@@ -8,6 +8,7 @@ use App\Http\Controllers\Back\Catalog\CategoryController;
 use App\Http\Controllers\Back\Catalog\OptionsController;
 use App\Http\Controllers\Back\Catalog\ProductController;
 use App\Http\Controllers\Back\Catalog\PublisherController;
+use App\Http\Controllers\Back\ContractWithdrawalController as AdminContractWithdrawalController;
 use App\Http\Controllers\Back\DashboardController;
 use App\Http\Controllers\Back\OrderController;
 use App\Http\Controllers\Back\Marketing\ActionController;
@@ -24,11 +25,13 @@ use App\Http\Controllers\Back\Settings\PageController;
 use App\Http\Controllers\Back\Settings\QuickMenuController;
 use App\Http\Controllers\Back\Settings\SettingsController;
 use App\Http\Controllers\Back\Settings\ApiController;
+use App\Http\Controllers\Back\Settings\ContractWithdrawalSettingsController;
 use App\Http\Controllers\Back\UserController;
 use App\Http\Controllers\Back\Widget\WidgetController;
 use App\Http\Controllers\Back\Widget\WidgetGroupController;
 use App\Http\Controllers\Front\CatalogRouteController;
 use App\Http\Controllers\Front\CheckoutController;
+use App\Http\Controllers\Front\ContractWithdrawalController;
 use App\Http\Controllers\Front\CustomerController;
 use App\Http\Controllers\Front\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -126,6 +129,12 @@ Route::middleware(['auth:sanctum', 'verified', 'no.customers'])->prefix('admin')
     Route::get('order/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit');
     Route::patch('order/{order}', [OrderController::class, 'update'])->name('orders.update');
 
+    // JEDNOSTRANI RASKIDI UGOVORA
+    Route::get('contract-withdrawals', [AdminContractWithdrawalController::class, 'index'])->name('contract-withdrawals.index');
+    Route::get('contract-withdrawals/{withdrawal}', [AdminContractWithdrawalController::class, 'show'])->name('contract-withdrawals.show');
+    Route::patch('contract-withdrawals/{withdrawal}', [AdminContractWithdrawalController::class, 'update'])->name('contract-withdrawals.update');
+    Route::post('contract-withdrawals/{withdrawal}/resend', [AdminContractWithdrawalController::class, 'resend'])->name('contract-withdrawals.resend');
+
     // MARKETING
     Route::prefix('marketing')->group(function () {
         // AKCIJE
@@ -190,6 +199,10 @@ Route::middleware(['auth:sanctum', 'verified', 'no.customers'])->prefix('admin')
         Route::get('faq/{faq}/edit', [FaqController::class, 'edit'])->name('faqs.edit');
         Route::patch('faq/{faq}', [FaqController::class, 'update'])->name('faqs.update');
         Route::delete('faq/{faq}', [FaqController::class, 'destroy'])->name('faqs.destroy');
+
+        // JEDNOSTRANI RASKID UGOVORA
+        Route::get('contract-withdrawals', [ContractWithdrawalSettingsController::class, 'edit'])->name('contract-withdrawal-settings.edit');
+        Route::patch('contract-withdrawals', [ContractWithdrawalSettingsController::class, 'update'])->name('contract-withdrawal-settings.update');
 
         //Route::get('application', [SettingsController::class, 'index'])->name('settings');
 
@@ -343,6 +356,13 @@ Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/kontakt', [HomeController::class, 'contact'])->name('kontakt');
 Route::get('/nase-ljekarne', [HomeController::class, 'poslovnice'])->name('poslovnice');
 Route::post('/kontakt/posalji', [HomeController::class, 'sendContactMessage'])->name('poruka');
+Route::get('/forma-za-povrat-i-reklamacije', [ContractWithdrawalController::class, 'create'])->name('contract-withdrawal.create');
+Route::post('/forma-za-povrat-i-reklamacije', [ContractWithdrawalController::class, 'review'])
+    ->middleware('throttle:5,10')
+    ->name('contract-withdrawal.review');
+Route::post('/forma-za-povrat-i-reklamacije/potvrdi', [ContractWithdrawalController::class, 'store'])
+    ->middleware('throttle:5,10')
+    ->name('contract-withdrawal.store');
 Route::get('/faq', [CatalogRouteController::class, 'faq'])->name('faq');
 //
 Route::get('/kosarica', [CheckoutController::class, 'cart'])->name('kosarica');

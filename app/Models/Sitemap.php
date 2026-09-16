@@ -142,6 +142,11 @@ class Sitemap
             'lastmod' => Carbon::now()->startOfYear()->tz('UTC')->toAtomString()
         ];
 
+        $this->response[] = [
+            'url' => route('contract-withdrawal.create'),
+            'lastmod' => Carbon::now()->startOfYear()->tz('UTC')->toAtomString()
+        ];
+
         foreach ($pages as $page) {
             $this->response[] = [
                 'url' => route('catalog.route.page', ['page' => $page->slug]),
