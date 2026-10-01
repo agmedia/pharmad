@@ -26,6 +26,7 @@ use App\Http\Controllers\Back\Settings\QuickMenuController;
 use App\Http\Controllers\Back\Settings\SettingsController;
 use App\Http\Controllers\Back\Settings\ApiController;
 use App\Http\Controllers\Back\Settings\ContractWithdrawalSettingsController;
+use App\Http\Controllers\Back\Settings\DigitalPriceListController;
 use App\Http\Controllers\Back\UserController;
 use App\Http\Controllers\Back\Widget\WidgetController;
 use App\Http\Controllers\Back\Widget\WidgetGroupController;
@@ -34,6 +35,8 @@ use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\ContractWithdrawalController;
 use App\Http\Controllers\Front\CustomerController;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\PriceListController;
+use App\Http\Middleware\AuthorizeContractWithdrawals;
 use Illuminate\Support\Facades\Route;
 
 
@@ -57,6 +60,8 @@ use Illuminate\Support\Facades\Route;
  */
 Route::middleware(['auth:sanctum', 'verified', 'no.customers'])->prefix('admin')->group(function () {
     Route::match(['get', 'post'], '/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/install-digital-price-list', [DashboardController::class, 'installDigitalPriceList'])
+        ->name('dashboard.install-digital-price-list');
 
     Route::get('setRoles', [DashboardController::class, 'setRoles'])->name('roles.set');
     Route::get('pingHP', [DashboardController::class, 'pingHP'])->name('ping.hp');
@@ -130,10 +135,12 @@ Route::middleware(['auth:sanctum', 'verified', 'no.customers'])->prefix('admin')
     Route::patch('order/{order}', [OrderController::class, 'update'])->name('orders.update');
 
     // JEDNOSTRANI RASKIDI UGOVORA
-    Route::get('contract-withdrawals', [AdminContractWithdrawalController::class, 'index'])->name('contract-withdrawals.index');
-    Route::get('contract-withdrawals/{withdrawal}', [AdminContractWithdrawalController::class, 'show'])->name('contract-withdrawals.show');
-    Route::patch('contract-withdrawals/{withdrawal}', [AdminContractWithdrawalController::class, 'update'])->name('contract-withdrawals.update');
-    Route::post('contract-withdrawals/{withdrawal}/resend', [AdminContractWithdrawalController::class, 'resend'])->name('contract-withdrawals.resend');
+    Route::middleware(AuthorizeContractWithdrawals::class)->group(function () {
+        Route::get('contract-withdrawals', [AdminContractWithdrawalController::class, 'index'])->name('contract-withdrawals.index');
+        Route::get('contract-withdrawals/{withdrawal}', [AdminContractWithdrawalController::class, 'show'])->name('contract-withdrawals.show');
+        Route::patch('contract-withdrawals/{withdrawal}', [AdminContractWithdrawalController::class, 'update'])->name('contract-withdrawals.update');
+        Route::post('contract-withdrawals/{withdrawal}/resend', [AdminContractWithdrawalController::class, 'resend'])->name('contract-withdrawals.resend');
+    });
 
     // MARKETING
     Route::prefix('marketing')->group(function () {
@@ -201,8 +208,17 @@ Route::middleware(['auth:sanctum', 'verified', 'no.customers'])->prefix('admin')
         Route::delete('faq/{faq}', [FaqController::class, 'destroy'])->name('faqs.destroy');
 
         // JEDNOSTRANI RASKID UGOVORA
-        Route::get('contract-withdrawals', [ContractWithdrawalSettingsController::class, 'edit'])->name('contract-withdrawal-settings.edit');
-        Route::patch('contract-withdrawals', [ContractWithdrawalSettingsController::class, 'update'])->name('contract-withdrawal-settings.update');
+        Route::middleware(AuthorizeContractWithdrawals::class)->group(function () {
+            Route::get('contract-withdrawals', [ContractWithdrawalSettingsController::class, 'edit'])->name('contract-withdrawal-settings.edit');
+            Route::patch('contract-withdrawals', [ContractWithdrawalSettingsController::class, 'update'])->name('contract-withdrawal-settings.update');
+        });
+
+        // DIGITALNI CJENIK I SIDRENE CIJENE
+        Route::get('digital-price-list', [DigitalPriceListController::class, 'edit'])->name('digital-price-list.edit');
+        Route::patch('digital-price-list', [DigitalPriceListController::class, 'update'])->name('digital-price-list.update');
+        Route::post('digital-price-list/generate', [DigitalPriceListController::class, 'generate'])->name('digital-price-list.generate');
+        Route::post('digital-price-list/import', [DigitalPriceListController::class, 'import'])->name('digital-price-list.import');
+        Route::get('digital-price-list/errors.csv', [DigitalPriceListController::class, 'errors'])->name('digital-price-list.errors');
 
         //Route::get('application', [SettingsController::class, 'index'])->name('settings');
 
@@ -356,14 +372,22 @@ Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/kontakt', [HomeController::class, 'contact'])->name('kontakt');
 Route::get('/nase-ljekarne', [HomeController::class, 'poslovnice'])->name('poslovnice');
 Route::post('/kontakt/posalji', [HomeController::class, 'sendContactMessage'])->name('poruka');
-Route::get('/forma-za-povrat-i-reklamacije', [ContractWithdrawalController::class, 'create'])->name('contract-withdrawal.create');
+Route::get('/raskid-ugovora', [ContractWithdrawalController::class, 'create'])->name('contract-withdrawal.create');
+Route::redirect('/forma-za-povrat-i-reklamacije', '/raskid-ugovora', 301);
+Route::post('/raskid-ugovora', [ContractWithdrawalController::class, 'review'])->middleware('throttle:5,10')->name('contract-withdrawal.review');
+Route::post('/raskid-ugovora/potvrdi', [ContractWithdrawalController::class, 'store'])->middleware('throttle:5,10')->name('contract-withdrawal.store');
 Route::post('/forma-za-povrat-i-reklamacije', [ContractWithdrawalController::class, 'review'])
     ->middleware('throttle:5,10')
-    ->name('contract-withdrawal.review');
+    ->name('contract-withdrawal.review.legacy');
 Route::post('/forma-za-povrat-i-reklamacije/potvrdi', [ContractWithdrawalController::class, 'store'])
     ->middleware('throttle:5,10')
-    ->name('contract-withdrawal.store');
+    ->name('contract-withdrawal.store.legacy');
 Route::get('/faq', [CatalogRouteController::class, 'faq'])->name('faq');
+Route::get('/cjenik', [PriceListController::class, 'index'])->name('price-list.index');
+Route::get('/cjenik/aktualni.xml', [PriceListController::class, 'current'])->name('price-list.current');
+Route::get('/cjenik/arhiva/{filename}', [PriceListController::class, 'archive'])
+    ->where('filename', '[A-Za-z0-9._-]+')
+    ->name('price-list.archive');
 //
 Route::get('/kosarica', [CheckoutController::class, 'cart'])->name('kosarica');
 Route::get('/naplata', [CheckoutController::class, 'checkout'])->name('naplata');

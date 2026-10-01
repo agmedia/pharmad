@@ -10,6 +10,10 @@
         <div class="bg-light mt-2 pt-0">
             <div class="d-sm-flex justify-content-between align-items-center mx-auto px-4 py-1" >
                 <div class="fs-sm text-dark opacity-50 text-center text-sm-start py-3">2025. Ljekarne Pharmad © Sva prava pridržana. Web by <a class="text-dark" href="https://www.agmedia.hr" target="_blank" rel="noopener">AG media</a></div>
+                <div class="text-center py-2 px-sm-3">
+                    <a class="fw-bold" href="{{ route('contract-withdrawal.create') }}">Raskid ugovora</a>
+                    <span class="mx-2">·</span><a class="fw-bold" href="{{ route('price-list.index') }}">Digitalni cjenik</a>
+                </div>
                 <div class="widget widget-links widget-dark  text-center text-md-end"><img src="{{ asset('media/cards/visa.svg') }}" alt="Visa" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35"> <img src="{{ asset('media/cards/maestro.svg') }}" alt="Maestro" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35"> <img src="{{ asset('media/cards/mastercard.svg') }}" alt="MasterCard" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35"> <img src="{{ asset('media/cards/diners.svg') }}" alt="Diners" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35">
                     <img src="{{ config('settings.images_domain') }}media/cards/google_pay.svg" width="55" height="35" alt="Gogole pay" class="d-inline-block" style="width: 55px; margin-right: 3px;"><img src="{{ config('settings.images_domain') }}media/cards/apple_pay.svg" width="55" height="35" alt="Apple Pay" class="d-inline-block" style="width: 55px; margin-right: 3px;">
                 </div>
@@ -105,6 +109,9 @@
                             <a class="btn btn-outline-primary btn-sm btn-icon" href="https://www.facebook.com/ljekarna.pharmad/"><i class="ci-facebook"></i></a>
                         </div>
                     </div>
+                    <div class="col-12 d-md-none text-center mb-3">
+                        <a class="btn btn-outline-primary" href="{{ route('contract-withdrawal.create') }}">Raskid ugovora</a>
+                    </div>
                     <!-- Mobile dropdown menu (visible on screens below md)-->
                     <div class="col-12 d-md-none text-center mb-sm-4 pb-2">
                         <div class="btn-group dropdown d-block mx-auto mb-3">
@@ -113,7 +120,8 @@
                                 @foreach ($uvjeti_kupnje as $page)
                                     <li><a class="dropdown-item" href="{{ route('catalog.route.page', ['page' => $page]) }}">{{ $page->title }}</a></li>
                                 @endforeach
-                                <li><a class="dropdown-item" href="{{ route('contract-withdrawal.create') }}">Jednostrani raskid ugovora</a></li>
+                                <li><a class="dropdown-item" href="{{ route('contract-withdrawal.create') }}">Raskid ugovora</a></li>
+                                <li><a class="dropdown-item" href="{{ route('price-list.index') }}">Digitalni cjenik</a></li>
                             </ul>
                         </div>
                     </div>
@@ -125,7 +133,8 @@
                                 @foreach ($uvjeti_kupnje as $page)
                                     <li class="widget-list-item"><a class="widget-list-link" href="{{ route('catalog.route.page', ['page' => $page]) }}">{{ $page->title }}</a></li>
                                 @endforeach
-                                <li class="widget-list-item"><a class="widget-list-link" href="{{ route('contract-withdrawal.create') }}">Jednostrani raskid ugovora</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="{{ route('contract-withdrawal.create') }}">Raskid ugovora</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="{{ route('price-list.index') }}">Digitalni cjenik</a></li>
                             </ul>
                         </div>
                     </div>
@@ -167,7 +176,5 @@
 
 
 @endif
-
-
 
 

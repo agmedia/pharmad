@@ -101,6 +101,8 @@ class PlavaKrava
                         'description'          => $item[7],
                         'slug'                 => Helper::resolveSlug($item, '3'),
                         'price'                => $item[11],
+                        'anchor_price'         => $item[11],
+                        'anchor_date'          => Carbon::now()->toDateString(),
                         'quantity'             => $item[12] ?: 0,
                         'decrease'             => 1,
                         'tax_id'               => config('settings.default_tax_id'),

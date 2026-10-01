@@ -123,6 +123,36 @@
                                     </div>
 
 
+                                    <div class="form-group row items-push mb-3">
+                                        <div class="col-md-3">
+                                            <label for="ean-input">EAN / barkod</label>
+                                            <input type="text" class="form-control" id="ean-input" name="ean" value="{{ old('ean', isset($product) ? $product->ean : '') }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="anchor-price-input">Sidrena cijena</label>
+                                            <div class="input-group">
+                                                <input type="number" step="0.01" min="0.01" class="form-control" id="anchor-price-input" name="anchor_price" value="{{ old('anchor_price', isset($product) ? $product->anchor_price : '') }}" placeholder="Automatski iz redovne cijene">
+                                                <div class="input-group-append"><span class="input-group-text">EUR</span></div>
+                                            </div>
+                                            @error('anchor_price')<span class="text-danger small">{{ $message }}</span>@enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="anchor-date-input">Referentni datum</label>
+                                            <input type="date" class="form-control" id="anchor-date-input" name="anchor_date" value="{{ old('anchor_date', isset($product) && $product->anchor_date ? $product->anchor_date->format('Y-m-d') : '') }}">
+                                            @error('anchor_date')<span class="text-danger small">{{ $message }}</span>@enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Jedinica mjere / cijena</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="unit_measure" value="{{ old('unit_measure', isset($product) ? $product->unit_measure : '') }}" placeholder="npr. kg">
+                                                <input type="number" step="0.01" min="0.01" class="form-control" name="unit_price" value="{{ old('unit_price', isset($product) ? $product->unit_price : '') }}" placeholder="EUR">
+                                            </div>
+                                            @error('unit_measure')<span class="text-danger small d-block">{{ $message }}</span>@enderror
+                                            @error('unit_price')<span class="text-danger small d-block">{{ $message }}</span>@enderror
+                                        </div>
+                                    </div>
+
+
 
                                     <div class="form-group row items-push mb-3">
                                         <div class="col-md-3">

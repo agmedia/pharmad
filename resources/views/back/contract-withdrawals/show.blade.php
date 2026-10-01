@@ -38,14 +38,15 @@
                         <div class="alert alert-primary font-w600" style="line-height: 1.7;">{{ $withdrawal->declaration }}</div>
 
                         <div class="table-responsive">
+                            <p><strong>{{ __('contract_withdrawal.withdrawal_scope') }}:</strong> {{ $withdrawal->scope_label }}</p>
                             <table class="table table-vcenter">
                                 <tbody>
                                     <tr><th style="width: 230px;">Referenca</th><td>{{ $withdrawal->reference }}</td></tr>
-                                    <tr><th>Podneseno</th><td>{{ optional($withdrawal->submitted_at)->format('d.m.Y. H:i:s T') }}</td></tr>
+                                    <tr><th>Podneseno</th><td>{{ optional(optional($withdrawal->submitted_at)->timezone('Europe/Zagreb'))->format('d.m.Y. H:i:s T') }}</td></tr>
                                     <tr><th>Ime i prezime</th><td>{{ $withdrawal->full_name }}</td></tr>
                                     <tr><th>E-mail</th><td><a href="mailto:{{ $withdrawal->email }}">{{ $withdrawal->email }}</a></td></tr>
                                     <tr><th>Telefon</th><td>{{ $withdrawal->phone ?: '—' }}</td></tr>
-                                    <tr><th>Adresa</th><td>{{ $withdrawal->address_line }}, {{ $withdrawal->postal_code }} {{ $withdrawal->city }}, {{ $withdrawal->country_code }}</td></tr>
+                                    <tr><th>Adresa</th><td>{{ $withdrawal->formatted_address }}</td></tr>
                                     <tr>
                                         <th>Broj narudžbe / ugovora</th>
                                         <td>
@@ -89,10 +90,11 @@
                             </div>
                         </div>
 
+                        <p>Pokušaji slanja — kupac: {{ $withdrawal->consumer_notification_attempts }}, PharmAD: {{ $withdrawal->admin_notification_attempts }}. Automatsko slanje prestaje nakon pet pokušaja po primatelju.</p>
                         <form method="POST" action="{{ route('contract-withdrawals.resend', $withdrawal) }}">
                             @csrf
                             <button class="btn btn-alt-primary mb-4" type="submit">
-                                <i class="fa fa-paper-plane mr-1"></i>Ponovno pošalji oba e-maila
+                                <i class="fa fa-paper-plane mr-1"></i>Ponovno pokušaj neuspjele obavijesti
                             </button>
                         </form>
                     </div>

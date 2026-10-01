@@ -10,17 +10,18 @@
 
         <div style="margin-bottom:20px;padding:14px 16px;border:1px solid #bce5d4;background:#f2fbf7;line-height:1.65;">
             <strong>{{ __('contract_withdrawal.email.reference') }}:</strong> {{ $withdrawal->reference }}<br>
-            <strong>{{ __('contract_withdrawal.email.submitted_at') }}:</strong> {{ optional($withdrawal->submitted_at)->format('d.m.Y. H:i:s T') }}<br>
+            <strong>{{ __('contract_withdrawal.email.submitted_at') }}:</strong> {{ optional(optional($withdrawal->submitted_at)->timezone('Europe/Zagreb'))->format('d.m.Y. H:i:s T') }}<br>
             <strong>{{ __('contract_withdrawal.email.confirmation_method') }}:</strong> E-mail — {{ $withdrawal->email }}
         </div>
 
         <div style="margin:20px 0;padding:16px;border-left:4px solid #26b67f;background:#f8f9fb;color:#373f50;font-size:15px;font-weight:700;line-height:1.6;">{{ $withdrawal->declaration }}</div>
 
+        <p><strong>{{ __('contract_withdrawal.withdrawal_scope') }}:</strong> {{ $withdrawal->scope_label }}</p>
         <table role="presentation" style="width:100%;margin:0 !important;table-layout:auto !important;font-size:14px;">
             <tr><td style="width:38%;padding:8px;border-bottom:1px solid #e5e9f0;color:#747d8c;">{{ __('contract_withdrawal.full_name') }}</td><td style="padding:8px;border-bottom:1px solid #e5e9f0;">{{ $withdrawal->full_name }}</td></tr>
             <tr><td style="padding:8px;border-bottom:1px solid #e5e9f0;color:#747d8c;">E-mail</td><td style="padding:8px;border-bottom:1px solid #e5e9f0;">{{ $withdrawal->email }}</td></tr>
             <tr><td style="padding:8px;border-bottom:1px solid #e5e9f0;color:#747d8c;">{{ __('contract_withdrawal.phone') }}</td><td style="padding:8px;border-bottom:1px solid #e5e9f0;">{{ $withdrawal->phone ?: '—' }}</td></tr>
-            <tr><td style="padding:8px;border-bottom:1px solid #e5e9f0;color:#747d8c;">{{ __('contract_withdrawal.review.address') }}</td><td style="padding:8px;border-bottom:1px solid #e5e9f0;">{{ $withdrawal->address_line }}, {{ $withdrawal->postal_code }} {{ $withdrawal->city }}, {{ $withdrawal->country_code }}</td></tr>
+            <tr><td style="padding:8px;border-bottom:1px solid #e5e9f0;color:#747d8c;">{{ __('contract_withdrawal.review.address') }}</td><td style="padding:8px;border-bottom:1px solid #e5e9f0;">{{ $withdrawal->formatted_address }}</td></tr>
             <tr><td style="padding:8px;border-bottom:1px solid #e5e9f0;color:#747d8c;">{{ __('contract_withdrawal.order_number') }}</td><td style="padding:8px;border-bottom:1px solid #e5e9f0;">{{ $withdrawal->order_number }}</td></tr>
             <tr><td style="padding:8px;border-bottom:1px solid #e5e9f0;color:#747d8c;">{{ __('contract_withdrawal.contract_date') }}</td><td style="padding:8px;border-bottom:1px solid #e5e9f0;">{{ optional($withdrawal->contract_date)->format('d.m.Y.') ?: '—' }}</td></tr>
             <tr><td style="padding:8px;border-bottom:1px solid #e5e9f0;color:#747d8c;">{{ __('contract_withdrawal.received_date') }}</td><td style="padding:8px;border-bottom:1px solid #e5e9f0;">{{ optional($withdrawal->received_date)->format('d.m.Y.') ?: '—' }}</td></tr>

@@ -24,6 +24,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('withdrawals:retry-notifications')->everyFiveMinutes()->withoutOverlapping();
+        $generationTime = app(\App\Services\PriceListSettingsService::class)->all()['generation_time'] ?? '07:00';
+        $schedule->command('price-list:generate')
+            ->dailyAt($generationTime)
+            ->timezone('Europe/Zagreb')
+            ->withoutOverlapping();
         $schedule->command('clean:authors')->dailyAt('00:03');
         $schedule->command('clean:publishers')->dailyAt('00:04');
     }

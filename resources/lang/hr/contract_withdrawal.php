@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'withdrawal_scope' => 'Opseg raskida',
+    'scopes' => ['whole' => 'Cijela narudžba', 'partial' => 'Odabrani proizvodi', 'legacy' => 'Prema izvornoj izjavi'],
+    'declaration_whole' => 'Ovime nedvosmisleno izjavljujem da jednostrano raskidam ugovor sklopljen na daljinu za cijelu narudžbu/ugovor :order_number.',
+    'receipt_sent' => 'Potvrda sa sadržajem izjave poslana je na vaš e-mail.',
+    'privacy_link' => 'Politika privatnosti',
     'meta_title' => 'Obrazac za jednostrani raskid ugovora - Ljekarne PharmAD',
     'meta_description' => 'Elektronički obrazac za jednostrani raskid ugovora sklopljenog na daljinu s Ljekarnama PharmAD.',
     'breadcrumb' => 'Jednostrani raskid ugovora',
@@ -19,15 +24,15 @@ return [
     'city' => 'Mjesto',
     'country_code' => 'Oznaka države',
     'contract_goods' => 'Podaci ugovora i proizvoda',
-    'order_number' => 'Broj narudžbe / ugovora',
+    'order_number' => 'Broj narudžbe ili računa',
     'contract_date' => 'Datum narudžbe',
     'received_date' => 'Datum primitka proizvoda',
     'items' => 'Proizvodi / dio ugovora koji raskidate',
-    'items_placeholder' => 'Navedite naziv, šifru i količinu proizvoda ili napišite da raskidate cijelu narudžbu.',
+    'items_placeholder' => 'Navedite naziv i količinu svakog proizvoda. Šifru možete dodati ako je znate.',
     'note' => 'Dodatna napomena',
     'note_placeholder' => 'Razlog raskida nije potrebno navesti.',
     'privacy_text' => 'Podaci se obrađuju radi izvršenja zakonskih obveza trgovca i evidencije vaše izjave o raskidu. U sljedećem koraku pregledat ćete nedvosmislenu izjavu prije konačnog slanja.',
-    'submit' => 'Raskid ugovora',
+    'submit' => 'Pregledaj podatke',
     'important_title' => 'Važno prije slanja',
     'important' => [
         'Ugovor sklopljen na daljinu u pravilu možete raskinuti u roku od 14 dana bez navođenja razloga.',
@@ -45,10 +50,12 @@ return [
     'default_instructions' => 'Proizvode sigurno zapakirajte i pošaljite bez nepotrebnog odgađanja, a najkasnije u roku od 14 dana od slanja izjave o raskidu. U paket priložite broj narudžbe ili referencu zahtjeva.',
     'declaration' => 'Ovime nedvosmisleno izjavljujem da jednostrano raskidam ugovor sklopljen na daljinu za narudžbu/ugovor :order_number u odnosu na proizvode navedene u ovoj izjavi.',
     'expired' => 'Pregled obrasca je istekao. Ponovno unesite podatke i potvrdite raskid ugovora.',
-    'success' => 'Vaša izjava o raskidu ugovora je zaprimljena. Referenca: :reference. Potvrda sa sadržajem te datumom i vremenom podnošenja poslana je na vaš e-mail.',
+    'success' => 'Vaša izjava o raskidu ugovora je zaprimljena. Referenca: :reference. Datum i vrijeme podnošenja: :submitted_at.',
     'email_warning' => 'Zahtjev je evidentiran, ali e-mail potvrda trenutačno nije mogla biti dostavljena. Sačuvajte referencu i javite se korisničkoj podršci.',
     'captcha_failed' => 'Sigurnosna provjera nije uspjela. Pokušajte ponovno.',
     'validation' => [
+        'required_if' => 'Za odabrane proizvode navedite njihove nazive i količine.',
+        'in' => 'Odaberite valjanu vrijednost za :attribute.',
         'required' => 'Polje :attribute je obavezno.',
         'email' => 'Polje :attribute mora biti ispravna e-mail adresa.',
         'alpha' => 'Polje :attribute smije sadržavati samo slova.',
@@ -60,6 +67,8 @@ return [
         'after_or_equal' => 'Datum primitka ne može biti prije datuma narudžbe.',
     ],
     'attributes' => [
+        'withdrawal_scope' => 'opseg raskida',
+        'website' => 'sigurnosna provjera',
         'full_name' => 'ime i prezime',
         'email' => 'e-mail',
         'phone' => 'telefon',

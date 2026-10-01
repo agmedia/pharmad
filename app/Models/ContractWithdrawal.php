@@ -13,6 +13,7 @@ class ContractWithdrawal extends Model
     public const STATUS_DECLINED = 'declined';
 
     protected $fillable = [
+        'withdrawal_scope',
         'reference',
         'submission_key',
         'user_id',
@@ -65,6 +66,16 @@ class ContractWithdrawal extends Model
         'handled_at' => 'datetime',
         'completed_at' => 'datetime',
     ];
+
+    public function getScopeLabelAttribute(): string
+    {
+        return __('contract_withdrawal.scopes.'.($this->withdrawal_scope ?: 'legacy'));
+    }
+
+    public function getFormattedAddressAttribute(): string
+    {
+        return implode(', ', array_filter([$this->address_line, trim($this->postal_code.' '.$this->city), $this->country_code])) ?: '—';
+    }
 
     public static function statuses(): array
     {

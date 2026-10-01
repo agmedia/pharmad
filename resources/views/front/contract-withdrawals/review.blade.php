@@ -41,11 +41,14 @@
                         __('contract_withdrawal.full_name') => $withdrawal['full_name'],
                         'E-mail' => $withdrawal['email'],
                         __('contract_withdrawal.phone') => $withdrawal['phone'],
-                        __('contract_withdrawal.review.address') => $withdrawal['address_line'].', '.$withdrawal['postal_code'].' '.$withdrawal['city'].', '.$withdrawal['country_code'],
+                        __('contract_withdrawal.review.address') => implode(', ', array_filter([$withdrawal['address_line'], trim($withdrawal['postal_code'].' '.$withdrawal['city']), $withdrawal['country_code']])),
                         __('contract_withdrawal.order_number') => $withdrawal['order_number'],
                         __('contract_withdrawal.contract_date') => $withdrawal['contract_date'],
                         __('contract_withdrawal.received_date') => $withdrawal['received_date'],
-                        __('contract_withdrawal.review.contract_items') => $withdrawal['items'],
+                        __('contract_withdrawal.withdrawal_scope') => __('contract_withdrawal.scopes.'.($withdrawal['withdrawal_scope'] ?? 'legacy')),
+                        __('contract_withdrawal.review.contract_items') => $withdrawal['withdrawal_scope'] === 'whole'
+                            ? __('contract_withdrawal.scopes.whole')
+                            : $withdrawal['items'],
                         __('contract_withdrawal.note') => $withdrawal['note'],
                     ] as $label => $value)
                         <div class="withdrawal-review-list__row">

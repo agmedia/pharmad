@@ -43,6 +43,17 @@
                             <a href="{{ route('import.oc.products') }}" class="btn btn-hero-sm btn-rounded btn-hero-warning mb-3 mr-3">Import OpenCart Products</a>
                             <br>
                             <a href="{{ route('mailing.test') }}" class="btn btn-hero-sm btn-rounded btn-hero-success mb-3 mr-3">Mail Test</a>
+                            <form method="POST" action="{{ route('dashboard.install-digital-price-list') }}" class="d-inline"
+                                  onsubmit="return confirm('Instalirati/provjeriti stupce digitalnog cjenika i popuniti prazne sidrene cijene iz redovne cijene?');">
+                                @csrf
+                                <button type="submit" class="btn btn-hero-sm btn-rounded btn-hero-primary mb-3 mr-3">
+                                    <i class="fa fa-database mr-1"></i>
+                                    {{ $digitalPriceListInstalled ? 'Provjeri digitalni cjenik' : 'Instaliraj digitalni cjenik' }}
+                                </button>
+                            </form>
+                            @if($digitalPriceListInstalled)
+                                <span class="badge badge-success mb-3 mr-3">Digitalni cjenik instaliran</span>
+                            @endif
                             @endif
                             <a href="{{ route('update.actions.feed') }}" class="btn btn-hero-sm btn-rounded btn-hero-danger mb-3 mr-3">Update Actions, Prices and Quantity</a>
                             <a href="{{ route('update-priceandquantity-feed') }}" class="btn btn-hero-sm btn-rounded btn-hero-danger mb-3 mr-3">Update only Prices and Quantity</a>
@@ -327,4 +338,3 @@
     </script>
 
 @endpush
-

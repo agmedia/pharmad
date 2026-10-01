@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Mail\ContractWithdrawalAdminMail;
 use App\Mail\ContractWithdrawalReceiptMail;
 use App\Models\ContractWithdrawal;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -17,33 +19,48 @@ class ContractWithdrawalNotificationService
         $this->settings = $settings;
     }
 
-    public function send(ContractWithdrawal $withdrawal): void
+    public function send(ContractWithdrawal $withdrawal, bool $manual = false): void
     {
-        $errors = [];
+        foreach (['consumer', 'admin'] as $recipient) {
+            // A database row lock also serializes scheduler and manual retries.
+            DB::transaction(function () use ($withdrawal, $recipient, $manual): void {
+                $record = ContractWithdrawal::whereKey($withdrawal->id)->lockForUpdate()->firstOrFail();
+                $attempts = $recipient.'_notification_attempts';
+                $lastAttempt = $recipient.'_last_attempt_at';
+                $error = $recipient.'_notification_error';
 
-        try {
-            $this->sendConsumerReceipt($withdrawal);
-        } catch (\Throwable $exception) {
-            $errors[] = 'Korisnik: '.$exception->getMessage();
-            Log::error('Contract withdrawal consumer receipt failed', [
-                'withdrawal_id' => $withdrawal->id,
-                'exception' => $exception,
-            ]);
+                if ($record->{$recipient.'_notified_at'}) {
+                    return;
+                }
+
+                if (! $manual && ((int) $record->{$attempts} >= 5
+                    || ($record->{$lastAttempt} && Carbon::parse($record->{$lastAttempt})->gt(now()->subMinutes(5))))) {
+                    return;
+                }
+
+                $record->forceFill([$attempts => (int) $record->{$attempts} + 1, $lastAttempt => now()])->save();
+
+                try {
+                    $recipient === 'consumer'
+                        ? $this->sendConsumerReceipt($record)
+                        : $this->sendAdminNotification($record);
+                    $record->forceFill([$error => null]);
+                } catch (\Throwable $exception) {
+                    $record->forceFill([$error => 'Slanje nije uspjelo. Provjerite postavke e-pošte i zapisnik.']);
+                    Log::error('Contract withdrawal notification failed', [
+                        'withdrawal_id' => $record->id,
+                        'recipient_type' => $recipient,
+                        'exception' => $exception,
+                    ]);
+                }
+                $record->forceFill(['notification_error' => implode("\n", array_filter([
+                    $record->consumer_notification_error ? 'Kupac: '.$record->consumer_notification_error : null,
+                    $record->admin_notification_error ? 'PharmAD: '.$record->admin_notification_error : null,
+                ])) ?: null])->save();
+            });
         }
 
-        try {
-            $this->sendAdminNotification($withdrawal);
-        } catch (\Throwable $exception) {
-            $errors[] = 'Administrator: '.$exception->getMessage();
-            Log::error('Contract withdrawal admin notification failed', [
-                'withdrawal_id' => $withdrawal->id,
-                'exception' => $exception,
-            ]);
-        }
-
-        $withdrawal->forceFill([
-            'notification_error' => $errors ? implode("\n", $errors) : null,
-        ])->save();
+        $withdrawal->refresh();
     }
 
     public function sendConsumerReceipt(ContractWithdrawal $withdrawal): void

@@ -98,12 +98,14 @@
                     </a>
                 </li>
 
-                <li class="nav-main-item">
-                    <a class="nav-main-link{{ request()->routeIs(['contract-withdrawals.*']) ? ' active' : '' }}" href="{{ route('contract-withdrawals.index') }}">
-                        <i class="nav-main-link-icon si si-note"></i>
-                        <span class="nav-main-link-name">Raskidi ugovora</span>
-                    </a>
-                </li>
+                @if (auth()->user()->isA('superadmin', 'admin') || auth()->user()->can('manage-contract-withdrawals'))
+                    <li class="nav-main-item">
+                        <a class="nav-main-link{{ request()->routeIs(['contract-withdrawals.*']) ? ' active' : '' }}" href="{{ route('contract-withdrawals.index') }}">
+                            <i class="nav-main-link-icon si si-note"></i>
+                            <span class="nav-main-link-name">Raskidi ugovora</span>
+                        </a>
+                    </li>
+                @endif
 
                 <li class="nav-main-item{{ request()->is(['admin/marketing/*']) ? ' open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="true" href="#">
@@ -169,9 +171,16 @@
                                 <span class="nav-main-link-name">FAQ</span>
                             </a>
                         </li>
+                        @if (auth()->user()->isA('superadmin', 'admin') || auth()->user()->can('manage-contract-withdrawals'))
+                            <li class="nav-main-item">
+                                <a class="nav-main-link{{ request()->routeIs(['contract-withdrawal-settings.*']) ? ' active' : '' }}" href="{{ route('contract-withdrawal-settings.edit') }}">
+                                    <span class="nav-main-link-name">Jednostrani raskid</span>
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-main-item">
-                            <a class="nav-main-link{{ request()->routeIs(['contract-withdrawal-settings.*']) ? ' active' : '' }}" href="{{ route('contract-withdrawal-settings.edit') }}">
-                                <span class="nav-main-link-name">Jednostrani raskid</span>
+                            <a class="nav-main-link{{ request()->routeIs(['digital-price-list.*']) ? ' active' : '' }}" href="{{ route('digital-price-list.edit') }}">
+                                <span class="nav-main-link-name">Digitalni cjenik</span>
                             </a>
                         </li>
                         <li class="nav-main-item{{ request()->is(['admin/settings/application/*']) ? ' open' : '' }}">

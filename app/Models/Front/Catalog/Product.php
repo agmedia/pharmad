@@ -40,6 +40,7 @@ class Product extends Model
         'main_price_text',
         'main_special',
         'main_special_text',
+        'main_anchor_price_text',
         'secondary_price',
         'secondary_price_text',
         'secondary_special',
@@ -51,6 +52,12 @@ class Product extends Model
      * @var
      */
     protected $eur;
+
+    protected $casts = [
+        'anchor_date' => 'date',
+        'anchor_price' => 'decimal:4',
+        'unit_price' => 'decimal:4',
+    ];
 
 
     /**
@@ -97,6 +104,11 @@ class Product extends Model
     public function getMainSpecialTextAttribute()
     {
         return Currency::main($this->special(), true);
+    }
+
+    public function getMainAnchorPriceTextAttribute()
+    {
+        return Currency::main($this->anchor_price, true);
     }
 
 

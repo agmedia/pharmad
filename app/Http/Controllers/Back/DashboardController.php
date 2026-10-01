@@ -23,6 +23,7 @@ use App\Models\Back\Settings\Api\OC_Import;
 use App\Models\Back\Settings\Settings;
 use App\Models\Front\Checkout\Shipping\HP;
 use App\Models\User;
+use App\Services\DigitalPriceListInstaller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Bouncer;
@@ -63,7 +64,28 @@ class DashboardController extends Controller
             Order::chartData($chart->setQueryParams(true))
         ));
 
-        return view('back.dashboard', compact('data', 'orders', 'products', 'this_year', 'last_year'));
+        $digitalPriceListInstalled = app(DigitalPriceListInstaller::class)->isInstalled();
+
+        return view('back.dashboard', compact('data', 'orders', 'products', 'this_year', 'last_year', 'digitalPriceListInstalled'));
+    }
+
+    public function installDigitalPriceList(Request $request, DigitalPriceListInstaller $installer)
+    {
+        abort_unless($request->user() && $request->user()->can('*'), 403);
+
+        try {
+            $result = $installer->install();
+            $message = 'Digitalni cjenik je instaliran/provjeren. Dodani stupci: '
+                .(count($result['added']) ? implode(', ', $result['added']) : 'nijedan')
+                .'. Popunjene cijene: '.$result['pricesFilled']
+                .'; datumi: '.$result['datesFilled'].'.';
+
+            return redirect()->route('dashboard')->with('success', $message);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()->route('dashboard')->with('error', 'Instalacija digitalnog cjenika nije uspjela: '.$e->getMessage());
+        }
     }
 
 
@@ -261,6 +283,8 @@ class DashboardController extends Controller
                     'slug'             => Str::slug($product_description->name) . '-' . time(),
                     'url'              => '',
                     'price'            => $product->price,
+                    'anchor_price'     => $product->price,
+                    'anchor_date'      => Carbon::now()->toDateString(),
                     'quantity'         => $product->quantity,
                     'decrease'         => 1,
                     'tax_id'           => 1,
@@ -705,6 +729,8 @@ class DashboardController extends Controller
                     'description'      => '<p class="text-primary">Rok dostave 20 radnih dana!</p><p>' . str_replace('\n', '<br>', $item->Opis) . '</p>',
                     'slug'             => Helper::resolveSlug($data),
                     'price'            => $priceeur ?: '0',
+                    'anchor_price'     => $priceeur ?: '0',
+                    'anchor_date'      => Carbon::now()->toDateString(),
                     'quantity'         => 1,
                     'tax_id'           => 1,
                     'special'          => NULL,

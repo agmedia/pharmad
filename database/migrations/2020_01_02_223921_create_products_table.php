@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
             $table->text('description')->nullable();
             $table->string('slug');
             $table->string('url', 255);
-            $table->text('slug')->nullable();
+            $table->text('category_string')->nullable();
             $table->string('image')->nullable();
             $table->decimal('price', 15, 4)->default(0);
             $table->integer('quantity')->unsigned()->default(0);
@@ -97,6 +97,5 @@ class CreateProductsTable extends Migration
         Schema::dropIfExists('product_category');
     }
 }
-
 
 

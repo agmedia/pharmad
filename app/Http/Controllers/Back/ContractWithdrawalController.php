@@ -88,8 +88,7 @@ class ContractWithdrawalController extends Controller
         ContractWithdrawal $withdrawal,
         ContractWithdrawalNotificationService $notifications
     ) {
-        $withdrawal->forceFill(['notification_error' => null])->save();
-        $notifications->send($withdrawal);
+        $notifications->send($withdrawal, true);
         $withdrawal->refresh();
 
         if ($withdrawal->notification_error) {
@@ -100,6 +99,6 @@ class ContractWithdrawalController extends Controller
 
         return redirect()
             ->route('contract-withdrawals.show', $withdrawal)
-            ->with('success', 'Potvrda korisniku i obavijest administratoru ponovno su poslane.');
+            ->with('success', 'Sve obavijesti su poslane; prethodno uspješne poruke nisu ponovno slane.');
     }
 }

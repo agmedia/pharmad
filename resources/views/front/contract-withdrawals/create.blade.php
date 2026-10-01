@@ -28,6 +28,7 @@
         @if (session('success'))
             <div class="alert alert-success mb-4" role="status">
                 <i class="ci-check-circle me-2"></i>{{ session('success') }}
+                @if(session('receipt_sent')) <div>{{ session('receipt_sent') }}</div> @endif
             </div>
         @endif
         @if (session('warning'))
@@ -62,6 +63,10 @@
                         data-recaptcha-enabled="{{ $captchaEnabled ? '1' : '0' }}"
                     >
                         @csrf
+                        <div hidden aria-hidden="true">
+                            <label for="withdrawal-website">Website</label>
+                            <input id="withdrawal-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                        </div>
                         <input type="hidden" name="recaptcha" value="" data-withdrawal-recaptcha>
 
                         <section class="withdrawal-section" aria-labelledby="withdrawal-consumer-title">
@@ -117,7 +122,7 @@
                                 </div>
 
                                 <div class="withdrawal-form-grid__full">
-                                    <label class="form-label" for="withdrawal-address">{{ __('contract_withdrawal.address_line') }} *</label>
+                                    <label class="form-label" for="withdrawal-address">{{ __('contract_withdrawal.address_line') }} ({{ __('contract_withdrawal.optional') }})</label>
                                     <input
                                         class="form-control @error('address_line') is-invalid @enderror"
                                         id="withdrawal-address"
@@ -125,14 +130,13 @@
                                         name="address_line"
                                         value="{{ old('address_line', $prefill['address_line'] ?? '') }}"
                                         autocomplete="street-address"
-                                        required
                                         maxlength="255"
                                     >
                                     @error('address_line') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
                                 <div>
-                                    <label class="form-label" for="withdrawal-postal-code">{{ __('contract_withdrawal.postal_code') }} *</label>
+                                    <label class="form-label" for="withdrawal-postal-code">{{ __('contract_withdrawal.postal_code') }} ({{ __('contract_withdrawal.optional') }})</label>
                                     <input
                                         class="form-control @error('postal_code') is-invalid @enderror"
                                         id="withdrawal-postal-code"
@@ -140,14 +144,13 @@
                                         name="postal_code"
                                         value="{{ old('postal_code', $prefill['postal_code'] ?? '') }}"
                                         autocomplete="postal-code"
-                                        required
                                         maxlength="32"
                                     >
                                     @error('postal_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
                                 <div>
-                                    <label class="form-label" for="withdrawal-city">{{ __('contract_withdrawal.city') }} *</label>
+                                    <label class="form-label" for="withdrawal-city">{{ __('contract_withdrawal.city') }} ({{ __('contract_withdrawal.optional') }})</label>
                                     <input
                                         class="form-control @error('city') is-invalid @enderror"
                                         id="withdrawal-city"
@@ -155,22 +158,20 @@
                                         name="city"
                                         value="{{ old('city', $prefill['city'] ?? '') }}"
                                         autocomplete="address-level2"
-                                        required
                                         maxlength="120"
                                     >
                                     @error('city') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
                                 <div>
-                                    <label class="form-label" for="withdrawal-country">{{ __('contract_withdrawal.country_code') }} *</label>
+                                    <label class="form-label" for="withdrawal-country">{{ __('contract_withdrawal.country_code') }} ({{ __('contract_withdrawal.optional') }})</label>
                                     <input
                                         class="form-control text-uppercase @error('country_code') is-invalid @enderror"
                                         id="withdrawal-country"
                                         type="text"
                                         name="country_code"
-                                        value="{{ old('country_code', $prefill['country_code'] ?? 'HR') }}"
+                                        value="{{ old('country_code', $prefill['country_code'] ?? '') }}"
                                         autocomplete="country"
-                                        required
                                         minlength="2"
                                         maxlength="2"
                                         pattern="[A-Za-z]{2}"
@@ -227,15 +228,25 @@
                                     @error('received_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
 
+                                <fieldset class="withdrawal-form-grid__full">
+                                    <legend class="form-label">{{ __('contract_withdrawal.withdrawal_scope') }} *</legend>
+                                    @foreach (['whole', 'partial'] as $scope)
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="radio" name="withdrawal_scope" id="withdrawal-scope-{{ $scope }}" value="{{ $scope }}" required @if(old('withdrawal_scope', $prefill['withdrawal_scope'] ?? '') === $scope) checked @endif>
+                                            <label class="form-check-label" for="withdrawal-scope-{{ $scope }}">{{ __('contract_withdrawal.scopes.'.$scope) }}</label>
+                                        </div>
+                                    @endforeach
+                                    @error('withdrawal_scope') <div class="text-danger small">{{ $message }}</div> @enderror
+                                </fieldset>
+
                                 <div class="withdrawal-form-grid__full">
-                                    <label class="form-label" for="withdrawal-items">{{ __('contract_withdrawal.items') }} *</label>
+                                    <label class="form-label" for="withdrawal-items">{{ __('contract_withdrawal.items') }} (obavezno za odabrane proizvode)</label>
                                     <textarea
                                         class="form-control @error('items') is-invalid @enderror"
                                         id="withdrawal-items"
                                         name="items"
                                         rows="6"
                                         placeholder="{{ __('contract_withdrawal.items_placeholder') }}"
-                                        required
                                         maxlength="5000"
                                     >{{ old('items', $prefill['items'] ?? '') }}</textarea>
                                     @error('items') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -256,7 +267,7 @@
                             </div>
                         </section>
 
-                        <p class="withdrawal-field-help mt-4">{{ __('contract_withdrawal.privacy_text') }}</p>
+                        <p class="withdrawal-field-help mt-4">{{ __('contract_withdrawal.privacy_text') }} <a href="{{ route('catalog.route.page', ['page' => 'pravila-privatnosti']) }}">{{ __('contract_withdrawal.privacy_link') }}</a></p>
                         @error('recaptcha') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
 
                         <button class="withdrawal-submit mt-3" type="submit" data-withdrawal-submit>
@@ -297,6 +308,18 @@
 
 @push('js_after')
     <script>
+        (function () {
+            var items = document.getElementById('withdrawal-items');
+            var choices = document.querySelectorAll('[name="withdrawal_scope"]');
+            function updateScope() {
+                var selected = document.querySelector('[name="withdrawal_scope"]:checked');
+                items.required = !!selected && selected.value === 'partial';
+                items.closest('.withdrawal-form-grid__full').hidden = !!selected && selected.value === 'whole';
+            }
+            choices.forEach(function (choice) { choice.addEventListener('change', updateScope); });
+            updateScope();
+        })();
+
         (function () {
             var form = document.querySelector('[data-withdrawal-form]');
 

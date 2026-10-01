@@ -37,6 +37,12 @@ class Product extends Model
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected $casts = [
+        'anchor_date' => 'date',
+        'anchor_price' => 'decimal:4',
+        'unit_price' => 'decimal:4',
+    ];
+
     /**
      * @var Request
      */
@@ -152,6 +158,11 @@ class Product extends Model
         return $this->hasOne(ProductAction::class, 'product_id');
     }
 
+    public function priceListAction()
+    {
+        return $this->belongsTo(Action::class, 'action_id', 'id');
+    }
+
 
     /**
      * @return false|mixed
@@ -205,10 +216,15 @@ class Product extends Model
     {
         // Validate the request.
         $request->validate([
-            'name'     => 'required',
-            'sku'      => 'required',
-            'price'    => 'required',
-            'category' => 'required'
+            'name'         => 'required',
+            'sku'          => 'required',
+            'price'        => 'required|numeric|min:0.01',
+            'category'     => 'required',
+            'anchor_price' => 'nullable|numeric|min:0.01|required_with:anchor_date',
+            'anchor_date'  => 'nullable|date_format:Y-m-d|required_with:anchor_price',
+            'unit_measure' => 'nullable|string|max:50|required_with:unit_price',
+            'unit_price'   => 'nullable|numeric|min:0.01|required_with:unit_measure',
+            'ean'          => 'nullable|string|max:64',
         ]);
 
         // Set Product Model request variable
@@ -300,9 +316,14 @@ class Product extends Model
             'name'             => $this->request->name,
             'sku'              => $this->request->sku,
             'polica'           => $this->request->polica,
+            'ean'              => $this->request->ean,
             'description'      => $this->cleanHTML($this->request->description),
             'slug'             => $slug,
             'price'            => isset($this->request->price) ? $this->request->price : 0,
+            'anchor_price'     => $this->request->filled('anchor_price') ? $this->request->anchor_price : ($insert ? $this->request->price : $this->anchor_price),
+            'anchor_date'      => $this->request->filled('anchor_date') ? $this->request->anchor_date : ($insert ? Carbon::now()->toDateString() : $this->anchor_date),
+            'unit_measure'     => $this->request->filled('unit_measure') ? trim($this->request->unit_measure) : null,
+            'unit_price'       => $this->request->filled('unit_price') ? $this->request->unit_price : null,
             'quantity'         => $this->request->quantity ?: 0,
             'decrease'         => (isset($this->request->decrease) and $this->request->decrease == 'on') ? 0 : 1,
             'tax_id'           => $this->request->tax_id ?: 1,

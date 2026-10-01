@@ -1,0 +1,1 @@
+<!DOCTYPE html><html lang="hr"><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/css/theme.css">@stack('css_after')</head><body>@yield('content')@stack('js_after')</body></html>

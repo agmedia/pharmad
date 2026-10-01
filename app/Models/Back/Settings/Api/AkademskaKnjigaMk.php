@@ -163,6 +163,8 @@ class AkademskaKnjigaMk
                         'description'          => $data['description'],
                         'slug'                 => Helper::resolveSlug($data, 'title'),
                         'price'                => $item->price,
+                        'anchor_price'         => $item->price,
+                        'anchor_date'          => Carbon::now()->toDateString(),
                         'quantity'             => $item->quantity ?: 0,
                         'decrease'             => 1,
                         'tax_id'               => config('settings.default_tax_id'),

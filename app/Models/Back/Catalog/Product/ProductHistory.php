@@ -229,6 +229,17 @@ class ProductHistory extends Model
             $this->changed .= '<li>Promjenjena cijena: <b>' . number_format($this->old['price'], 2, ',', '.') . '</b> u <b>' . number_format($this->new['price'], 2, ',', '.') . '</b></li>';
         }
 
+        if (($this->old['anchor_price'] ?? null) != ($this->new['anchor_price'] ?? null)) {
+            $old = number_format((float) ($this->old['anchor_price'] ?? 0), 2, ',', '.');
+            $new = number_format((float) ($this->new['anchor_price'] ?? 0), 2, ',', '.');
+            $this->changed .= '<li>Promijenjena sidrena cijena: <b>'.$old.'</b> u <b>'.$new.'</b></li>';
+        }
+        if (($this->old['anchor_date'] ?? null) != ($this->new['anchor_date'] ?? null)) {
+            $old = ! empty($this->old['anchor_date']) ? Carbon::parse($this->old['anchor_date'])->format('d.m.Y.') : 'prazno';
+            $new = ! empty($this->new['anchor_date']) ? Carbon::parse($this->new['anchor_date'])->format('d.m.Y.') : 'prazno';
+            $this->changed .= '<li>Promijenjen referentni datum: <b>'.$old.'</b> u <b>'.$new.'</b></li>';
+        }
+
         // Quantity changed
         if ($this->old['quantity'] != $this->new['quantity']) {
             $this->changed .= '<li>Promjenjena količina: <b>' . $this->old['quantity'] . '</b> u <b>' . $this->new['quantity'] . '</b></li>';

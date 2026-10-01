@@ -123,31 +123,12 @@
 
    <h1 class="h3">{{ $prod->name }}</h1>
 
-       <div class="mb-1">
-           @if ($prod->special() < $prod->price)
-               <span class="h3 fw-normal text-accent me-1">{{ $prod->main_special_text }}</span>
-               <span class="text-muted fs-lg me-3">*{{ $prod->main_price_text }}</span>
+       @include('front.catalog.partials.prices', ['product' => $prod, 'compact' => false])
 
-           @else
-               <span class="h3 fw-normal text-accent me-1">{{ $prod->main_price_text }}</span>
-           @endif
-
-       </div>
-
-   @if($prod->secondary_price_text)
-       <div class="mb-1 mt-1 text-start">
-           @if ($prod->special() < $prod->price)
-               <span class=" fs-sm text-muted me-1"> {{ $prod->secondary_special_text }}</span>
-               <span class="text-muted fs-sm me-3">*{{ $prod->secondary_price_text }}</span>
-           @else
-               <span class="fs-sm text-muted  me-1">{{ $prod->secondary_price_text }}</span>
-           @endif
-       </div>
-   @endif
    @if ($prod->special() < $prod->price)
 
        <div class="mb-3 mt-1 text-start">
-           <span class=" fs-sm text-muted me-1"> *Najniža cijena u zadnjih 30 dana.</span>
+           <span class=" fs-sm text-muted me-1">NC30 je najniža cijena u zadnjih 30 dana.</span>
        </div>
 
 
