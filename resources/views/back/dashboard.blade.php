@@ -52,6 +52,15 @@
                                 </button>
                             </form>
                             @if($digitalPriceListInstalled)
+                                <form method="POST" action="{{ route('digital-price-list.generate') }}" class="d-inline"
+                                      onsubmit="return confirm('Generirati i javno objaviti novu verziju digitalnog cjenika?');">
+                                    @csrf
+                                    <button type="submit" class="btn btn-hero-sm btn-rounded btn-hero-success mb-3 mr-3">
+                                        <i class="fa fa-file-code mr-1"></i> Generiraj digitalni cjenik
+                                    </button>
+                                </form>
+                            @endif
+                            @if($digitalPriceListInstalled)
                                 <span class="badge badge-success mb-3 mr-3">Digitalni cjenik instaliran</span>
                             @endif
                             @endif
