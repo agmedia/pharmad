@@ -20,7 +20,8 @@ class PricePresentationTest extends TestCase
 
         $html = view('front.catalog.partials.prices', compact('product'))->render();
 
-        $this->assertStringContainsString('Aktualna cijena', $html);
+        $this->assertStringContainsString('Cijena', $html);
+        $this->assertStringNotContainsString('Aktualna cijena', $html);
         $this->assertStringContainsString('Cijena na 10.09.2026.', $html);
         $this->assertSame(2, substr_count($html, '12,60 €'));
     }

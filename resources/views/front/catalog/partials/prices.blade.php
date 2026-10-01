@@ -14,7 +14,7 @@
         </div>
     @else
         <div class="anchor-prices__row anchor-prices__row--current">
-            <span class="anchor-prices__label">Aktualna cijena</span>
+            <span class="anchor-prices__label">Cijena</span>
             <span class="anchor-prices__value">{{ $product->main_price_text }}</span>
         </div>
     @endif
